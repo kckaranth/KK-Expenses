@@ -38,6 +38,22 @@ jobs:
           printf '%s' "$KK_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/kk-expenses.jks"
           test -s "$RUNNER_TEMP/kk-expenses.jks"
 
+
+      - name: Validate permanent signing key
+        shell: bash
+        env:
+          KK_STORE_PASSWORD: ${{ secrets.KK_KEYSTORE_PASSWORD }}
+          KK_ALIAS: ${{ secrets.KK_KEY_ALIAS }}
+        run: |
+          set -euo pipefail
+          test "$(wc -c < "$RUNNER_TEMP/kk-expenses.jks")" -eq 3600
+          keytool -list \
+            -storetype PKCS12 \
+            -keystore "$RUNNER_TEMP/kk-expenses.jks" \
+            -storepass "$KK_STORE_PASSWORD" \
+            -alias "$KK_ALIAS" > /dev/null
+          echo "Permanent signing keystore validated"
+          
       - name: Build signed debug APK
         env:
           KK_SIGNING_STORE_FILE: ${{ runner.temp }}/kk-expenses.jks

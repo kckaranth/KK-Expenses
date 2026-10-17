@@ -634,7 +634,7 @@ private fun PaneSurface(
         content = content
     )
 }
-/** A read-only dashboard over the existing account state; no schema changes. */
+/** KK Expenses home: read-only, using the existing account state and currency formatter. */
 @Composable
 private fun KKHomeDashboard(
     accounts: List<FullAccount>,
@@ -644,38 +644,72 @@ private fun KKHomeDashboard(
     val formatter = LocalCurrencyFormatter.current
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
         Text("KK Expenses", style = MaterialTheme.typography.headlineMedium)
-        Text("Your money at a glance", color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text("Your finances, clearly organized", color = MaterialTheme.colorScheme.onSurfaceVariant)
+
         Card(modifier = Modifier.fillMaxWidth()) {
-            Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Accounts", style = MaterialTheme.typography.titleLarge)
-                Text("${accounts.size} accounts", style = MaterialTheme.typography.bodyMedium)
+            Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text("Account overview", style = MaterialTheme.typography.titleLarge)
+                Text(
+                    if (accounts.size == 1) "1 account" else "${accounts.size} accounts",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                )
                 if (accounts.isEmpty()) {
-                    Text("Create an account to get started.")
+                    Text("No accounts yet. Create your first account to begin tracking.")
                 } else {
                     accounts.forEach { account ->
-                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text(account.label, modifier = Modifier.weight(1f), maxLines = 1)
-                            Text(formatter.convAmount(account.currentBalance, account.currencyUnit))
+                        Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            color = MaterialTheme.colorScheme.surface,
+                            shape = RoundedCornerShape(14.dp),
+                        ) {
+                            Column(
+                                Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+                                verticalArrangement = Arrangement.spacedBy(5.dp),
+                            ) {
+                                Text(account.label, style = MaterialTheme.typography.titleSmall)
+                                Text(
+                                    formatter.convAmount(account.currentBalance, account.currencyUnit),
+                                    style = MaterialTheme.typography.headlineSmall,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                )
+                            }
                         }
                     }
                 }
                 Text(
-                    "Balances are shown separately by currency; no cross-currency totals are assumed.",
+                    "Each currency is displayed separately to avoid misleading totals.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
+
+        Text("Quick access", style = MaterialTheme.typography.titleMedium)
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Button(onClick = onTransactions, modifier = Modifier.weight(1f)) { Text("Transactions") }
-            OutlinedButton(onClick = onAccounts, modifier = Modifier.weight(1f)) { Text("Accounts") }
+            Button(onClick = onTransactions, modifier = Modifier.weight(1f)) {
+                Text("Transactions")
+            }
+            OutlinedButton(onClick = onAccounts, modifier = Modifier.weight(1f)) {
+                Text("Accounts")
+            }
         }
-        Spacer(Modifier.height(4.dp))
-        Text("Existing transactions and balances remain in your local database.",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            color = MaterialTheme.colorScheme.surfaceVariant,
+        ) {
+            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text("Private by design", style = MaterialTheme.typography.titleSmall)
+                Text(
+                    "Balances come from your existing local database. This dashboard does not change transactions or account data.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
     }
 }

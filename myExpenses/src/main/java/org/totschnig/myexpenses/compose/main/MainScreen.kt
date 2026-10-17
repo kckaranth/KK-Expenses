@@ -7,6 +7,13 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,10 +32,14 @@ import androidx.compose.material.icons.filled.CheckBox
 import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.outlined.CropLandscape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Card
+import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -82,6 +93,8 @@ import org.totschnig.myexpenses.activity.HELP_VARIANT_PORTFOLIO
 import org.totschnig.myexpenses.activity.HELP_VARIANT_TRANSACTIONS
 import org.totschnig.myexpenses.activity.StartScreen
 import org.totschnig.myexpenses.compose.TEST_TAG_NAV_ACCOUNTS
+import org.totschnig.myexpenses.compose.LocalCurrencyFormatter
+import org.totschnig.myexpenses.util.convAmount
 import org.totschnig.myexpenses.compose.TEST_TAG_NAV_OVERFLOW
 import org.totschnig.myexpenses.compose.TEST_TAG_NAV_TRANSACTIONS
 import org.totschnig.myexpenses.compose.accounts.AccountEventHandler
@@ -254,6 +267,7 @@ fun MainScreenAdaptive(
     val is2Pane = navigator.scaffoldDirective.maxHorizontalPartitions > 1
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
 
+    var showHome by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
 
@@ -374,13 +388,20 @@ fun MainScreenAdaptive(
                     )
                 }
                 if (!is2Pane) {
+                    item(
+                        selected = showHome,
+                        onClick = { showHome = true },
+                        icon = { Icon(Icons.Default.Home, contentDescription = null) },
+                        label = { NavigationItem("Home") },
+                    )
                     listOfNotNull(
                         Screen.Accounts,
                         Screen.Transactions.takeIf { accounts.isNotEmpty() }
                     ).forEach { screen ->
                         item(
-                            selected = navigator.currentDestination?.pane == screen.paneRole,
+                            selected = !showHome && navigator.currentDestination?.pane == screen.paneRole,
                             onClick = {
+                                showHome = false
                                 scope.launch {
                                     navigator.navigateToRoot(screen.paneRole)
                                 }
@@ -450,7 +471,19 @@ fun MainScreenAdaptive(
                     {}
                 }
 
-            ListDetailPaneScaffold(
+            if (showHome && !is2Pane) {
+                KKHomeDashboard(
+                    accounts = accounts,
+                    onAccounts = {
+                        showHome = false
+                        scope.launch { navigator.navigateToRoot(ListDetailPaneScaffoldRole.List) }
+                    },
+                    onTransactions = {
+                        showHome = false
+                        scope.launch { navigator.navigateToRoot(ListDetailPaneScaffoldRole.Detail) }
+                    },
+                )
+            } else ListDetailPaneScaffold(
                 directive = navigator.scaffoldDirective,
                 value = navigator.scaffoldValue,
                 listPane = {
@@ -600,4 +633,49 @@ private fun PaneSurface(
         } else null,
         content = content
     )
+}
+/** A read-only dashboard over the existing account state; no schema changes. */
+@Composable
+private fun KKHomeDashboard(
+    accounts: List<FullAccount>,
+    onAccounts: () -> Unit,
+    onTransactions: () -> Unit,
+) {
+    val formatter = LocalCurrencyFormatter.current
+    Column(
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Text("KK Expenses", style = MaterialTheme.typography.headlineMedium)
+        Text("Your money at a glance", color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("Accounts", style = MaterialTheme.typography.titleLarge)
+                Text("${accounts.size} accounts", style = MaterialTheme.typography.bodyMedium)
+                if (accounts.isEmpty()) {
+                    Text("Create an account to get started.")
+                } else {
+                    accounts.forEach { account ->
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                            Text(account.label, modifier = Modifier.weight(1f), maxLines = 1)
+                            Text(formatter.convAmount(account.currentBalance, account.currencyUnit))
+                        }
+                    }
+                }
+                Text(
+                    "Balances are shown separately by currency; no cross-currency totals are assumed.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Button(onClick = onTransactions, modifier = Modifier.weight(1f)) { Text("Transactions") }
+            OutlinedButton(onClick = onAccounts, modifier = Modifier.weight(1f)) { Text("Accounts") }
+        }
+        Spacer(Modifier.height(4.dp))
+        Text("Existing transactions and balances remain in your local database.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
 }

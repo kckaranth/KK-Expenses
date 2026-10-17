@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.graphics.Color
 import org.totschnig.myexpenses.R
 import org.totschnig.myexpenses.injector
 import org.totschnig.myexpenses.util.getDateTimeFormatter
@@ -30,8 +31,22 @@ fun AppTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> darkColorScheme()
-        else -> lightColorScheme()
+        darkTheme -> darkColorScheme(
+            primary = Color(0xFF80D5C3),
+            onPrimary = Color(0xFF00382E),
+            secondary = Color(0xFFA4D0C3),
+            background = Color(0xFF101B1A),
+            surface = Color(0xFF152220),
+            surfaceVariant = Color(0xFF394945)
+        )
+        else -> lightColorScheme(
+            primary = Color(0xFF006B5A),
+            onPrimary = Color.White,
+            secondary = Color(0xFF45675D),
+            background = Color(0xFFF5FAF7),
+            surface = Color(0xFFFFFFFF),
+            surfaceVariant = Color(0xFFDCEBE4)
+        )
     }
 
     MaterialTheme(

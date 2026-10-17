@@ -482,6 +482,9 @@ fun MainScreenAdaptive(
                         showHome = false
                         scope.launch { navigator.navigateToRoot(ListDetailPaneScaffoldRole.Detail) }
                     },
+                    onQuickTransaction = { action ->
+                        onAppEvent(AppEvent.CreateTransaction(action))
+                    },
                 )
             } else ListDetailPaneScaffold(
                 directive = navigator.scaffoldDirective,
@@ -640,6 +643,7 @@ private fun KKHomeDashboard(
     accounts: List<FullAccount>,
     onAccounts: () -> Unit,
     onTransactions: () -> Unit,
+    onQuickTransaction: (Action) -> Unit,
 ) {
     val formatter = LocalCurrencyFormatter.current
     Column(
@@ -688,6 +692,31 @@ private fun KKHomeDashboard(
             }
         }
 
+        Text("Quick entry", style = MaterialTheme.typography.titleMedium)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+            Button(
+                onClick = { onQuickTransaction(Action.Expense) },
+                modifier = Modifier.weight(1f),
+                enabled = accounts.isNotEmpty(),
+            ) { Text("Expense") }
+            OutlinedButton(
+                onClick = { onQuickTransaction(Action.Income) },
+                modifier = Modifier.weight(1f),
+                enabled = accounts.isNotEmpty(),
+            ) { Text("Income") }
+            OutlinedButton(
+                onClick = { onQuickTransaction(Action.Transfer) },
+                modifier = Modifier.weight(1f),
+                enabled = accounts.size > 1,
+            ) { Text("Transfer") }
+        }
+        if (accounts.size == 1) {
+            Text(
+                "Add a second account to enable transfers.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
         Text("Quick access", style = MaterialTheme.typography.titleMedium)
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Button(onClick = onTransactions, modifier = Modifier.weight(1f)) {

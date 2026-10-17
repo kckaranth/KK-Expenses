@@ -61,6 +61,25 @@ android {
         }
     }*/
 
+    // KK Expenses: use the same private key for all CI debug APK updates.
+    // Local builds without these environment variables retain normal debug signing.
+    def kkKeystorePath = System.getenv("KK_SIGNING_STORE_FILE")
+    def kkStorePassword = System.getenv("KK_SIGNING_STORE_PASSWORD")
+    def kkKeyAlias = System.getenv("KK_SIGNING_KEY_ALIAS")
+    def kkKeyPassword = System.getenv("KK_SIGNING_KEY_PASSWORD")
+    def kkSigningEnabled = [kkKeystorePath, kkStorePassword, kkKeyAlias, kkKeyPassword].every { it != null && !it.isEmpty() }
+
+    signingConfigs {
+        kkPersistent {
+            if (kkSigningEnabled) {
+                storeFile file(kkKeystorePath)
+                storePassword kkStorePassword
+                keyAlias kkKeyAlias
+                keyPassword kkKeyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -72,6 +91,9 @@ android {
             //ndk.debugSymbolLevel = 'FULL'
         }
         debug {
+            if (kkSigningEnabled) {
+                signingConfig signingConfigs.kkPersistent
+            }
             applicationIdSuffix ".debug"
             manifestPlaceholders["appName"] = "KK Expenses Debug"
             buildConfigField "int", "TEST_SCENARIO", getPropertyIfDefined('testScenario', "1")

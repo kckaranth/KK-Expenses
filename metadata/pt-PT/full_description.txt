@@ -1,0 +1,25 @@
+<b>Minhas Despesas</b> é o seu gestor de finanças pessoais definitivo e respeitador da privacidade—oferecendo o controlo total sobre o registo de despesas diárias, orçamentos e carteiras de investimento com a transparência do código aberto.
+
+<b>Funcionalidades principais:</b>
+
+• <b>Controlo diário de despesas e orçamentos</b>: Acompanhe facilmente receitas e despesas no seu smartphone ou tablet. Crie orçamentos, divida transações e defina planos para transações recorrentes.
+• <b>Gestão de carteira e investimentos</b>: Acompanhe carteiras de ações, criptomoedas ou ativos personalizados, monitorize o histórico de preços e gira investimentos multidivisa em tempo real.
+• <b>Integração bancária e reconciliação</b>: Ligue-se diretamente a bancos suportados via FinTS ou reconcilie transações manualmente com os seus extratos bancários para um controlo rigoroso de saldos.
+• <b>Digitalização inteligente de faturas (OCR)</b>: Extraia automaticamente os detalhes das transações a partir de fotos de faturas e recibos usando reconhecimento ótico de carateres.
+• <b>Interface web para computador</b>: Aceda e gira as suas transações a partir de qualquer navegador web na sua rede local.
+• <b>Análises avançadas</b>: Visualize tendências de gastos, gráficos circulares de distribuição e relatórios históricos com gráficos dinâmicos e personalizáveis.
+• <b>Sincronização flexível e controlo de dados</b>: Exporte e importe dados facilmente nos formatos QIF e CSV. Sincronize sem problemas entre dispositivos através de WebDAV, Nextcloud, Google Drive, Dropbox ou OneDrive com suporte para certificados de cliente.
+• <b>Privacidade e segurança em primeiro lugar</b>: Transparência de código aberto, proteção por palavra-passe ou bloqueio biométrico e base de dados encriptada.
+
+<b>Desbloquear funcionalidades Premium:</b>
+
+• <i>Chave de contribuição</i>: Os destaques incluem o desbloqueio de contas ilimitadas, planos recorrentes ilimitados, exportação de listas em PDF, gráficos de distribuição e muito mais.
+• <i>Chave estendida</i>: Inclui todas as funcionalidades da Chave de contribuição, além de sincronização automática na nuvem e regras avançadas de importação CSV.
+• <i>Chave Profissional</i>: Inclui todas as funcionalidades da Chave estendida, além de acompanhamento de carteiras e investimentos, gráficos históricos, monitorização de orçamentos, digitalização OCR de recibos, interface web local para computador, sincronização bancária direta (Alemanha) e muito mais.
+
+<b>Transparência nas permissões:</b>
+
+• <i>Calendário</i>: Os planos para transações recorrentes são guardados num calendário local dedicado ou em qualquer outro calendário atribuído.
+• <i>Internet</i>: Rastreio de utilização anónimo (opcional), sincronização na nuvem e relatórios de erros (opcional).
+
+Assuma o controlo do seu dinheiro e do seu património hoje mesmo com <i>Minhas Despesas</i>!

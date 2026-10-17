@@ -1,0 +1,25 @@
+A <b>Kiadásaim</b> az Ön tökéletes, adatvédelmet szem előtt tartó személyes pénzügyi menedzsere—teljes ellenőrzést biztosítva a napi költségkövetés, a költségvetés-tervezés és az befektetési portfóliók felett, nyílt forráskódú átláthatósággal.
+
+<b>Főbb jellemzők:</b>
+
+• <b>Napi költség- és költségvetés-követés</b>: Könnyedén nyomon követheti bevételeit és kiadásait okostelefonján vagy táblagépén. Hozzon létre költségvetéseket, ossza meg a tranzakciókat és állítson be ismétlődő tranzakciós terveket.
+• <b>Portfólió- és befektetéskezelés</b>: Kövesse nyomon részvény-, kripto- vagy egyedi eszközportfólióit, figyelje az árelőzményeket és kezelje többdevizás befektetéseit valós időben.
+• <b>Banki integráció és egyeztetés</b>: Csatlakozzon közvetlenül a támogatott bankokhoz FinTS-en keresztül, vagy egyeztesse manuálisan a tranzakciókat a bankkivonatokkal a pontos egyenlegkövetés érdekében.
+• <b>Okos nyugtabeolvasás (OCR)</b>: Automatikusan kinyerheti a tranzakció részleteit a fényképezett nyugtákról a fejlett optikai karaktermegjelenítés segítségével.
+• <b>Webes felület számítógépre</b>: Érje el és kezelje tranzakcióit bármely webböngészőből a helyi hálózaton keresztül.
+• <b>Erőteljes elemzések</b>: Visualizálja a költési trendeket, a megoszlási kördiagramokat és a történeti jelentéseket testreszabható dinamikus grafikonokkal.
+• <b>Rugalmas szinkronizálás és adatellenőrzés</b>: Könnyen exportálhat és importálhat adatokat QIF és CSV formátumban. Zökkenőmentesen szinkronizálhat az eszközök között WebDAV, Nextcloud, Google Drive, Dropbox vagy OneDrive használatával, ügyfél-tanúsítvány támogatással.
+• <b>Adatvédelem és biztonság az első</b>: Nyílt forráskódú átláthatóság, jelszóval vagy biometrikus képernyőzárral történő védelem, valamint titkosított adatbázis-védelem.
+
+<b>Prémium funkciók feloldása:</b>
+
+• <i>Contrib Kulcs</i>: A főbb jellemzők közé tartozik a korlátlan számú fiók feloldása, ismétlődő tervek, listák PDF-exportálása, kategória-megoszlási diagramok és még sok más.
+• <i>Kiterjesztett Kulcs</i>: Tartalmazza a Contrib Kulcs összes funkcióját, plusz az automatikus felhőszinkronizálást és a haladó CSV-importálási szabályokat.
+• <i>Szakmai kulcs</i>: Tartalmazza a Kiterjesztett Kulcs összes funkcióját, plusz a befektetés- és portfóliókövetést, történeti grafikonokat, költségvetés-figyelést, nyugták OCR-beolvasását, helyi webes felületet számítógépre, közvetlen banki szinkronizálást (Németország) és még sok mást.
+
+<b>Engedélyek átláthatósága:</b>
+
+• <i>Naptár</i>: Az ismétlődő tranzakciókra vonatkozó terveket egy speciális helyi naptárban vagy az Ön által kiválasztott bármely más naptárban tárolja.
+• <i>Internet</i>: Névtelen használatkövetés (választható), felhőszinkronizálás és összeomlási jelentések (választható).
+
+Vegye kézbe pénzügyeit és vagyonát még ma a <b>Kiadásaim</b> segítségével!

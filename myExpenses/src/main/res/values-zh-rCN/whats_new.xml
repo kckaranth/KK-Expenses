@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="whats_new_384">简化云备份设置</string>
+    <string name="whats_new_388">交易可以存档。</string>
+    <string name="whats_new_395">导出的文件（PDF、备份、QIF、CSV、JSON）可以通过 Web 用户界面下载。</string>
+    <string name="whats_new_396">通过自动汇率更新和实时价值跟踪，增强外币账户管理。</string>
+    <string name="whats_new_398">在一个地方查看您的资产、负债和净资产。</string>
+    <string name="whats_new_399">改进的 PDF 导出布局，可通过拖放完全自定义。</string>
+    <string name="whats_new_400_2">价格历史记录：批量下载缺失的条目</string>
+    <string name="whats_new_400_1">显示账户之间资金分配的饼图</string>
+    <string name="whats_new_401">交易列表现在显示拆分交易的更多详细信息。</string>
+    <string name="whats_new_402">可以自定义账户类型</string>
+    <string name="whats_new_403">账户标志扩展了账户可见性和优先级的自定义。</string>
+    <string name="whats_new_407">对标签、类别、账户、交易对象进行自然排序。</string>
+</resources>

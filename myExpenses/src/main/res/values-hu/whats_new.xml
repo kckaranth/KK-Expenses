@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="whats_new_374">Egyedi színek a címkékhez</string>
+    <string name="whats_new_384">A felhőalapú biztonsági mentés egyszerűsített beállítása</string>
+    <string name="whats_new_386">A kiadások szerinti eloszlás és a jövedelemenkénti eloszlás együtt mutatható be a kettős gyűrűs fánkdiagramon.</string>
+    <string name="whats_new_388">A tranzakciók archiválhatók.</string>
+    <string name="whats_new_395">Az exportált fájlok (PDF, backup, QIF, CSV, JSON) letölthetők a webes felhasználói felületen keresztül.</string>
+    <string name="whats_new_396">Továbbfejlesztett devizaszámla-kezelés automatikus árfolyam-frissítésekkel és valós idejű értékkövetéssel.</string>
+    <string name="whats_new_398">Tekintse meg eszközeit, kötelezettségeit és nettó vagyonát — mindent egy helyen.</string>
+    <string name="whats_new_399">Továbbfejlesztett PDF-exportálási elrendezés, teljesen testreszabható fogással és vidddal.</string>
+    <string name="whats_new_400_1">A pénz számlák közötti eloszlását bemutató kördiagram</string>
+    <string name="whats_new_400_2">Árelőzmények: Hiányzó bejegyzések tömeges letöltése</string>
+    <string name="whats_new_401">A tranzakciólista mostantól további részleteket jelenít meg a felosztási tranzakciókról.</string>
+    <string name="whats_new_402">A számlatípusok testreszabhatók</string>
+    <string name="whats_new_403">A fiókjelzők kiterjesztik a fiók láthatóságának és prioritásának testreszabását.</string>
+    <string name="whats_new_407">Természetes sorrend a címkék, kategóriák, számlák és résztvevők számára.</string>
+</resources>

@@ -1,0 +1,25 @@
+<b>Nire gastuak</b> zure finantza pertsonalak kudeatzeko tresna nagusia da, pribatutasuna errespetatzen duena—eguneroko gastuen jarraipena, aurrekontuak eta inbertsio-zorroak erabat kontrolatzeko aukera ematen dizu, kode irekiaren gardentasunarekin.
+
+<b>Ezaugarri nagusiak:</b>
+
+• <b>Eguneroko gastu eta aurrekontuen jarraipena</b>: Jarraitu erraz zure diru-sarrerak eta gastuak telefonoan edo tabletan. Sortu aurrekontuak, zatitu transakzioak (transakzio zatituak) eta ezarri errepikatzen diren transakzioen planak.
+• <b>Zorro eta inbertsioen kudeaketa</b>: Jarraitu akzio, kriptomoneta edo aktibo pertsonalizatuen zorroak, ikusi prezioen bilakaera eta kudeatu moneta anitzeko inbertsioak denbora errealean.
+• <b>Banku-integrazioa eta adiskidetzea</b>: Konektatu zuzenean onartutako bankuekin FinTS bidez edo adiskidetu transakzioak eskuz zure banku-laburpenekin, saldoen jarraipen zehatza lortzeko.
+• <b>Ordainagirien eskaneatze adimenduna (OCR)</b>: Erauzi automatikoki transakzioen xehetasunak ordainagirien argazkietatik, karaktere-ezagutze optiko aurreratua erabiliz.
+• <b>Mahaigainerako web-interfazea</b>: Atzitu eta kudeatu zure transakzioak zure tokiko sareko edozein web-arakatzailetatik.
+• <b>Analisi indartsuak</b>: Ikusi gastu-joerak, kategoria araberako banaketa-diagramak eta txosten historikoak grafiko dinamiko pertsonalizagarriekin.
+• <b>Sinkronizazio malgua eta datuen kontrola</b>: Esportatu eta inportatu datuak erraz QIF eta CSV formatuetan. Sinkronizatu ezin hobeto gailuen artean WebDAV, Nextcloud, Google Drive, Dropbox edo OneDrive erabiliz, bezero-ziurtagirien laguntzarekin.
+• <b>Pribatutasuna eta segurtasuna lehenik</b>: Kode irekiaren gardentasuna, pasahitza edo blokeo biometriko bidezko babesa eta enkriptatutako datu-basea.
+
+<b>Desblokeatu Premium ezaugarriak:</b>
+
+• <i>Kontribuzio Gakoa</i>: Nabarmenen artean sartzen dira mugarik gabeko kontuak desblokeatzea, ohiko plan mugagabeak, zerrendak PDFra esportatzea, kategorien banaketa-diagramak eta gehiago.
+• <i>Gako hedatua</i>: Kontribuzio Gakoaren ezaugarri guztiak biltzen ditu, gehi hodeiko sinkronizazio automatikoa eta CSV inportatzeko arau aurreratuak.
+• <i>Gako profesionala</i>: Gako hedatuaren ezaugarri guztiak biltzen ditu, gehi inbertsio eta zorroen jarraipena, diagrama historikoak, aurrekontuen jarraipena, ordainagirien OCR eskaneatzea, mahaigainerako tokiko web-interfazea, banku-sinkronizazio zuzena (Alemania) eta gehiago.
+
+<b>Baimenen gardentasuna:</b>
+
+• <i>Egutegia</i>: Errepikatzen diren transakzioen planak tokiko egutegi berezi batean edo zuk esleitutako beste edozein egutegitan gordetzen dira.
+• <i>Internet</i>: Erabileraren jarraipen anonimoa (aukerakoa), hodeiko sinkronizazioa eta akats-txostenak (aukerakoa).
+
+Hartu zure diruaren eta ondarearen kontrola gaur bertan <b>Nire gastuak</b> aplikazioarekin!

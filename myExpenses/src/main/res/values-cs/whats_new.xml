@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="whats_new_374">Vlastní barvy pro štítky</string>
+    <string name="whats_new_384">Zjednodušené nastavení zálohování do cloudu</string>
+    <string name="whats_new_386">Rozdělení na výdaje a rozdělení na příjem lze společně zobrazit na dvoukroužkovém prstencovém grafu.</string>
+    <string name="whats_new_388">Transakce lze archivovat.</string>
+    <string name="whats_new_395">Exportované soubory (PDF, záloha, QIF, CSV, JSON) lze stáhnout prostřednictvím webového uživatelského rozhraní.</string>
+    <string name="whats_new_396">Vylepšená správa účtů v cizí měně s automatickou aktualizací směnného kurzu a sledováním hodnoty v reálném čase.</string>
+    <string name="whats_new_398">Podívejte se na své aktiva, pasiva a čisté jmění — vše na jednom místě.</string>
+    <string name="whats_new_399">Vylepšené rozvržení exportu PDF, plně přizpůsobitelné přetažením.</string>
+    <string name="whats_new_400_1">Výsečový graf znázorňující rozdělení peněz mezi účty</string>
+    <string name="whats_new_400_2">Cenová historie: Hromadné stahování chybějících položek</string>
+    <string name="whats_new_401">Seznam transakcí nyní zobrazuje více podrobností o rozdělených transakcích.</string>
+    <string name="whats_new_402">Typy účtů lze přizpůsobit</string>
+    <string name="whats_new_403">Příznaky účtu rozšiřují přizpůsobení viditelnosti a priority účtu.</string>
+    <string name="whats_new_407">Přirozené řazení pro štítky, kategorie, účty a oddíly.</string>
+</resources>

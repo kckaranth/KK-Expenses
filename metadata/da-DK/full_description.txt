@@ -1,0 +1,25 @@
+<b>Mine udgifter</b> er din ultimative, privatlivsvenlige personlige økonomistyring—der giver dig fuld kontrol over daglig udgiftssporing, budgetter og investeringsporteføljer med åben kildekode-transparens.
+
+<b>Nøglefunktioner:</b>
+
+• <b>Daglig udgifts- og budgetsporing</b>: Hold nemt styr på indtægter og udgifter på din telefon eller tablet. Opret budgetter, opdel transaktioner (split) og opsæt planer for tilbagevendende transaktioner.
+• <b>Portefølje- og investeringsstyring</b>: Spor aktie-, krypto- eller tilpassede aktivporteføljer, overvåg kurs-historik og administrer investeringer i flere valutaer i realtid.
+• <b>Bankintegration og afstemning</b>: Forbind direkte til understøttede banker via FinTS eller afstem transaktioner manuelt mod dine kontoudtog for præcis balancekontrol.
+• <b>Smart kvitteringsscanning (OCR)</b>: Udtræk automatisk transaktionsoplysninger fra billeder af kvitteringer ved hjælp af avanceret optisk tegnregistrering.
+• <b>Webgrænseflade til pc</b>: Få adgang til og administrer dine transaktioner fra enhver webbrowser på dit lokale netværk.
+• <b>Kraftfulde analyser</b>: Visualiser forbrugstendenser, fordelingscirkeldiagrammer og historiske rapporter med tilpasselige dynamiske grafer.
+• <b>Fleksibel synkronisering og datakontrol</b>: Eksporter og importer nemt data i QIF- og CSV-formater. Synkroniser sømløst mellem enheder ved hjælp af WebDAV, Nextcloud, Google Drive, Dropbox eller OneDrive med support til klientcertifikater.
+• <b>Privatliv og sikkerhed først</b>: Åben kildekode-transparens, beskyttelse med adgangskode eller biometrisk lås og en krypteret database.
+
+<b>Lås op for premium-funktioner:</b>
+
+• <i>Bidragsnøgle</i>: Højdepunkterne inkluderer oplåsning af ubegrænsede konti, tilbagevendende planer, PDF-listeeksport, kategorifordelingsdiagrammer og mere.
+• <i>Udvidet Nøgle</i>: Indeholder alle funktioner fra Bidragsnøglen plus automatisk skysynkronisering og avancerede CSV-importregler.
+• <i>Professionel Nøgle</i>: Indeholder alle funktioner fra Den Udvidede Nøgle plus investerings- og porteføljestyring, historikdiagrammer, budgetovervågning, OCR-kvitteringsscanning, lokal webgrænseflade til pc, direkte banksynkronisering (Tyskland) og mere.
+
+<b>Gennemsigtighed om tilladelser:</b>
+
+• <i>Kalender</i>: Tilbagevendende planer gemmes i en dedikeret lokal kalender eller en anden kalender, du tildeler.
+• <i>Internet</i>: Anonym brugsstatistik (valgfrit), skysynkronisering og fejlrapporter (valgfrit).
+
+Tag kontrollen over dine penge og din formue i dag med <b>Mine udgifter</b>!

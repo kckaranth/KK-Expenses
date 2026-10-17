@@ -1,0 +1,25 @@
+<b>Mis Gastos</b> es su gestor de finanzas personales definitivo y respetuoso con la privacidad: le ofrece un control total sobre el seguimiento de sus gastos diarios, presupuestos y carteras de inversión con la transparencia del código abierto.
+
+<b>Características principales:</b>
+
+• <b>Control diario de gastos y presupuestos</b>: Controle fácilmente sus ingresos y gastos en su teléfono o tableta. Cree presupuestos, divida transacciones (transacciones divididas) y programe planes de transacciones recurrentes.
+• <b>Gestión de carteras e inversiones</b>: Realice un seguimiento de carteras de acciones, criptomonedas o activos personalizados, consulte el historial de precios y gestione inversiones multidivisa en tiempo real.
+• <b>Integración bancaria y conciliación</b>: Conéctese directamente con bancos compatibles a través de FinTS o concilie transacciones manualmente con sus extractos bancarios para un control exacto de sus saldos.
+• <b>Escaneo inteligente de recibos (OCR)</b>: Extraiga automáticamente los detalles de las transacciones a partir de fotos de sus tickets de compra mediante reconocimiento óptico de caracteres.
+• <b>Interfaz web para ordenador</b>: Acceda y gestione sus transacciones desde cualquier navegador web en su red local.
+• <b>Análisis potentes</b>: Visualice tendencias de gasto, gráficos de tarta de distribución e informes históricos con gráficos dinámicos y personalizables.
+• <b>Sincronización flexible y control de datos</b>: Exporte e importe datos fácilmente en formatos QIF y CSV. Sincronice sin problemas entre dispositivos usando WebDAV, Nextcloud, Google Drive, Dropbox o OneDrive con soporte para certificados de cliente.
+• <b>Privacidad y seguridad ante todo</b>: Transparencia de código abierto, protección mediante contraseña o bloqueo biométrico y base de datos encriptada.
+
+<b>Desbloquear funciones Premium:</b>
+
+• <i>Clave Contrib</i>: Entre lo más destacado se incluye el desbloqueo de cuentas ilimitadas, planes recurrentes ilimitados, exportación de listas a PDF, gráficos de distribución y más.
+• <i>Clave Extendida</i>: Incluye todas las funciones de la Clave Contrib, además de sincronización automática en la nube y reglas avanzadas de importación CSV.
+• <i>Llave Profesional</i>: Incluye todas las funciones de la Clave Extendida, además de seguimiento de carteras e inversiones, gráficos históricos, seguimiento de presupuestos, escaneo OCR de recibos, interfaz web local para ordenador, sincronización bancaria directa (Alemania) y más.
+
+<b>Transparencia de permisos:</b>
+
+• <i>Calendario</i>: Los planes para transacciones recurrentes se guardan en un calendario local dedicado o en cualquier otro calendario que asigne.
+• <i>Internet</i>: Seguimiento de uso anónimo (opcional), sincronización en la nube e informes de fallos (opcional).
+
+¡Tome el control de su dinero y de su patrimonio hoy mismo con <i>Mis Gastos</i>!

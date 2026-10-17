@@ -1,0 +1,25 @@
+<b>Moje výdaje</b> je váš dokonalý správce osobních financí zaměřený na soukromí—poskytuje vám plnou kontrolu nad každodenním sledováním výdajů, rozpočty a investičními portfolii s transparentností open-source.
+
+<b>Klíčové funkce:</b>
+
+• <b>Denní sledování výdajů a rozpočtů</b>: Snadno sledujte své příjmy a výdaje na chytrém telefonu nebo tabletu. Vytvářejte rozpočty, rozdělejte transakce (rozdělené transakce) a nastavujte plány opakujících se transakcí.
+• <b>Správa portfolia a investic</b>: Sledujte portfolia akcií, kryptoměn nebo vlastních aktiv, sledujte historii cen a spravujte víceplatové investice v reálném čase.
+• <b>Bankovní integrace a odsouhlasení</b>: Připojte se přímo k podporovaným bankám přes FinTS nebo ručně odsouhlasujte transakce s bankovními výpisy pro přesné sledování zůstatku.
+• <b>Chytré skenování účtenek (OCR)</b>: Automaticky získávejte podrobnosti o transakcích z fotografií účtenek pomocí pokročilého optického rozpoznávání znaků.
+• <b>Webové rozhraní pro počítač</b>: Přistupujte ke svým transakcím a spravujte je z jakéhokoli webového prohlížeče v místní síti.
+• <b>Výkonná analytika</b>: Vizualizujte výdajové trendy, koláčové grafy rozdělení a historické přehledy pomocí přizpůsobitelných dynamických grafů.
+• <b>Flexibilní synchronizace a kontrola dat</b>: Snadno exportujte a importujte data ve formátech QIF a CSV. Plynule synchronizujte mezi zařízeními pomocí WebDAV, Nextcloud, Google Drive, Dropbox nebo OneDrive s podporou klientských certifikátů.
+• <b>Soukromí a bezpečnost na prvním místě</b>: Transparentnost open-source, ochrana heslem nebo biometrickým zámkem a šifrovaná databáze.
+
+<b>Odemknutí prémiových funkcí:</b>
+
+• <i>Klíč Contrib</i>: Mezi nejzajímavější funkce patří odemknutí neomezených účtů, opakujících se plánů, export seznamů do PDF, grafy rozdělení kategorií a další.
+• <i>Rozšířený klíč</i>: Obsahuje všechny funkce Klíče Contrib, plus automatickou cloudovou synchronizaci a pokročilá pravidla pro import CSV.
+• <i>Profesionální klíč</i>: Obsahuje všechny funkce Rozšířeného klíče, plus sledování investic a portfolií, grafy historie, sledování rozpočtů, OCR skenování účtenek, lokální webové rozhraní pro počítač, přímou bankovní synchronizaci (Německo) a další.
+
+<b>Transparentnost oprávnění:</b>
+
+• <i>Kalendář</i>: Plány opakujících se transakcí se ukládají do speciálního místního kalendáře nebo do libovolného jiného kalendáře.
+• <i>Internet</i>: Anonymní statistiky využití (volitelné), cloudová synchronizace a zprávy o selhání (volitelné).
+
+Převezměte kontrolu nad svými financemi a majetkem ještě dnes s aplikací <b>Moje výdaje</b>!

@@ -1,0 +1,25 @@
+<b>Mes dépenses</b> est votre gestionnaire de finances personnelles ultime et respectueux de la vie privée—vous offrant un contrôle total sur le suivi des dépenses quotidiennes, la budgétisation et les portefeuilles d'investissement, avec la transparence de l'open source.
+
+<b>Fonctionnalités principales :</b>
+
+• <b>Suivi des dépenses quotidiennes et budgets</b> : Suivez facilement vos revenus et dépenses sur smartphone ou tablette. Créez des budgets, divisez vos transactions (scission) et planifiez des opérations récurrentes.
+• <b>Gestion de portefeuille et d'investissements</b> : Suivez vos portefeuilles d'actions, cryptomonnaies ou actifs personnalisés, surveillez l'historique des cours et gérez vos investissements multi-devises en temps réel.
+• <b>Intégration bancaire et rapprochement</b> : Connectez-vous directement aux banques compatibles via FinTS ou rapprochez manuellement vos transactions avec vos relevés bancaires pour un suivi précis de vos soldes.
+• <b>Numérisation intelligente des reçus (OCR)</b> : Extrayez automatiquement les détails de vos transactions à partir de photos de tickets de caisse grâce à la reconnaissance optique de caractères.
+• <b>Interface web pour ordinateur</b> : Accédez à vos transactions et gérez-les depuis n'importe quel navigateur web sur votre réseau local.
+• <b>Analyses puissantes</b> : Visualisez les tendances de dépenses, la répartition par diagrammes circulaires et les rapports historiques grâce à des graphiques dynamiques personnalisables.
+• <b>Synchronisation flexible et contrôle des données</b> : Exportez et importez facilement vos données aux formats QIF et CSV. Synchronisez de manière fluide entre vos appareils via WebDAV, Nextcloud, Google Drive, Dropbox ou OneDrive avec prise en charge des certificats clients.
+• <b>Confidentialité et sécurité avant tout</b> : Transparence de l'open source, protection par mot de passe ou verrouillage biométrique, et base de données chiffrée.
+
+<b>Débloquez les fonctionnalités Premium :</b>
+
+• <i>Clé Contrib</i> : Les fonctionnalités clés incluent le déblocage de comptes illimités, de plans récurrents illimités, l'exportation de listes en PDF, des graphiques de répartition, et bien plus encore.
+• <i>Clé étendue</i> : Inclut toutes les fonctionnalités de la Clé Contrib, plus la synchronisation cloud automatique et des règles d'importation CSV avancées.
+• <i>Clé professionnelle</i> : Inclut toutes les fonctionnalités de la Clé étendue, plus le suivi de portefeuille et d'investissements, des graphiques d'historique, le suivi des budgets, la numérisation OCR des reçus, l'interface web pour ordinateur, la synchronisation bancaire directe (Allemagne), et bien plus encore.
+
+<b>Transparence des autorisations :</b>
+
+• <i>Calendrier</i> : Les plans pour les transactions récurrentes sont enregistrés dans un calendrier local dédié ou dans le calendrier de votre choix.
+• <i>Internet</i> : Suivi d'utilisation anonyme (sur option), synchronisation cloud et rapports de plantage (sur option).
+
+Prenez le contrôle de votre argent et de votre patrimoine dès aujourd'hui avec <i>Mes dépenses</i> !

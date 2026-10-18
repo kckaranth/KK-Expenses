@@ -53,7 +53,9 @@ private data class ActivitySnapshot(val entries: List<ActivityEntry>, val catego
 private fun readActivity(context: Context): ActivitySnapshot {
     val entries = mutableListOf<ActivityEntry>()
     val categories = mutableMapOf<Long, String>()
-    val selection: String? = null
+    // Transfers have a peer transaction and must not count as income or spending.
+    // Do not exclude uncategorized transactions (cat_id may be NULL).
+    val selection = "$KEY_TRANSFER_PEER IS NULL"
     context.contentResolver.query(
         TransactionProvider.TRANSACTIONS_URI,
         arrayOf(KEY_ROWID, KEY_ACCOUNTID, KEY_AMOUNT, KEY_DATE, KEY_COMMENT, KEY_CATID),
@@ -127,8 +129,10 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                     Text(account.label, style = MaterialTheme.typography.titleMedium)
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("Income: " + formatter.convAmount(income, account.currencyUnit))
-                        Text("Expenses: " + formatter.convAmount(expense, account.currencyUnit))
+                        Text("Expenses: " + formatter.convAmount(-expense, account.currencyUnit))
                     }
+                    Text("Net cash flow: " + formatter.convAmount(income + expense, account.currencyUnit),
+                        style = MaterialTheme.typography.bodyMedium)
                     val byCategory = month.filter { it.amount < 0 }.groupBy { it.categoryId }
                         .mapValues { (_, txns) -> txns.sumOf { -it.amount } }
                         .toList().sortedByDescending { it.second }.take(4)
@@ -138,7 +142,7 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                         byCategory.forEach { (id, value) ->
                             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                                 Text(data.categories[id]?.ifBlank { "Uncategorized" } ?: "Uncategorized", style = MaterialTheme.typography.bodySmall)
-                                Text(formatter.convAmount(-value, account.currencyUnit), style = MaterialTheme.typography.bodySmall)
+                                Text(formatter.convAmount(value, account.currencyUnit), style = MaterialTheme.typography.bodySmall)
                             }
                             LinearProgressIndicator(progress = { (value.toDouble() / maximum).toFloat().coerceIn(0f, 1f) }, modifier = Modifier.fillMaxWidth())
                         }
@@ -159,7 +163,7 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                         Text(formatter.convAmount(entry.amount, account.currencyUnit), style = MaterialTheme.typography.bodyMedium)
                     }
                 }
-                Text("Transfers and voided transactions excluded. Amounts are not combined across currencies.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Transfers excluded. Voided and split transaction handling requires further verification. Amounts are not combined across currencies.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }

@@ -31,6 +31,7 @@ import org.totschnig.myexpenses.compose.LocalCurrencyFormatter
 import org.totschnig.myexpenses.provider.TransactionProvider
 import org.totschnig.myexpenses.provider.KEY_ACCOUNTID
 import org.totschnig.myexpenses.provider.KEY_PARENTID
+import org.totschnig.myexpenses.provider.KEY_PATH
 import org.totschnig.myexpenses.provider.KEY_AMOUNT
 import org.totschnig.myexpenses.provider.KEY_CATID
 import org.totschnig.myexpenses.provider.KEY_COMMENT
@@ -74,9 +75,17 @@ private fun readActivity(context: Context): ActivitySnapshot {
     }
     // Category labels are optional; reporting must still work if the category provider differs.
     try {
-        context.contentResolver.query(TransactionProvider.CATEGORIES_URI, arrayOf(KEY_ROWID, KEY_LABEL), null, null, null)?.use { cursor ->
+        context.contentResolver.query(
+            TransactionProvider.CATEGORIES_URI.buildUpon()
+                .appendQueryParameter(
+                    TransactionProvider.QUERY_PARAMETER_HIERARCHICAL,
+                    "true"
+                ).build(),
+            arrayOf(KEY_ROWID, KEY_PATH),
+            null, null, null
+        )?.use { cursor ->
             val id = cursor.getColumnIndexOrThrow(KEY_ROWID)
-            val label = cursor.getColumnIndexOrThrow(KEY_LABEL)
+            val label = cursor.getColumnIndexOrThrow(KEY_PATH)
             while (cursor.moveToNext()) categories[cursor.getLong(id)] = cursor.getString(label).orEmpty()
         }
     } catch (_: Exception) { /* fall back to Uncategorized */ }

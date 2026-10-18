@@ -30,6 +30,7 @@ import kotlinx.coroutines.withContext
 import org.totschnig.myexpenses.compose.LocalCurrencyFormatter
 import org.totschnig.myexpenses.provider.TransactionProvider
 import org.totschnig.myexpenses.provider.KEY_ACCOUNTID
+import org.totschnig.myexpenses.provider.KEY_PARENTID
 import org.totschnig.myexpenses.provider.KEY_AMOUNT
 import org.totschnig.myexpenses.provider.KEY_CATID
 import org.totschnig.myexpenses.provider.KEY_COMMENT
@@ -55,7 +56,7 @@ private fun readActivity(context: Context): ActivitySnapshot {
     val categories = mutableMapOf<Long, String>()
     // Transfers have a peer transaction and must not count as income or spending.
     // Do not exclude uncategorized transactions (cat_id may be NULL).
-    val selection = "$KEY_TRANSFER_PEER IS NULL"
+    val selection = "$KEY_TRANSFER_PEER IS NULL AND $KEY_PARENTID IS NULL"
     context.contentResolver.query(
         TransactionProvider.TRANSACTIONS_URI,
         arrayOf(KEY_ROWID, KEY_ACCOUNTID, KEY_AMOUNT, KEY_DATE, KEY_COMMENT, KEY_CATID),

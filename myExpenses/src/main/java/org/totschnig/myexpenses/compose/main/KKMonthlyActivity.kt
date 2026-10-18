@@ -53,11 +53,11 @@ private data class ActivitySnapshot(val entries: List<ActivityEntry>, val catego
 private fun readActivity(context: Context): ActivitySnapshot {
     val entries = mutableListOf<ActivityEntry>()
     val categories = mutableMapOf<Long, String>()
-    val selection = "$KEY_CATID != 0 AND $KEY_TRANSFER_PEER IS NULL AND ($KEY_CR_STATUS IS NULL OR $KEY_CR_STATUS != ?) AND ($KEY_STATUS IS NULL OR $KEY_STATUS != ?)"
+    val selection: String? = null
     context.contentResolver.query(
         TransactionProvider.TRANSACTIONS_URI,
         arrayOf(KEY_ROWID, KEY_ACCOUNTID, KEY_AMOUNT, KEY_DATE, KEY_COMMENT, KEY_CATID),
-        selection, arrayOf("VOID", STATUS_ARCHIVED.toString()), "$KEY_DATE DESC"
+        selection, null, "$KEY_DATE DESC"
     )?.use { cursor ->
         val account = cursor.getColumnIndexOrThrow(KEY_ACCOUNTID)
         val amount = cursor.getColumnIndexOrThrow(KEY_AMOUNT)

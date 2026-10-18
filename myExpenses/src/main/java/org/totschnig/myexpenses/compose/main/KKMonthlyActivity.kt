@@ -2,6 +2,7 @@ package org.totschnig.myexpenses.compose.main
 import org.totschnig.myexpenses.util.convAmount
 
 import android.content.Context
+import android.util.Log
 import android.database.ContentObserver
 import android.os.Handler
 import android.os.Looper
@@ -88,7 +89,19 @@ private fun readActivity(context: Context): ActivitySnapshot {
             val label = cursor.getColumnIndexOrThrow(KEY_PATH)
             while (cursor.moveToNext()) categories[cursor.getLong(id)] = cursor.getString(label).orEmpty()
         }
-    } catch (_: Exception) { /* fall back to Uncategorized */ }
+    } catch (e: Exception) {
+        Log.e("KKMonthlyActivity", "Category lookup failed", e)
+    }
+    Log.d(
+        "KKMonthlyActivity",
+        "Transactions=${entries.size}, categories=${categories.size}"
+    )
+    entries.take(10).forEach {
+        Log.d(
+            "KKMonthlyActivity",
+            "Transaction account=${it.accountId}, amount=${it.amount}, categoryId=${it.categoryId}, category=${categories[it.categoryId]}"
+        )
+    }
     return ActivitySnapshot(entries, categories)
 }
 

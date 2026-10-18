@@ -724,6 +724,8 @@ private fun KKHomeDashboard(
             }
         }
 
+        KKMonthlyActivity(accounts = accounts)
+
         Text("Quick entry", style = MaterialTheme.typography.titleMedium)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
             Button(

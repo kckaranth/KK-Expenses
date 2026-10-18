@@ -1,4 +1,5 @@
 package org.totschnig.myexpenses.compose.main
+import org.totschnig.myexpenses.util.convAmount
 
 import android.content.Context
 import android.database.ContentObserver

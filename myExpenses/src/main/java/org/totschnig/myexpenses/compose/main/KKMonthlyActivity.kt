@@ -50,12 +50,25 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 // Financial amounts are stored in the upstream database's integer minor units.
-private data class ActivityEntry(val accountId: Long, val amount: Long, val epoch: Long, val description: String, val categoryId: Long)
-private data class ActivitySnapshot(val entries: List<ActivityEntry>, val categories: Map<Long, String>)
+private data class ActivityEntry(
+    val id: Long,
+    val accountId: Long,
+    val amount: Long,
+    val epoch: Long,
+    val description: String,
+    val categoryId: Long
+)
+private data class ActivitySnapshot(
+    val entries: List<ActivityEntry>,
+    val categoryEntries: List<ActivityEntry>,
+    val categories: Map<Long, String>
+)
 
 private fun readActivity(context: Context): ActivitySnapshot {
     val entries = mutableListOf<ActivityEntry>()
     val categories = mutableMapOf<Long, String>()
+    val categoryEntries = mutableListOf<ActivityEntry>()
+    val splitParentIds = mutableSetOf<Long>()
     // Transfers have a peer transaction and must not count as income or spending.
     // Do not exclude uncategorized transactions (cat_id may be NULL).
     val selection = "$KEY_TRANSFER_PEER IS NULL AND $KEY_PARENTID IS NULL"
@@ -64,16 +77,62 @@ private fun readActivity(context: Context): ActivitySnapshot {
         arrayOf(KEY_ROWID, KEY_ACCOUNTID, KEY_AMOUNT, KEY_DATE, KEY_COMMENT, KEY_CATID),
         selection, null, "$KEY_DATE DESC"
     )?.use { cursor ->
+        val id = cursor.getColumnIndexOrThrow(KEY_ROWID)
         val account = cursor.getColumnIndexOrThrow(KEY_ACCOUNTID)
         val amount = cursor.getColumnIndexOrThrow(KEY_AMOUNT)
         val date = cursor.getColumnIndexOrThrow(KEY_DATE)
         val comment = cursor.getColumnIndexOrThrow(KEY_COMMENT)
         val category = cursor.getColumnIndexOrThrow(KEY_CATID)
         while (cursor.moveToNext()) {
-            entries.add(ActivityEntry(cursor.getLong(account), cursor.getLong(amount), cursor.getLong(date),
+            entries.add(ActivityEntry(cursor.getLong(id), cursor.getLong(account), cursor.getLong(amount), cursor.getLong(date),
                 cursor.getString(comment).orEmpty(), cursor.getLong(category)))
         }
     }
+    // Read split parts separately for category attribution.
+    // Monthly totals continue to use parent-level entries.
+    context.contentResolver.query(
+        TransactionProvider.TRANSACTIONS_URI,
+        arrayOf(
+            KEY_ROWID, KEY_ACCOUNTID, KEY_AMOUNT,
+            KEY_DATE, KEY_COMMENT, KEY_CATID, KEY_PARENTID
+        ),
+        "$KEY_PARENTID IS NOT NULL AND $KEY_TRANSFER_PEER IS NULL",
+        null,
+        "$KEY_DATE DESC"
+    )?.use { cursor ->
+        val id = cursor.getColumnIndexOrThrow(KEY_ROWID)
+        val account = cursor.getColumnIndexOrThrow(KEY_ACCOUNTID)
+        val amount = cursor.getColumnIndexOrThrow(KEY_AMOUNT)
+        val date = cursor.getColumnIndexOrThrow(KEY_DATE)
+        val comment = cursor.getColumnIndexOrThrow(KEY_COMMENT)
+        val category = cursor.getColumnIndexOrThrow(KEY_CATID)
+        val parent = cursor.getColumnIndexOrThrow(KEY_PARENTID)
+
+        val parentsById = entries.associateBy { it.id }
+
+        while (cursor.moveToNext()) {
+            if (cursor.isNull(parent)) continue
+
+            val parentId = cursor.getLong(parent)
+            val parentEntry = parentsById[parentId] ?: continue
+
+            if (parentEntry.categoryId != 0L) continue
+
+            splitParentIds.add(parentId)
+
+            categoryEntries.add(
+                ActivityEntry(
+                    cursor.getLong(id),
+                    parentEntry.accountId,
+                    cursor.getLong(amount),
+                    parentEntry.epoch,
+                    cursor.getString(comment).orEmpty(),
+                    cursor.getLong(category)
+                )
+            )
+        }
+    }
+
     // Category labels are optional; reporting must still work if the category provider differs.
     try {
         context.contentResolver.query(
@@ -102,7 +161,10 @@ private fun readActivity(context: Context): ActivitySnapshot {
             "Transaction account=${it.accountId}, amount=${it.amount}, categoryId=${it.categoryId}, category=${categories[it.categoryId]}"
         )
     }
-    return ActivitySnapshot(entries, categories)
+    val categoryReportEntries =
+        entries.filter { it.id !in splitParentIds } + categoryEntries
+
+    return ActivitySnapshot(entries, categoryReportEntries, categories)
 }
 
 @Composable
@@ -156,9 +218,32 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                     }
                     Text("Net cash flow: " + formatter.convAmount(income + expense, account.currencyUnit),
                         style = MaterialTheme.typography.bodyMedium)
-                    val byCategory = month.filter { it.amount < 0 }.groupBy { it.categoryId }
+                    val byCategory = data.categoryEntries
+                    .filter {
+                        it.accountId == account.id &&
+                        it.epoch >= start &&
+                        it.epoch < end &&
+                        it.amount < 0
+                    }
+                    .groupBy { it.categoryId }
                         .mapValues { (_, txns) -> txns.sumOf { -it.amount } }
                         .toList().sortedByDescending { it.second }.take(4)
+                    val attributedExpenses = data.categoryEntries
+                        .filter {
+                            it.accountId == account.id &&
+                            it.epoch >= start &&
+                            it.epoch < end &&
+                            it.amount < 0
+                        }
+                        .sumOf { -it.amount }
+
+                    Log.d(
+                        "KKMonthlyActivity",
+                        "Account=${account.id}, monthlyExpenses=${-expense}, " +
+                            "attributedExpenses=$attributedExpenses, " +
+                            "difference=${-expense - attributedExpenses}"
+                    )
+
                     if (byCategory.isNotEmpty()) {
                         Text("Top spending categories", style = MaterialTheme.typography.labelLarge)
                         val maximum = byCategory.first().second.coerceAtLeast(1L)

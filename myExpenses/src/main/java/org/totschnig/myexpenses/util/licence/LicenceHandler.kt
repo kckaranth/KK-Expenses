@@ -125,7 +125,9 @@ open class LicenceHandler(
         hasAccessTo(feature) || usagesLeft(feature)
 
     fun hasAccessTo(feature: ContribFeature) =
-        isEnabledFor(feature.licenceStatus) || addOnFeatures.contains(feature)
+        feature == ContribFeature.SPLIT_TRANSACTION ||
+        isEnabledFor(feature.licenceStatus) ||
+        addOnFeatures.contains(feature)
 
     open fun isEnabledFor(licenceStatus: LicenceStatus) =
         (this.licenceStatus?.compareTo(licenceStatus) ?: -1) >= 0

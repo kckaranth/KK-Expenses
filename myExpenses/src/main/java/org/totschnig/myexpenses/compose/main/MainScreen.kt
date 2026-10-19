@@ -771,4 +771,3 @@ accounts.forEach { account ->
             }
         }
     }
-}

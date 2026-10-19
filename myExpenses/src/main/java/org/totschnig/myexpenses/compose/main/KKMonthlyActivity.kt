@@ -151,16 +151,6 @@ private fun readActivity(context: Context): ActivitySnapshot {
     } catch (e: Exception) {
         Log.e("KKMonthlyActivity", "Category lookup failed", e)
     }
-    Log.d(
-        "KKMonthlyActivity",
-        "Transactions=${entries.size}, categories=${categories.size}"
-    )
-    entries.take(10).forEach {
-        Log.d(
-            "KKMonthlyActivity",
-            "Transaction account=${it.accountId}, amount=${it.amount}, categoryId=${it.categoryId}, category=${categories[it.categoryId]}"
-        )
-    }
     val categoryReportEntries =
         entries.filter { it.id !in splitParentIds } + categoryEntries
 
@@ -228,22 +218,6 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                     .groupBy { it.categoryId }
                         .mapValues { (_, txns) -> txns.sumOf { -it.amount } }
                         .toList().sortedByDescending { it.second }.take(4)
-                    val attributedExpenses = data.categoryEntries
-                        .filter {
-                            it.accountId == account.id &&
-                            it.epoch >= start &&
-                            it.epoch < end &&
-                            it.amount < 0
-                        }
-                        .sumOf { -it.amount }
-
-                    Log.d(
-                        "KKMonthlyActivity",
-                        "Account=${account.id}, monthlyExpenses=${-expense}, " +
-                            "attributedExpenses=$attributedExpenses, " +
-                            "difference=${-expense - attributedExpenses}"
-                    )
-
                     if (byCategory.isNotEmpty()) {
                         Text("Top spending categories", style = MaterialTheme.typography.labelLarge)
                         val maximum = byCategory.first().second.coerceAtLeast(1L)
@@ -271,7 +245,7 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                         Text(formatter.convAmount(entry.amount, account.currencyUnit), style = MaterialTheme.typography.bodyMedium)
                     }
                 }
-                Text("Transfers excluded. Voided and split transaction handling requires further verification. Amounts are not combined across currencies.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Transfers excluded. Split expenses are grouped by their assigned categories. Amounts are not combined across currencies.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }

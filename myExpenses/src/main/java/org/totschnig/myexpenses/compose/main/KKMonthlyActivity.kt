@@ -16,6 +16,11 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -164,6 +169,7 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
     var revision by remember { mutableStateOf(0) }
     var snapshot by remember { mutableStateOf<ActivitySnapshot?>(null) }
     var error by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
     // Observe upstream provider notifications, including edits/deletions from the legacy editor.
     DisposableEffect(context) {
         val observer = object : ContentObserver(Handler(Looper.getMainLooper())) {
@@ -185,9 +191,39 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
     val data = snapshot
     Card(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Text("This month", style = MaterialTheme.typography.titleLarge)
             val monthStart = LocalDate.now().withDayOfMonth(1)
-            Text(monthStart.format(DateTimeFormatter.ofPattern("MMMM yyyy")), color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Column {
+                    Text(
+                        "This month",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Text(
+                        monthStart.format(
+                            DateTimeFormatter.ofPattern("MMMM yyyy")
+                        ),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                TextButton(onClick = { expanded = !expanded }) {
+                    Icon(
+                        imageVector = if (expanded) {
+                            Icons.Filled.ExpandLess
+                        } else {
+                            Icons.Filled.ExpandMore
+                        },
+                        contentDescription = if (expanded) {
+                            "Collapse monthly activity"
+                        } else {
+                            "Expand monthly activity"
+                        }
+                    )
+                }
+            }
+            if (expanded) {
             if (error) {
                 Text("Monthly activity is temporarily unavailable. Account balances are unaffected.")
             } else if (data == null) {
@@ -252,5 +288,6 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                 Text("Transfers excluded. Split expenses are grouped by their assigned categories. Amounts are not combined across currencies.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
+    }
     }
 }

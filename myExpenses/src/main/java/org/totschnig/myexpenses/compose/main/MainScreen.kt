@@ -653,79 +653,6 @@ private fun KKHomeDashboard(
         Text("KK Expenses", style = MaterialTheme.typography.headlineMedium)
         Text("Your finances, clearly organized", color = MaterialTheme.colorScheme.onSurfaceVariant)
 
-        Card(modifier = Modifier.fillMaxWidth()) {
-            Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text("Account overview", style = MaterialTheme.typography.titleLarge)
-                Text(
-                    if (accounts.size == 1) "1 account" else "${accounts.size} accounts",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                if (accounts.isEmpty()) {
-                    Text("No accounts yet. Create your first account to begin tracking.")
-                } else {
-                    accounts.forEach { account ->
-                        Surface(
-                            modifier = Modifier.fillMaxWidth(),
-                            color = MaterialTheme.colorScheme.surface,
-                            shape = RoundedCornerShape(14.dp),
-                        ) {
-                            Column(
-                                Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
-                                verticalArrangement = Arrangement.spacedBy(5.dp),
-                            ) {
-                                Text(account.label, style = MaterialTheme.typography.titleSmall)
-                                Text(
-                                    formatter.convAmount(account.currentBalance, account.currencyUnit),
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                )
-                                // These values come from the existing account summary.
-                                // Do not label them as monthly totals: their reporting period
-                                // is controlled by the upstream account data source.
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                                ) {
-                                    Column(modifier = Modifier.weight(1f)) {
-                                        Text(
-                                            "Income",
-                                            style = MaterialTheme.typography.labelMedium,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        )
-                                        Text(
-                                            formatter.convAmount(account.sumIncome, account.currencyUnit),
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = MaterialTheme.colorScheme.primary,
-                                        )
-                                    }
-                                    Column(modifier = Modifier.weight(1f)) {
-                                        Text(
-                                            "Expenses",
-                                            style = MaterialTheme.typography.labelMedium,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        )
-                                        Text(
-                                            formatter.convAmount(account.sumExpense, account.currencyUnit),
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = MaterialTheme.colorScheme.onSurface,
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                Text(
-                    "Income and expenses reflect the existing account summary, not a new monthly calculation. Currencies remain separate.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-        }
-
-        KKMonthlyActivity(accounts = accounts)
-
         Text("Quick entry", style = MaterialTheme.typography.titleMedium)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
             Button(
@@ -760,6 +687,75 @@ private fun KKHomeDashboard(
                 Text("Accounts")
             }
         }
+
+
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text("Account overview", style = MaterialTheme.typography.titleLarge)
+                Text(
+                    if (accounts.size == 1) "1 account" else "${accounts.size} accounts",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                if (accounts.isEmpty()) {
+                    Text("No accounts yet. Create your first account to begin tracking.")
+                } else {
+accounts.forEach { account ->
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.surface,
+                        shape = RoundedCornerShape(12.dp),
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(
+                                horizontal = 14.dp,
+                                vertical = 10.dp
+                            ),
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                            ) {
+                                Text(
+                                    account.label,
+                                    style = MaterialTheme.typography.titleSmall,
+                                    modifier = Modifier.weight(1f),
+                                )
+                                Text(
+                                    formatter.convAmount(
+                                        account.currentBalance,
+                                        account.currencyUnit
+                                    ),
+                                    style = MaterialTheme.typography.titleMedium,
+                                )
+                            }
+                            Text(
+                                "Income " + formatter.convAmount(
+                                    account.sumIncome,
+                                    account.currencyUnit
+                                ) + "  ·  Expenses " + formatter.convAmount(
+                                    account.sumExpense,
+                                    account.currencyUnit
+                                ),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
+                }
+                 }
+                }
+                Text(
+                    "Income and expenses reflect the existing account summary, not a new monthly calculation. Currencies remain separate.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+
+        KKMonthlyActivity(accounts = accounts)
+
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),

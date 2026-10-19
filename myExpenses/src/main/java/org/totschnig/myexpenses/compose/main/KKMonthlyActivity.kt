@@ -71,7 +71,7 @@ private fun readActivity(context: Context): ActivitySnapshot {
     val splitParentIds = mutableSetOf<Long>()
     // Transfers have a peer transaction and must not count as income or spending.
     // Do not exclude uncategorized transactions (cat_id may be NULL).
-    val selection = "$KEY_TRANSFER_PEER IS NULL AND $KEY_PARENTID IS NULL"
+    val selection = "$KEY_TRANSFER_PEER IS NULL AND $KEY_PARENTID IS NULL AND $KEY_STATUS != $STATUS_ARCHIVED AND $KEY_CR_STATUS != 'VOID'"
     context.contentResolver.query(
         TransactionProvider.TRANSACTIONS_URI,
         arrayOf(KEY_ROWID, KEY_ACCOUNTID, KEY_AMOUNT, KEY_DATE, KEY_COMMENT, KEY_CATID),

@@ -198,7 +198,11 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                 val end = monthStart.plusMonths(1).atStartOfDay(zone).toEpochSecond()
                 val activeAccounts = accounts.filter { it.id > 0 }
                 activeAccounts.forEach { account ->
-                    val month = data.entries.filter { it.accountId == account.id && it.epoch >= start && it.epoch < end }
+                    val month = data.categoryEntries.filter {
+                        it.accountId == account.id &&
+                        it.epoch >= start &&
+                        it.epoch < end
+                    }
                     val income = month.filter { it.amount > 0 }.sumOf { it.amount }
                     val expense = month.filter { it.amount < 0 }.sumOf { it.amount }
                     Text(account.label, style = MaterialTheme.typography.titleMedium)

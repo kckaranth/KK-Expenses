@@ -647,7 +647,7 @@ private fun KKHomeDashboard(
 ) {
     val formatter = LocalCurrencyFormatter.current
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
+        modifier = Modifier.fillMaxSize().padding(20.dp).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
         Text("KK Expenses", style = MaterialTheme.typography.headlineMedium)

@@ -647,7 +647,7 @@ private fun KKHomeDashboard(
 ) {
     val formatter = LocalCurrencyFormatter.current
     Column(
-        modifier = Modifier.fillMaxSize().padding(20.dp).verticalScroll(rememberScrollState()),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
         Text("KK Expenses", style = MaterialTheme.typography.headlineMedium)
@@ -753,7 +753,6 @@ accounts.forEach { account ->
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-        }
 
         KKMonthlyActivity(accounts = accounts)
 
@@ -772,3 +771,4 @@ accounts.forEach { account ->
             }
         }
     }
+}

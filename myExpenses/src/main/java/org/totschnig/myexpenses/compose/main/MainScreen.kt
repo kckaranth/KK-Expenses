@@ -651,7 +651,6 @@ private fun KKHomeDashboard(
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
         Text("KK Expenses", style = MaterialTheme.typography.headlineMedium)
-        Text("BUILD CHECK 7b2a575", color = MaterialTheme.colorScheme.primary)
         Text("Your finances, clearly organized", color = MaterialTheme.colorScheme.onSurfaceVariant)
 
         Text("Quick entry", style = MaterialTheme.typography.titleMedium)

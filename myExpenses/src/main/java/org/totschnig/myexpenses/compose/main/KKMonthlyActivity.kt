@@ -21,6 +21,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -170,6 +172,9 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
     var snapshot by remember { mutableStateOf<ActivitySnapshot?>(null) }
     var error by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
+    var selectedMonth by remember {
+        mutableStateOf(LocalDate.now().withDayOfMonth(1))
+    }
     // Observe upstream provider notifications, including edits/deletions from the legacy editor.
     DisposableEffect(context) {
         val observer = object : ContentObserver(Handler(Looper.getMainLooper())) {
@@ -191,14 +196,15 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
     val data = snapshot
     Card(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            val monthStart = LocalDate.now().withDayOfMonth(1)
+            val currentMonth = LocalDate.now().withDayOfMonth(1)
+            val monthStart = selectedMonth
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Column {
                     Text(
-                        "This month",
+                        "Monthly activity",
                         style = MaterialTheme.typography.titleLarge
                     )
                     Text(
@@ -207,6 +213,29 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                         ),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
+                }
+                Row {
+                    TextButton(
+                        onClick = {
+                            selectedMonth = selectedMonth.minusMonths(1)
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ChevronLeft,
+                            contentDescription = "Previous month"
+                        )
+                    }
+                    TextButton(
+                        onClick = {
+                            selectedMonth = selectedMonth.plusMonths(1)
+                        },
+                        enabled = monthStart.isBefore(currentMonth)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ChevronRight,
+                            contentDescription = "Next month"
+                        )
+                    }
                 }
                 TextButton(onClick = { expanded = !expanded }) {
                     Icon(
@@ -273,7 +302,11 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                 }
                 Text("Recent transactions", style = MaterialTheme.typography.titleMedium)
                 val accountById = activeAccounts.associateBy { it.id }
-                val recent = data.entries.filter { accountById.containsKey(it.accountId) }.take(5)
+                val recent = data.entries.filter {
+                    accountById.containsKey(it.accountId) &&
+                    it.epoch >= start &&
+                    it.epoch < end
+                }.take(5)
                 if (recent.isEmpty()) Text("No transactions yet")
                 recent.forEach { entry ->
                     val account = accountById[entry.accountId] ?: return@forEach

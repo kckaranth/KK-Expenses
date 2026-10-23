@@ -206,7 +206,7 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
     }
     val data = snapshot
     Card(Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             val currentMonth = LocalDate.now().withDayOfMonth(1)
             val monthStart = selectedMonth
             Row(
@@ -296,7 +296,8 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                         .sumOf { it.amount }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             account.label,
@@ -407,7 +408,8 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                     } else {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             "Compared with " +
@@ -723,7 +725,8 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                 }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         "Recent transactions",

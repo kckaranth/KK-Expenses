@@ -350,6 +350,13 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                         )
                     }
                     if (account.id in expandedAccounts) {
+                    if (month.isEmpty() && previousMonth.isEmpty()) {
+                        Text(
+                            "No activity in the previous month either.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    } else {
                     Text(
                         "Compared with " + monthStart.minusMonths(1).format(
                             DateTimeFormatter.ofPattern("MMMM yyyy")
@@ -484,6 +491,7 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                                 )
                             }
                         }
+                    }
                     }
 
                     val byCategory = data.categoryEntries

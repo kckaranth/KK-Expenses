@@ -329,25 +329,60 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                     } else {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Text(
+                                    "Income",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    formatter.convAmount(
+                                        income, account.currencyUnit
+                                    ),
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            }
+
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Text(
+                                    "Expenses",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    formatter.convAmount(
+                                        -expense, account.currencyUnit
+                                    ),
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            }
+                        }
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                "Income: " + formatter.convAmount(
-                                    income, account.currencyUnit
-                                )
+                                "Net cash flow",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
-                                "Expenses: " + formatter.convAmount(
-                                    -expense, account.currencyUnit
-                                )
+                                formatter.convAmount(
+                                    income + expense,
+                                    account.currencyUnit
+                                ),
+                                style = MaterialTheme.typography.titleMedium
                             )
                         }
-                        Text(
-                            "Net cash flow: " + formatter.convAmount(
-                                income + expense, account.currencyUnit
-                            ),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
                     }
                     if (account.id in expandedAccounts) {
                     if (month.isEmpty() && previousMonth.isEmpty()) {

@@ -261,6 +261,8 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                 val zone = ZoneId.systemDefault()
                 val start = monthStart.atStartOfDay(zone).toEpochSecond()
                 val end = monthStart.plusMonths(1).atStartOfDay(zone).toEpochSecond()
+                val previousStart = monthStart.minusMonths(1)
+                    .atStartOfDay(zone).toEpochSecond()
                 val activeAccounts = accounts.filter { it.id > 0 }
                 activeAccounts.forEach { account ->
                     val month = data.categoryEntries.filter {
@@ -270,6 +272,17 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                     }
                     val income = month.filter { it.amount > 0 }.sumOf { it.amount }
                     val expense = month.filter { it.amount < 0 }.sumOf { it.amount }
+                    val previousMonth = data.categoryEntries.filter {
+                        it.accountId == account.id &&
+                        it.epoch >= previousStart &&
+                        it.epoch < start
+                    }
+                    val previousIncome = previousMonth
+                        .filter { it.amount > 0 }
+                        .sumOf { it.amount }
+                    val previousExpense = previousMonth
+                        .filter { it.amount < 0 }
+                        .sumOf { it.amount }
                     Text(account.label, style = MaterialTheme.typography.titleMedium)
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("Income: " + formatter.convAmount(income, account.currencyUnit))
@@ -277,6 +290,122 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                     }
                     Text("Net cash flow: " + formatter.convAmount(income + expense, account.currencyUnit),
                         style = MaterialTheme.typography.bodyMedium)
+                    Text(
+                        "Compared with " + monthStart.minusMonths(1).format(
+                            DateTimeFormatter.ofPattern("MMMM yyyy")
+                        ),
+                        style = MaterialTheme.typography.labelLarge
+                    )
+
+                    val incomeChange = income - previousIncome
+                    val expenseChange = (-expense) - (-previousExpense)
+                    val netChange = (income + expense) -
+                        (previousIncome + previousExpense)
+
+                    Text(
+                        "Income change: " +
+                            formatter.convAmount(incomeChange, account.currencyUnit),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Text(
+                        "Expense change: " +
+                            formatter.convAmount(expenseChange, account.currencyUnit),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Text(
+                        "Net cash flow change: " +
+                            formatter.convAmount(netChange, account.currencyUnit),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+
+                    val expensePercent = if (previousExpense != 0L) {
+                        val change = expenseChange.toDouble() /
+                            (-previousExpense).toDouble() * 100.0
+                        String.format(
+                            java.util.Locale.getDefault(),
+                            "%+.1f%%",
+                            change
+                        )
+                    } else {
+                        "N/A (previous month zero)"
+                    }
+
+                    Text(
+                        "Expense change (%): " + expensePercent,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    val incomePercent = if (previousIncome != 0L) {
+                        String.format(
+                            java.util.Locale.getDefault(),
+                            "%+.1f%%",
+                            incomeChange.toDouble() /
+                                kotlin.math.abs(previousIncome.toDouble()) * 100.0
+                        )
+                    } else {
+                        "N/A (previous month zero)"
+                    }
+
+                    Text(
+                        "Income change (%): " + incomePercent,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    val currentCategories = month
+                        .filter { it.amount < 0 }
+                        .groupBy { it.categoryId }
+                        .mapValues { (_, items) ->
+                            items.sumOf { -it.amount }
+                        }
+
+                    val previousCategories = previousMonth
+                        .filter { it.amount < 0 }
+                        .groupBy { it.categoryId }
+                        .mapValues { (_, items) ->
+                            items.sumOf { -it.amount }
+                        }
+
+                    val categoryChanges = (
+                        currentCategories.keys + previousCategories.keys
+                    ).distinct().map { categoryId ->
+                        val current = currentCategories[categoryId] ?: 0L
+                        val previous = previousCategories[categoryId] ?: 0L
+                        categoryId to (current - previous)
+                    }.filter { it.second != 0L }
+                        .sortedByDescending { kotlin.math.abs(it.second) }
+                        .take(4)
+
+                    if (categoryChanges.isNotEmpty()) {
+                        Text(
+                            "Category spending changes",
+                            style = MaterialTheme.typography.labelLarge
+                        )
+
+                        categoryChanges.forEach { (categoryId, change) ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    data.categories[categoryId]
+                                        ?.ifBlank { "Uncategorized" }
+                                        ?: "Uncategorized",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Text(
+                                    formatter.convAmount(
+                                        change,
+                                        account.currencyUnit
+                                    ),
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
+                    }
+
                     val byCategory = data.categoryEntries
                     .filter {
                         it.accountId == account.id &&
@@ -307,7 +436,7 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                     it.epoch >= start &&
                     it.epoch < end
                 }.take(5)
-                if (recent.isEmpty()) Text("No transactions yet")
+                if (recent.isEmpty()) Text("No transactions for this month")
                 recent.forEach { entry ->
                     val account = accountById[entry.accountId] ?: return@forEach
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {

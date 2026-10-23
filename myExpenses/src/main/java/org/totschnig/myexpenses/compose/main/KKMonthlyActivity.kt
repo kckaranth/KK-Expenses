@@ -172,6 +172,9 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
     var snapshot by remember { mutableStateOf<ActivitySnapshot?>(null) }
     var error by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
+    var expandedAccounts by remember {
+        mutableStateOf(setOf<Long>())
+    }
     var selectedMonth by remember {
         mutableStateOf(LocalDate.now().withDayOfMonth(1))
     }
@@ -283,13 +286,47 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                     val previousExpense = previousMonth
                         .filter { it.amount < 0 }
                         .sumOf { it.amount }
-                    Text(account.label, style = MaterialTheme.typography.titleMedium)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            account.label,
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.weight(1f)
+                        )
+                        TextButton(
+                            onClick = {
+                                expandedAccounts =
+                                    if (account.id in expandedAccounts) {
+                                        expandedAccounts - account.id
+                                    } else {
+                                        expandedAccounts + account.id
+                                    }
+                            }
+                        ) {
+                            Icon(
+                                imageVector = if (account.id in expandedAccounts) {
+                                    Icons.Filled.ExpandLess
+                                } else {
+                                    Icons.Filled.ExpandMore
+                                },
+                                contentDescription =
+                                    if (account.id in expandedAccounts) {
+                                        "Collapse " + account.label
+                                    } else {
+                                        "Expand " + account.label
+                                    }
+                            )
+                        }
+                    }
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("Income: " + formatter.convAmount(income, account.currencyUnit))
                         Text("Expenses: " + formatter.convAmount(-expense, account.currencyUnit))
                     }
                     Text("Net cash flow: " + formatter.convAmount(income + expense, account.currencyUnit),
                         style = MaterialTheme.typography.bodyMedium)
+                    if (account.id in expandedAccounts) {
                     Text(
                         "Compared with " + monthStart.minusMonths(1).format(
                             DateTimeFormatter.ofPattern("MMMM yyyy")
@@ -426,6 +463,7 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                             }
                             LinearProgressIndicator(progress = { (value.toDouble() / maximum).toFloat().coerceIn(0f, 1f) }, modifier = Modifier.fillMaxWidth())
                         }
+                    }
                     }
                     HorizontalDivider()
                 }

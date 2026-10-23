@@ -346,7 +346,8 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                                     formatter.convAmount(
                                         income, account.currencyUnit
                                     ),
-                                    style = MaterialTheme.typography.titleMedium
+                                    style = MaterialTheme.typography.titleMedium,
+                                    softWrap = true
                                 )
                             }
 
@@ -363,7 +364,8 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                                     formatter.convAmount(
                                         -expense, account.currencyUnit
                                     ),
-                                    style = MaterialTheme.typography.titleMedium
+                                    style = MaterialTheme.typography.titleMedium,
+                                    softWrap = true
                                 )
                             }
                         }
@@ -382,7 +384,10 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                                     income + expense,
                                     account.currencyUnit
                                 ),
-                                style = MaterialTheme.typography.titleMedium
+                                modifier = Modifier.weight(1f),
+                                style = MaterialTheme.typography.titleMedium,
+                                textAlign = TextAlign.End,
+                                softWrap = true
                             )
                         }
                     }
@@ -514,7 +519,8 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                                 Text(
                                     amount,
                                     style = MaterialTheme.typography.bodySmall,
-                                    textAlign = TextAlign.End
+                                    textAlign = TextAlign.End,
+                                    softWrap = true
                                 )
 
                                 if (percentage != null) {
@@ -522,7 +528,8 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                                         "($percentage)",
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        textAlign = TextAlign.End
+                                        textAlign = TextAlign.End,
+                                    softWrap = true
                                     )
                                 }
                             }
@@ -617,7 +624,10 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
 
                                 Text(
                                     signedAmount(change),
-                                    style = MaterialTheme.typography.bodySmall
+                                    modifier = Modifier.weight(1f),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    textAlign = TextAlign.End,
+                                    softWrap = true
                                 )
                             }
                         }
@@ -638,9 +648,28 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                         Text("Top spending categories", style = MaterialTheme.typography.labelLarge)
                         val maximum = byCategory.first().second.coerceAtLeast(1L)
                         byCategory.forEach { (id, value) ->
-                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                Text(data.categories[id]?.ifBlank { "Uncategorized" } ?: "Uncategorized", style = MaterialTheme.typography.bodySmall)
-                                Text(formatter.convAmount(value, account.currencyUnit), style = MaterialTheme.typography.bodySmall)
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                Text(
+                                    data.categories[id]
+                                        ?.ifBlank { "Uncategorized" }
+                                        ?: "Uncategorized",
+                                    modifier = Modifier.weight(1f),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    softWrap = true
+                                )
+                                Text(
+                                    formatter.convAmount(
+                                        value,
+                                        account.currencyUnit
+                                    ),
+                                    modifier = Modifier.weight(1f),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    textAlign = TextAlign.End,
+                                    softWrap = true
+                                )
                             }
                             LinearProgressIndicator(progress = { (value.toDouble() / maximum).toFloat().coerceIn(0f, 1f) }, modifier = Modifier.fillMaxWidth())
                         }

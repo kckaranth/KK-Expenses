@@ -416,6 +416,7 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                         }
                     }
 
+                    @Composable
                     fun performanceColor(
                         change: Long,
                         higherIsBetter: Boolean

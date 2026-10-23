@@ -174,6 +174,9 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
     var snapshot by remember { mutableStateOf<ActivitySnapshot?>(null) }
     var error by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
+    var recentExpanded by remember {
+        mutableStateOf(false)
+    }
     var expandedAccounts by remember {
         mutableStateOf(setOf<Long>())
     }
@@ -677,7 +680,35 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                     }
                     HorizontalDivider()
                 }
-                Text("Recent transactions", style = MaterialTheme.typography.titleMedium)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        "Recent transactions",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.weight(1f)
+                    )
+                    TextButton(
+                        onClick = {
+                            recentExpanded = !recentExpanded
+                        }
+                    ) {
+                        Icon(
+                            imageVector = if (recentExpanded) {
+                                Icons.Filled.ExpandLess
+                            } else {
+                                Icons.Filled.ExpandMore
+                            },
+                            contentDescription = if (recentExpanded) {
+                                "Collapse recent transactions"
+                            } else {
+                                "Expand recent transactions"
+                            }
+                        )
+                    }
+                }
+                if (recentExpanded) {
                 val accountById = activeAccounts.associateBy { it.id }
                 val recent = data.entries.filter {
                     accountById.containsKey(it.accountId) &&
@@ -694,6 +725,7 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                         }
                         Text(formatter.convAmount(entry.amount, account.currencyUnit), style = MaterialTheme.typography.bodyMedium)
                     }
+                }
                 }
                 Text("Transfers excluded. Split expenses are grouped by their assigned categories. Amounts are not combined across currencies.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }

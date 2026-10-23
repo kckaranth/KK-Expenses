@@ -399,49 +399,100 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                         return if (value > 0L) "+$formatted" else formatted
                     }
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            "Income change",
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                        Text(
-                            signedAmount(incomeChange) + "  (" +
-                                incomePercent + ")",
-                            style = MaterialTheme.typography.bodySmall
-                        )
+                    fun performanceLabel(
+                        change: Long,
+                        higherIsBetter: Boolean
+                    ): String {
+                        if (change == 0L) return "Neutral"
+                        val favorable = if (higherIsBetter) {
+                            change > 0L
+                        } else {
+                            change < 0L
+                        }
+                        return if (favorable) {
+                            "Favorable"
+                        } else {
+                            "Unfavorable"
+                        }
                     }
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            "Expense change",
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                        Text(
-                            signedAmount(expenseChange) + "  (" +
-                                expensePercent + ")",
-                            style = MaterialTheme.typography.bodySmall
-                        )
+                    fun performanceColor(
+                        change: Long,
+                        higherIsBetter: Boolean
+                    ): androidx.compose.ui.graphics.Color {
+                        if (change == 0L) {
+                            return MaterialTheme.colorScheme.onSurfaceVariant
+                        }
+                        val favorable = if (higherIsBetter) {
+                            change > 0L
+                        } else {
+                            change < 0L
+                        }
+                        return if (favorable) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.error
+                        }
                     }
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                    @Composable
+                    fun ChangeRow(
+                        label: String,
+                        change: Long,
+                        higherIsBetter: Boolean,
+                        percentage: String? = null
                     ) {
-                        Text(
-                            "Net cash flow change",
-                            style = MaterialTheme.typography.bodySmall
+                        val status = performanceLabel(
+                            change, higherIsBetter
                         )
-                        Text(
-                            signedAmount(netChange),
-                            style = MaterialTheme.typography.bodySmall
-                        )
+                        val value = signedAmount(change) +
+                            (percentage?.let { "  ($it)" } ?: "")
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    label,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                                Text(
+                                    status,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = performanceColor(
+                                        change, higherIsBetter
+                                    )
+                                )
+                            }
+                            Text(
+                                value,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
                     }
+
+                    ChangeRow(
+                        label = "Income change",
+                        change = incomeChange,
+                        higherIsBetter = true,
+                        percentage = incomePercent
+                    )
+
+                    ChangeRow(
+                        label = "Expense change",
+                        change = expenseChange,
+                        higherIsBetter = false,
+                        percentage = expensePercent
+                    )
+
+                    ChangeRow(
+                        label = "Net cash flow change",
+                        change = netChange,
+                        higherIsBetter = true
+                    )
 
                     val currentCategories = month
                         .filter { it.amount < 0 }

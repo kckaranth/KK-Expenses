@@ -30,6 +30,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -481,15 +483,15 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                         val status = performanceLabel(
                             change, higherIsBetter
                         )
-                        val value = signedAmount(change) +
-                            (percentage?.let { "  ($it)" } ?: "")
+                        val amount = signedAmount(change)
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             Column(
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
+                                verticalArrangement = Arrangement.spacedBy(2.dp)
                             ) {
                                 Text(
                                     label,
@@ -503,10 +505,27 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                                     )
                                 )
                             }
-                            Text(
-                                value,
-                                style = MaterialTheme.typography.bodySmall
-                            )
+
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.End,
+                                verticalArrangement = Arrangement.spacedBy(2.dp)
+                            ) {
+                                Text(
+                                    amount,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    textAlign = TextAlign.End
+                                )
+
+                                if (percentage != null) {
+                                    Text(
+                                        "($percentage)",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        textAlign = TextAlign.End
+                                    )
+                                }
+                            }
                         }
                     }
 

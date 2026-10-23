@@ -526,17 +526,41 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                         )
 
                         categoryChanges.forEach { (categoryId, change) ->
+                            val spendingLabel = when {
+                                change > 0L -> "Spending up"
+                                change < 0L -> "Spending down"
+                                else -> "No change"
+                            }
+
+                            val spendingColor = when {
+                                change > 0L ->
+                                    MaterialTheme.colorScheme.error
+                                change < 0L ->
+                                    MaterialTheme.colorScheme.primary
+                                else ->
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                            }
+
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text(
-                                    data.categories[categoryId]
-                                        ?.ifBlank { "Uncategorized" }
-                                        ?: "Uncategorized",
-                                    style = MaterialTheme.typography.bodySmall,
+                                Column(
                                     modifier = Modifier.weight(1f)
-                                )
+                                ) {
+                                    Text(
+                                        data.categories[categoryId]
+                                            ?.ifBlank { "Uncategorized" }
+                                            ?: "Uncategorized",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                    Text(
+                                        spendingLabel,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = spendingColor
+                                    )
+                                }
+
                                 Text(
                                     signedAmount(change),
                                     style = MaterialTheme.typography.bodySmall

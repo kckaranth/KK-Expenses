@@ -339,39 +339,16 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                     val netChange = (income + expense) -
                         (previousIncome + previousExpense)
 
-                    Text(
-                        "Income change: " +
-                            formatter.convAmount(incomeChange, account.currencyUnit),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                    Text(
-                        "Expense change: " +
-                            formatter.convAmount(expenseChange, account.currencyUnit),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                    Text(
-                        "Net cash flow change: " +
-                            formatter.convAmount(netChange, account.currencyUnit),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-
                     val expensePercent = if (previousExpense != 0L) {
-                        val change = expenseChange.toDouble() /
-                            (-previousExpense).toDouble() * 100.0
                         String.format(
                             java.util.Locale.getDefault(),
                             "%+.1f%%",
-                            change
+                            expenseChange.toDouble() /
+                                kotlin.math.abs(previousExpense.toDouble()) * 100.0
                         )
                     } else {
-                        "N/A (previous month zero)"
+                        "N/A"
                     }
-
-                    Text(
-                        "Expense change (%): " + expensePercent,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
 
                     val incomePercent = if (previousIncome != 0L) {
                         String.format(
@@ -381,14 +358,60 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                                 kotlin.math.abs(previousIncome.toDouble()) * 100.0
                         )
                     } else {
-                        "N/A (previous month zero)"
+                        "N/A"
                     }
 
-                    Text(
-                        "Income change (%): " + incomePercent,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    fun signedAmount(value: Long): String {
+                        val formatted = formatter.convAmount(
+                            value,
+                            account.currencyUnit
+                        )
+                        return if (value > 0L) "+$formatted" else formatted
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            "Income change",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                        Text(
+                            signedAmount(incomeChange) + "  (" +
+                                incomePercent + ")",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            "Expense change",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                        Text(
+                            signedAmount(expenseChange) + "  (" +
+                                expensePercent + ")",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            "Net cash flow change",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                        Text(
+                            signedAmount(netChange),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
 
                     val currentCategories = month
                         .filter { it.amount < 0 }

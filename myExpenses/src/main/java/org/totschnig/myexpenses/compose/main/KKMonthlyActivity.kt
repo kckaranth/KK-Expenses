@@ -177,6 +177,9 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
     var recentExpanded by remember {
         mutableStateOf(false)
     }
+    var expandedComparisons by remember {
+        mutableStateOf(setOf<Long>())
+    }
     var expandedAccounts by remember {
         mutableStateOf(setOf<Long>())
     }
@@ -402,13 +405,50 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     } else {
-                    Text(
-                        "Compared with " + monthStart.minusMonths(1).format(
-                            DateTimeFormatter.ofPattern("MMMM yyyy")
-                        ),
-                        style = MaterialTheme.typography.labelLarge
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            "Compared with " +
+                                monthStart.minusMonths(1).format(
+                                    DateTimeFormatter.ofPattern(
+                                        "MMMM yyyy"
+                                    )
+                                ),
+                            style = MaterialTheme.typography.labelLarge,
+                            modifier = Modifier.weight(1f)
+                        )
+                        TextButton(
+                            onClick = {
+                                expandedComparisons =
+                                    if (account.id in expandedComparisons) {
+                                        expandedComparisons - account.id
+                                    } else {
+                                        expandedComparisons + account.id
+                                    }
+                            }
+                        ) {
+                            Icon(
+                                imageVector =
+                                    if (account.id in expandedComparisons) {
+                                        Icons.Filled.ExpandLess
+                                    } else {
+                                        Icons.Filled.ExpandMore
+                                    },
+                                contentDescription =
+                                    if (account.id in expandedComparisons) {
+                                        "Collapse comparison for " +
+                                            account.label
+                                    } else {
+                                        "Expand comparison for " +
+                                            account.label
+                                    }
+                            )
+                        }
+                    }
 
+                    if (account.id in expandedComparisons) {
                     val incomeChange = income - previousIncome
                     val expenseChange = (-expense) - (-previousExpense)
                     val netChange = (income + expense) -
@@ -634,6 +674,7 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                                 )
                             }
                         }
+                    }
                     }
                     }
 

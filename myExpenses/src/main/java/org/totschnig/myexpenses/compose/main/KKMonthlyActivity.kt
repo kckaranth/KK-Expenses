@@ -320,12 +320,35 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                             )
                         }
                     }
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("Income: " + formatter.convAmount(income, account.currencyUnit))
-                        Text("Expenses: " + formatter.convAmount(-expense, account.currencyUnit))
+                    if (month.isEmpty()) {
+                        Text(
+                            "No activity this month",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    } else {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                "Income: " + formatter.convAmount(
+                                    income, account.currencyUnit
+                                )
+                            )
+                            Text(
+                                "Expenses: " + formatter.convAmount(
+                                    -expense, account.currencyUnit
+                                )
+                            )
+                        }
+                        Text(
+                            "Net cash flow: " + formatter.convAmount(
+                                income + expense, account.currencyUnit
+                            ),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
-                    Text("Net cash flow: " + formatter.convAmount(income + expense, account.currencyUnit),
-                        style = MaterialTheme.typography.bodyMedium)
                     if (account.id in expandedAccounts) {
                     Text(
                         "Compared with " + monthStart.minusMonths(1).format(
@@ -456,10 +479,7 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                                     modifier = Modifier.weight(1f)
                                 )
                                 Text(
-                                    formatter.convAmount(
-                                        change,
-                                        account.currencyUnit
-                                    ),
+                                    signedAmount(change),
                                     style = MaterialTheme.typography.bodySmall
                                 )
                             }

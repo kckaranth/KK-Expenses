@@ -694,7 +694,11 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                     if (byCategory.isNotEmpty()) {
                         Text("Top spending categories", style = MaterialTheme.typography.labelLarge)
                         val maximum = byCategory.first().second.coerceAtLeast(1L)
-                        byCategory.forEach { (id, value) ->
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            byCategory.forEach { (id, value) ->
+                                Column {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -718,19 +722,23 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                                     softWrap = true
                                 )
                             }
-                            LinearProgressIndicator(
-    progress = {
-        (value.toDouble() / maximum)
-            .toFloat().coerceIn(0f, 1f)
-    },
-    modifier = Modifier
-        .fillMaxWidth()
-        .height(4.dp)
-)
+                                LinearProgressIndicator(
+                                    progress = {
+                                        (value.toDouble() / maximum)
+                                            .toFloat().coerceIn(0f, 1f)
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(4.dp)
+                                )
+                                }
+                        }
                         }
                     }
                     }
-                    HorizontalDivider()
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
                 }
                 Row(
                     modifier = Modifier.fillMaxWidth(),

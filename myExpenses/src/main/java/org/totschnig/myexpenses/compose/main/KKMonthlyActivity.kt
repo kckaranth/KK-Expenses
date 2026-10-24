@@ -10,11 +10,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.progressBarRangeInfo
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -724,15 +730,36 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                                     softWrap = true
                                 )
                             }
-                                LinearProgressIndicator(
-                                    progress = {
-                                        (value.toDouble() / maximum)
-                                            .toFloat().coerceIn(0f, 1f)
-                                    },
+                                val fraction =
+                                    (value.toDouble() / maximum)
+                                        .toFloat()
+                                        .coerceIn(0f, 1f)
+
+                                Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(4.dp)
-                                )
+                                        .semantics {
+                                            progressBarRangeInfo =
+                                                ProgressBarRangeInfo(
+                                                    fraction,
+                                                    0f..1f
+                                                )
+                                        }
+                                        .clip(RoundedCornerShape(2.dp))
+                                        .background(
+                                            MaterialTheme.colorScheme.surfaceVariant
+                                        )
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth(fraction)
+                                            .height(4.dp)
+                                            .background(
+                                                MaterialTheme.colorScheme.primary
+                                            )
+                                    )
+                                }
                                 }
                         }
                         }

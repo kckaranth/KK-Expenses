@@ -698,7 +698,9 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                             verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             byCategory.forEach { (id, value) ->
-                                Column {
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(12.dp)

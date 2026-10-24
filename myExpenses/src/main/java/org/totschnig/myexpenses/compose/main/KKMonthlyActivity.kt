@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
@@ -717,7 +718,15 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                                     softWrap = true
                                 )
                             }
-                            LinearProgressIndicator(progress = { (value.toDouble() / maximum).toFloat().coerceIn(0f, 1f) }, modifier = Modifier.fillMaxWidth())
+                            LinearProgressIndicator(
+    progress = {
+        (value.toDouble() / maximum)
+            .toFloat().coerceIn(0f, 1f)
+    },
+    modifier = Modifier
+        .fillMaxWidth()
+        .height(4.dp)
+)
                         }
                     }
                     }

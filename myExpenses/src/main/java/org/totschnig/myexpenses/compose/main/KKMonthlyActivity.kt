@@ -837,12 +837,16 @@ onClick = { expanded = !expanded }) {
                     }
                 }
                 if (recentExpanded) {
-                val accountById = activeAccounts.associateBy { it.id }
-                val recent = data.entries.filter {
-                    accountById.containsKey(it.accountId) &&
-                    it.epoch >= start &&
-                    it.epoch < end
-                }.take(5)
+                val accountById = remember(activeAccounts) {
+                    activeAccounts.associateBy { it.id }
+                }
+                val recent = remember(data, accountById, monthStart, zone) {
+                    data.entries.filter {
+                        accountById.containsKey(it.accountId) &&
+                        it.epoch >= start &&
+                        it.epoch < end
+                    }.take(5)
+                }
                 if (recent.isEmpty()) Text("No transactions for this month")
                 recent.forEach { entry ->
                     val account = accountById[entry.accountId] ?: return@forEach

@@ -44,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.totschnig.myexpenses.compose.LocalCurrencyFormatter
@@ -229,6 +230,8 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
         try {
             snapshot = withContext(Dispatchers.IO) { readActivity(context) }
             error = false
+        } catch (e: CancellationException) {
+            throw e
         } catch (_: Exception) {
             snapshot = null
             error = true

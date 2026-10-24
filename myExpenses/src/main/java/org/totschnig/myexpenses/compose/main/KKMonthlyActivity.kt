@@ -76,6 +76,15 @@ private data class ActivityEntry(
     val description: String,
     val categoryId: Long
 )
+private data class MonthlyAccountSummary(
+    val current: List<ActivityEntry>,
+    val previous: List<ActivityEntry>,
+    val income: Long,
+    val expense: Long,
+    val previousIncome: Long,
+    val previousExpense: Long
+)
+
 private data class ActivitySnapshot(
     val entries: List<ActivityEntry>,
     val categoryEntries: List<ActivityEntry>,
@@ -293,22 +302,40 @@ onClick = { expanded = !expanded }) {
                     val accountEntries =
                         entriesByAccount[account.id].orEmpty()
 
-                    val month = accountEntries.filter {
-                        it.epoch >= start &&
-                        it.epoch < end
+                    val monthlySummary = remember(
+                        data,
+                        monthStart,
+                        account.id,
+                        zone
+                    ) {
+                        val current = accountEntries.filter {
+                            it.epoch >= start &&
+                            it.epoch < end
+                        }
+                        val previous = accountEntries.filter {
+                            it.epoch >= previousStart &&
+                            it.epoch < start
+                        }
+                        MonthlyAccountSummary(
+                            current = current,
+                            previous = previous,
+                            income = current.filter { it.amount > 0 }
+                                .sumOf { it.amount },
+                            expense = current.filter { it.amount < 0 }
+                                .sumOf { it.amount },
+                            previousIncome = previous.filter { it.amount > 0 }
+                                .sumOf { it.amount },
+                            previousExpense = previous.filter { it.amount < 0 }
+                                .sumOf { it.amount }
+                        )
                     }
-                    val income = month.filter { it.amount > 0 }.sumOf { it.amount }
-                    val expense = month.filter { it.amount < 0 }.sumOf { it.amount }
-                    val previousMonth = accountEntries.filter {
-                        it.epoch >= previousStart &&
-                        it.epoch < start
-                    }
-                    val previousIncome = previousMonth
-                        .filter { it.amount > 0 }
-                        .sumOf { it.amount }
-                    val previousExpense = previousMonth
-                        .filter { it.amount < 0 }
-                        .sumOf { it.amount }
+
+                    val month = monthlySummary.current
+                    val previousMonth = monthlySummary.previous
+                    val income = monthlySummary.income
+                    val expense = monthlySummary.expense
+                    val previousIncome = monthlySummary.previousIncome
+                    val previousExpense = monthlySummary.previousExpense
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,

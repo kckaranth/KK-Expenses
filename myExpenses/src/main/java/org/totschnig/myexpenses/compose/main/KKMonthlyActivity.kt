@@ -285,16 +285,20 @@ onClick = { expanded = !expanded }) {
                 val previousStart = monthStart.minusMonths(1)
                     .atStartOfDay(zone).toEpochSecond()
                 val activeAccounts = accounts.filter { it.id > 0 }
+                val entriesByAccount =
+                    data.categoryEntries.groupBy { it.accountId }
+
                 activeAccounts.forEach { account ->
-                    val month = data.categoryEntries.filter {
-                        it.accountId == account.id &&
+                    val accountEntries =
+                        entriesByAccount[account.id].orEmpty()
+
+                    val month = accountEntries.filter {
                         it.epoch >= start &&
                         it.epoch < end
                     }
                     val income = month.filter { it.amount > 0 }.sumOf { it.amount }
                     val expense = month.filter { it.amount < 0 }.sumOf { it.amount }
-                    val previousMonth = data.categoryEntries.filter {
-                        it.accountId == account.id &&
+                    val previousMonth = accountEntries.filter {
                         it.epoch >= previousStart &&
                         it.epoch < start
                     }

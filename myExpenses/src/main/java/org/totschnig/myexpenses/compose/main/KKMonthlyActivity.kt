@@ -76,13 +76,25 @@ private data class ActivityEntry(
     val description: String,
     val categoryId: Long
 )
+private fun categorySpending(
+    entries: List<ActivityEntry>
+): Map<Long, Long> =
+    entries
+        .filter { it.amount < 0 }
+        .groupBy { it.categoryId }
+        .mapValues { (_, items) ->
+            items.sumOf { -it.amount }
+        }
+
 private data class MonthlyAccountSummary(
     val current: List<ActivityEntry>,
     val previous: List<ActivityEntry>,
     val income: Long,
     val expense: Long,
     val previousIncome: Long,
-    val previousExpense: Long
+    val previousExpense: Long,
+    val currentCategorySpending: Map<Long, Long>,
+    val previousCategorySpending: Map<Long, Long>
 )
 
 private data class ActivitySnapshot(
@@ -326,7 +338,9 @@ onClick = { expanded = !expanded }) {
                             previousIncome = previous.filter { it.amount > 0 }
                                 .sumOf { it.amount },
                             previousExpense = previous.filter { it.amount < 0 }
-                                .sumOf { it.amount }
+                                .sumOf { it.amount },
+                            currentCategorySpending = categorySpending(current),
+                            previousCategorySpending = categorySpending(previous)
                         )
                     }
 
@@ -641,19 +655,11 @@ onClick = { expanded = !expanded }) {
                         higherIsBetter = true
                     )
 
-                    val currentCategories = month
-                        .filter { it.amount < 0 }
-                        .groupBy { it.categoryId }
-                        .mapValues { (_, items) ->
-                            items.sumOf { -it.amount }
-                        }
+                    val currentCategories =
+                        monthlySummary.currentCategorySpending
 
-                    val previousCategories = previousMonth
-                        .filter { it.amount < 0 }
-                        .groupBy { it.categoryId }
-                        .mapValues { (_, items) ->
-                            items.sumOf { -it.amount }
-                        }
+                    val previousCategories =
+                        monthlySummary.previousCategorySpending
 
                     val categoryChanges = (
                         currentCategories.keys + previousCategories.keys
@@ -720,15 +726,11 @@ onClick = { expanded = !expanded }) {
                     }
                     }
 
-                    val byCategory = month
-                        .filter { it.amount < 0 }
-                        .groupBy { it.categoryId }
-                        .mapValues { (_, txns) ->
-                            txns.sumOf { -it.amount }
-                        }
-                        .toList()
-                        .sortedByDescending { it.second }
-                        .take(4)
+                    val byCategory =
+                        monthlySummary.currentCategorySpending
+                            .toList()
+                            .sortedByDescending { it.second }
+                            .take(4)
                     if (byCategory.isNotEmpty()) {
                         Text("Top spending categories", style = MaterialTheme.typography.labelLarge)
                         val maximum = byCategory.first().second.coerceAtLeast(1L)

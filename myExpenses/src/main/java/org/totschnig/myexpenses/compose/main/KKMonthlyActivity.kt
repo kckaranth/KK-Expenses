@@ -285,8 +285,9 @@ onClick = { expanded = !expanded }) {
                 val previousStart = monthStart.minusMonths(1)
                     .atStartOfDay(zone).toEpochSecond()
                 val activeAccounts = accounts.filter { it.id > 0 }
-                val entriesByAccount =
+                val entriesByAccount = remember(data) {
                     data.categoryEntries.groupBy { it.accountId }
+                }
 
                 activeAccounts.forEach { account ->
                     val accountEntries =

@@ -720,16 +720,15 @@ onClick = { expanded = !expanded }) {
                     }
                     }
 
-                    val byCategory = data.categoryEntries
-                    .filter {
-                        it.accountId == account.id &&
-                        it.epoch >= start &&
-                        it.epoch < end &&
-                        it.amount < 0
-                    }
-                    .groupBy { it.categoryId }
-                        .mapValues { (_, txns) -> txns.sumOf { -it.amount } }
-                        .toList().sortedByDescending { it.second }.take(4)
+                    val byCategory = month
+                        .filter { it.amount < 0 }
+                        .groupBy { it.categoryId }
+                        .mapValues { (_, txns) ->
+                            txns.sumOf { -it.amount }
+                        }
+                        .toList()
+                        .sortedByDescending { it.second }
+                        .take(4)
                     if (byCategory.isNotEmpty()) {
                         Text("Top spending categories", style = MaterialTheme.typography.labelLarge)
                         val maximum = byCategory.first().second.coerceAtLeast(1L)

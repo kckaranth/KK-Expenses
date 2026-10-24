@@ -17,6 +17,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.progressBarRangeInfo
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -255,18 +257,19 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                         )
                     }
                 }
-                TextButton(onClick = { expanded = !expanded }) {
+                TextButton(
+                            modifier = Modifier.semantics {
+                                stateDescription = if (expanded) "Expanded" else "Collapsed"
+                                contentDescription = "Monthly activity"
+                            },
+onClick = { expanded = !expanded }) {
                     Icon(
                         imageVector = if (expanded) {
                             Icons.Filled.ExpandLess
                         } else {
                             Icons.Filled.ExpandMore
                         },
-                        contentDescription = if (expanded) {
-                            "Collapse monthly activity"
-                        } else {
-                            "Expand monthly activity"
-                        }
+                        contentDescription = null
                     )
                 }
             }
@@ -312,6 +315,11 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                             modifier = Modifier.weight(1f)
                         )
                         TextButton(
+                            modifier = Modifier.semantics {
+                                stateDescription = if (account.id in expandedAccounts) "Expanded" else "Collapsed"
+                                contentDescription = account.label
+                            },
+
                             onClick = {
                                 expandedAccounts =
                                     if (account.id in expandedAccounts) {
@@ -327,12 +335,7 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                                 } else {
                                     Icons.Filled.ExpandMore
                                 },
-                                contentDescription =
-                                    if (account.id in expandedAccounts) {
-                                        "Collapse " + account.label
-                                    } else {
-                                        "Expand " + account.label
-                                    }
+                                contentDescription = null
                             )
                         }
                     }
@@ -429,6 +432,11 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                             modifier = Modifier.weight(1f)
                         )
                         TextButton(
+                            modifier = Modifier.semantics {
+                                stateDescription = if (account.id in expandedComparisons) "Expanded" else "Collapsed"
+                                contentDescription = "Comparison for " + account.label
+                            },
+
                             onClick = {
                                 expandedComparisons =
                                     if (account.id in expandedComparisons) {
@@ -445,14 +453,7 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                                     } else {
                                         Icons.Filled.ExpandMore
                                     },
-                                contentDescription =
-                                    if (account.id in expandedComparisons) {
-                                        "Collapse comparison for " +
-                                            account.label
-                                    } else {
-                                        "Expand comparison for " +
-                                            account.label
-                                    }
+                                contentDescription = null
                             )
                         }
                     }
@@ -780,6 +781,11 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                         modifier = Modifier.weight(1f)
                     )
                     TextButton(
+                            modifier = Modifier.semantics {
+                                stateDescription = if (recentExpanded) "Expanded" else "Collapsed"
+                                contentDescription = "Recent transactions"
+                            },
+
                         onClick = {
                             recentExpanded = !recentExpanded
                         }
@@ -790,11 +796,7 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                             } else {
                                 Icons.Filled.ExpandMore
                             },
-                            contentDescription = if (recentExpanded) {
-                                "Collapse recent transactions"
-                            } else {
-                                "Expand recent transactions"
-                            }
+                            contentDescription = null
                         )
                     }
                 }

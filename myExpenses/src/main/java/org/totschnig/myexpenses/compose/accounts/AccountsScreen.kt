@@ -1,6 +1,7 @@
 package org.totschnig.myexpenses.compose.accounts
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,7 +19,11 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
@@ -251,19 +256,51 @@ fun AccountsScreen(
                                     .fillMaxHeight()
                                     .padding(paddingValues)
                             ) {
-                                OutlinedTextField(
+                                TextField(
                                     value = accountSearchQuery,
                                     onValueChange = {
                                         accountSearchQuery = it
                                     },
-                                    label = { Text("Search accounts") },
                                     placeholder = {
-                                        Text("Name or currency")
+                                        Text("Search accounts")
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            Icons.Filled.Search,
+                                            contentDescription = null
+                                        )
+                                    },
+                                    trailingIcon = {
+                                        if (accountSearchQuery.isNotEmpty()) {
+                                            IconButton(
+                                                onClick = {
+                                                    accountSearchQuery = ""
+                                                }
+                                            ) {
+                                                Icon(
+                                                    Icons.Filled.Close,
+                                                    contentDescription = "Clear search"
+                                                )
+                                            }
+                                        }
                                     },
                                     singleLine = true,
+                                    shape = RoundedCornerShape(28.dp),
+                                    colors = TextFieldDefaults.colors(
+                                        focusedIndicatorColor = Color.Transparent,
+                                        unfocusedIndicatorColor = Color.Transparent,
+                                        disabledIndicatorColor = Color.Transparent,
+                                        focusedContainerColor =
+                                            MaterialTheme.colorScheme.surfaceContainerHigh,
+                                        unfocusedContainerColor =
+                                            MaterialTheme.colorScheme.surfaceContainerHigh
+                                    ),
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = 16.dp)
+                                        .padding(
+                                            horizontal = 16.dp,
+                                            vertical = 8.dp
+                                        )
                                 )
 
                                 when {

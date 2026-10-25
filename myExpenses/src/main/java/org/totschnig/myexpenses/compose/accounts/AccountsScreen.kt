@@ -1,6 +1,9 @@
 package org.totschnig.myexpenses.compose.accounts
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -88,6 +91,13 @@ fun AccountsScreen(
 ) {
 
     val selectedTab = viewModel.currentAccountsTab.collectAsState()
+
+    val isAccountListScrolling =
+        viewModel.listState.isScrollInProgress
+
+    val hideAccountFab =
+        selectedTab.value == AccountsScreenTab.LIST &&
+        isAccountListScrolling
 
     var accountSearchQuery by rememberSaveable {
         mutableStateOf("")
@@ -202,7 +212,12 @@ fun AccountsScreen(
         },
         bottomBar = bottomBar,
         floatingActionButton = {
-            FloatingActionButtonMenu(
+            AnimatedVisibility(
+                visible = !hideAccountFab,
+                enter = EnterTransition.None,
+                exit = ExitTransition.None
+            ) {
+                FloatingActionButtonMenu(
                 modifier = Modifier.testTag(TEST_TAG_FAB_ACCOUNTS),
                 primaryAction = Action.AddAccount,
                 actions = listOf(Action.AddAccount, Action.AddPortfolio),
@@ -218,7 +233,8 @@ fun AccountsScreen(
                         }
                     }
                 }
-            )
+                )
+            }
         }
     ) { paddingValues ->
         if (selectedTab.value == AccountsScreenTab.BALANCE_SHEET) {

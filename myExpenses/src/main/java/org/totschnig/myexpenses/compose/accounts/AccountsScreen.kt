@@ -14,6 +14,7 @@ import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
@@ -194,18 +195,55 @@ fun AccountsScreen(
             val allAccountsState =
                 viewModel.accountDataV2.collectAsState()
 
-            val allAccounts = allAccountsState.value
-                ?.getOrNull()
-                ?.filter { it.id > 0L }
-                .orEmpty()
+            when (val result = allAccountsState.value) {
+                null -> {
+                    Column(
+                        modifier = Modifier.padding(paddingValues)
+                            .padding(24.dp)
+                    ) {
+                        CircularProgressIndicator()
+                        Text(
+                            "Loading accounts...",
+                            modifier = Modifier.padding(top = 12.dp)
+                        )
+                    }
+                }
 
-            KKDirectAccountList(
-                accountData = allAccounts,
-                scaffoldPadding = paddingValues,
-                listState = viewModel.listState,
-                onEvent = onAccountEvent,
-                flags = flags
-            )
+                else -> {
+                    result.fold(
+                        onSuccess = { loadedAccounts ->
+                            val allAccounts = loadedAccounts
+                                .filter { it.id > 0L }
+
+                            if (allAccounts.isEmpty()) {
+                                Text(
+                                    "No accounts yet. Use New account to create one.",
+                                    modifier = Modifier
+                                        .padding(paddingValues)
+                                        .padding(24.dp)
+                                )
+                            } else {
+                                KKDirectAccountList(
+                                    accountData = allAccounts,
+                                    scaffoldPadding = paddingValues,
+                                    listState = viewModel.listState,
+                                    onEvent = onAccountEvent,
+                                    flags = flags
+                                )
+                            }
+                        },
+                        onFailure = {
+                            Text(
+                                "Unable to load accounts. Your account data is unaffected.",
+                                modifier = Modifier
+                                    .padding(paddingValues)
+                                    .padding(24.dp),
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    )
+                }
+            }
         }
     }
 }

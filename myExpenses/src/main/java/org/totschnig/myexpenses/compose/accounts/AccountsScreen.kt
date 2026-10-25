@@ -1,6 +1,8 @@
 package org.totschnig.myexpenses.compose.accounts
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -16,6 +18,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
@@ -29,6 +32,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -76,6 +80,10 @@ fun AccountsScreen(
 ) {
 
     val selectedTab = viewModel.currentAccountsTab.collectAsState()
+
+    var accountSearchQuery by rememberSaveable {
+        mutableStateOf("")
+    }
 
     val showHiddenState = viewModel.balanceSheetShowHidden.asState()
     val showZeroState = viewModel.balanceSheetShowZero.asState()
@@ -215,21 +223,75 @@ fun AccountsScreen(
                             val allAccounts = loadedAccounts
                                 .filter { it.id > 0L }
 
-                            if (allAccounts.isEmpty()) {
-                                Text(
-                                    "No accounts yet. Use New account to create one.",
+                            val query = accountSearchQuery.trim()
+
+                            LaunchedEffect(query) {
+                                viewModel.listState.scrollToItem(0)
+                            }
+
+                            val filteredAccounts =
+                                if (query.isEmpty()) {
+                                    allAccounts
+                                } else {
+                                    allAccounts.filter { account ->
+                                        account.label.contains(
+                                            query,
+                                            ignoreCase = true
+                                        ) ||
+                                        account.currencyUnit.code.contains(
+                                            query,
+                                            ignoreCase = true
+                                        )
+                                    }
+                                }
+
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight()
+                                    .padding(paddingValues)
+                            ) {
+                                OutlinedTextField(
+                                    value = accountSearchQuery,
+                                    onValueChange = {
+                                        accountSearchQuery = it
+                                    },
+                                    label = { Text("Search accounts") },
+                                    placeholder = {
+                                        Text("Name or currency")
+                                    },
+                                    singleLine = true,
                                     modifier = Modifier
-                                        .padding(paddingValues)
-                                        .padding(24.dp)
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp)
                                 )
-                            } else {
-                                KKDirectAccountList(
-                                    accountData = allAccounts,
-                                    scaffoldPadding = paddingValues,
-                                    listState = viewModel.listState,
-                                    onEvent = onAccountEvent,
-                                    flags = flags
-                                )
+
+                                when {
+                                    allAccounts.isEmpty() -> {
+                                        Text(
+                                            "No accounts yet. Use New account to create one.",
+                                            modifier = Modifier.padding(24.dp)
+                                        )
+                                    }
+
+                                    filteredAccounts.isEmpty() -> {
+                                        Text(
+                                            "No matching accounts",
+                                            modifier = Modifier.padding(24.dp)
+                                        )
+                                    }
+
+                                    else -> {
+                                        KKDirectAccountList(
+                                            modifier = Modifier.weight(1f),
+                                            accountData = filteredAccounts,
+                                            scaffoldPadding = PaddingValues(0.dp),
+                                            listState = viewModel.listState,
+                                            onEvent = onAccountEvent,
+                                            flags = flags
+                                        )
+                                    }
+                                }
                             }
                         },
                         onFailure = {

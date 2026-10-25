@@ -128,6 +128,7 @@ interface AccountEventHandler {
 
 @Composable
 fun KKDirectAccountList(
+    modifier: Modifier = Modifier,
     accountData: List<FullAccount>,
     scaffoldPadding: PaddingValues,
     listState: LazyListState,
@@ -140,7 +141,7 @@ fun KKDirectAccountList(
     val layoutDirection = LocalLayoutDirection.current
 
     LazyColumnWithScrollbar(
-        modifier = Modifier.padding(
+        modifier = modifier.padding(
             start = scaffoldPadding.calculateStartPadding(layoutDirection),
             end = scaffoldPadding.calculateEndPadding(layoutDirection)
         ),

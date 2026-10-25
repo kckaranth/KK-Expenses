@@ -120,13 +120,6 @@ fun AccountsScreen(
                 actions = {
                     when (selectedTab.value) {
                         AccountsScreenTab.LIST -> {
-
-                            ViewOptionsMenu(
-                                activeGrouping = accountGrouping,
-                                onGroupingChange = { onEvent(AppEvent.SetAccountGrouping(it)) },
-                                onSort = { onEvent(AppEvent.Sort) }
-                            )
-
                             ManageEntitiesMenu(onEvent)
                         }
 

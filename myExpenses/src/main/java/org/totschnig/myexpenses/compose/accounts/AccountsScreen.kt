@@ -1,6 +1,7 @@
 package org.totschnig.myexpenses.compose.accounts
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -23,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
@@ -90,6 +93,13 @@ fun AccountsScreen(
         mutableStateOf("")
     }
 
+    var accountSortMode by rememberSaveable {
+        mutableStateOf("NAME_ASC")
+    }
+    var accountSortMenuExpanded by remember {
+        mutableStateOf(false)
+    }
+
     val showHiddenState = viewModel.balanceSheetShowHidden.asState()
     val showZeroState = viewModel.balanceSheetShowZero.asState()
     val showChartState = viewModel.balanceSheetShowChart.asState()
@@ -134,6 +144,44 @@ fun AccountsScreen(
                 actions = {
                     when (selectedTab.value) {
                         AccountsScreenTab.LIST -> {
+                            Box {
+                                IconButton(
+                                    onClick = {
+                                        accountSortMenuExpanded = true
+                                    }
+                                ) {
+                                    Icon(
+                                        Icons.Filled.Sort,
+                                        contentDescription = "Sort accounts"
+                                    )
+                                }
+
+                                DropdownMenu(
+                                    expanded = accountSortMenuExpanded,
+                                    onDismissRequest = {
+                                        accountSortMenuExpanded = false
+                                    }
+                                ) {
+                                    val options = listOf(
+                                        "NAME_ASC" to "Name (A-Z)",
+                                        "NAME_DESC" to "Name (Z-A)",
+                                        "BUDGET_DESC" to "Initial budget (high-low)",
+                                        "INCOME_DESC" to "Total income (high-low)",
+                                        "EXPENSE_DESC" to "Total expenses (high-low)"
+                                    )
+
+                                    options.forEach { (mode, label) ->
+                                        DropdownMenuItem(
+                                            text = { Text(label) },
+                                            onClick = {
+                                                accountSortMode = mode
+                                                accountSortMenuExpanded = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+
                             ManageEntitiesMenu(onEvent)
                         }
 
@@ -230,7 +278,7 @@ fun AccountsScreen(
 
                             val query = accountSearchQuery.trim()
 
-                            LaunchedEffect(query) {
+                            LaunchedEffect(query, accountSortMode) {
                                 viewModel.listState.scrollToItem(0)
                             }
 
@@ -303,6 +351,43 @@ fun AccountsScreen(
                                         )
                                 )
 
+                                val sortedAccounts = when (accountSortMode) {
+                                    "NAME_DESC" ->
+                                        filteredAccounts.sortedWith(
+                                            compareByDescending<FullAccount> {
+                                                it.label.lowercase()
+                                            }.thenBy { it.id }
+                                        )
+
+                                    "BUDGET_DESC" ->
+                                        filteredAccounts.sortedWith(
+                                            compareByDescending<FullAccount> {
+                                                it.openingBalance
+                                            }.thenBy { it.id }
+                                        )
+
+                                    "INCOME_DESC" ->
+                                        filteredAccounts.sortedWith(
+                                            compareByDescending<FullAccount> {
+                                                it.sumIncome
+                                            }.thenBy { it.id }
+                                        )
+
+                                    "EXPENSE_DESC" ->
+                                        filteredAccounts.sortedWith(
+                                            compareByDescending<FullAccount> {
+                                                kotlin.math.abs(it.sumExpense)
+                                            }.thenBy { it.id }
+                                        )
+
+                                    else ->
+                                        filteredAccounts.sortedWith(
+                                            compareBy<FullAccount> {
+                                                it.label.lowercase()
+                                            }.thenBy { it.id }
+                                        )
+                                }
+
                                 when {
                                     allAccounts.isEmpty() -> {
                                         Text(
@@ -321,7 +406,7 @@ fun AccountsScreen(
                                     else -> {
                                         KKDirectAccountList(
                                             modifier = Modifier.weight(1f),
-                                            accountData = filteredAccounts,
+                                            accountData = sortedAccounts,
                                             scaffoldPadding = PaddingValues(0.dp),
                                             listState = viewModel.listState,
                                             onEvent = onAccountEvent,

@@ -191,8 +191,16 @@ fun AccountsScreen(
                 )
             }
         } else {
+            val allAccountsState =
+                viewModel.accountDataV2.collectAsState()
+
+            val allAccounts = allAccountsState.value
+                ?.getOrNull()
+                ?.filter { it.id > 0L }
+                .orEmpty()
+
             KKDirectAccountList(
-                accountData = accounts,
+                accountData = allAccounts,
                 scaffoldPadding = paddingValues,
                 listState = viewModel.listState,
                 onEvent = onAccountEvent,

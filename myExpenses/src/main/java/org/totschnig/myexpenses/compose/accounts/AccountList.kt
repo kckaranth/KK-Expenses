@@ -175,7 +175,9 @@ fun KKDirectAccountList(
                                 Text(
                                     account.label,
                                     style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.SemiBold
+                                    fontWeight = FontWeight.SemiBold,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                                 Text(
                                     account.currencyUnit.code,
@@ -184,7 +186,10 @@ fun KKDirectAccountList(
                                 )
                             }
 
-                            Column(horizontalAlignment = Alignment.End) {
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.End
+                            ) {
                                 Text(
                                     "Initial budget",
                                     style = MaterialTheme.typography.labelSmall,
@@ -195,11 +200,16 @@ fun KKDirectAccountList(
                                         account.openingBalance,
                                         account.currencyUnit
                                     ),
-                                    style = MaterialTheme.typography.bodyLarge
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    softWrap = true
                                 )
                             }
 
                             OverFlowMenu(
+                                modifier = Modifier.semantics {
+                                    contentDescription =
+                                        "Account actions for " + account.label
+                                },
                                 menu = accountMenu(
                                     context = context,
                                     homeCurrency = homeCurrency,

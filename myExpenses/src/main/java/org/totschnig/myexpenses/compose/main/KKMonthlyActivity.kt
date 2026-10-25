@@ -38,6 +38,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.key
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.style.TextAlign
@@ -332,6 +333,7 @@ onClick = { expanded = !expanded }) {
                 }
 
                 activeAccounts.forEach { account ->
+                    key(account.id) {
                     val accountEntries =
                         entriesByAccount[account.id].orEmpty()
 
@@ -825,6 +827,7 @@ onClick = { expanded = !expanded }) {
                     HorizontalDivider(
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
+                }
                 }
                 Row(
                     modifier = Modifier.fillMaxWidth(),

@@ -77,6 +77,22 @@ private data class ActivityEntry(
     val description: String,
     val categoryId: Long
 )
+private fun incomeExpenseTotals(
+    entries: List<ActivityEntry>
+): Pair<Long, Long> {
+    var income = 0L
+    var expense = 0L
+
+    entries.forEach { entry ->
+        when {
+            entry.amount > 0L -> income += entry.amount
+            entry.amount < 0L -> expense += entry.amount
+        }
+    }
+
+    return income to expense
+}
+
 private fun categorySpending(
     entries: List<ActivityEntry>
 ): Map<Long, Long> =
@@ -333,17 +349,19 @@ onClick = { expanded = !expanded }) {
                             it.epoch >= previousStart &&
                             it.epoch < start
                         }
+                        val (income, expense) =
+                            incomeExpenseTotals(current)
+
+                        val (previousIncome, previousExpense) =
+                            incomeExpenseTotals(previous)
+
                         MonthlyAccountSummary(
                             current = current,
                             previous = previous,
-                            income = current.filter { it.amount > 0 }
-                                .sumOf { it.amount },
-                            expense = current.filter { it.amount < 0 }
-                                .sumOf { it.amount },
-                            previousIncome = previous.filter { it.amount > 0 }
-                                .sumOf { it.amount },
-                            previousExpense = previous.filter { it.amount < 0 }
-                                .sumOf { it.amount },
+                            income = income,
+                            expense = expense,
+                            previousIncome = previousIncome,
+                            previousExpense = previousExpense,
                             currentCategorySpending = categorySpending(current),
                             previousCategorySpending = categorySpending(previous)
                         )

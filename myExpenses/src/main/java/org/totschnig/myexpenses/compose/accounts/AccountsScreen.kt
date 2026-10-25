@@ -198,27 +198,12 @@ fun AccountsScreen(
                 )
             }
         } else {
-            AccountListV2(
+            KKDirectAccountList(
                 accountData = accounts,
                 scaffoldPadding = paddingValues,
-                grouping = accountGrouping,
-                selectedAccount = selectedAccountId,
                 listState = viewModel.listState,
-                expansionHandlerGroups = viewModel.expansionHandler("collapsedHeadersDrawer_${accountGrouping}"),
-                expansionHandlerAccounts = viewModel.expansionHandler("expandedAccounts_${accountGrouping}"),
-                onSelected = {
-                    if (accountGrouping != AccountGrouping.NONE) {
-                        viewModel.maybeResetFilter(accountGrouping.getGroupKey(it))
-                    }
-                    navigateToAccount(it.id)
-                },
-                onGroupSelected = ::navigateToGroup,
                 onEvent = onAccountEvent,
-                flags = flags,
-                bankIcon = bankIcon,
-                showPremiumNudge = !canCreatePortfolio && !premiumNudgeDismissed,
-                onUpgrade = { onEvent(AppEvent.ShowUpgrade(ContribFeature.PORTFOLIO)) },
-                onDismissPremiumNudge = viewModel::dismissPremiumNudge
+                flags = flags
             )
         }
     }

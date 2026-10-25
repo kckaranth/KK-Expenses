@@ -127,6 +127,135 @@ interface AccountEventHandler {
 }
 
 @Composable
+fun KKDirectAccountList(
+    accountData: List<FullAccount>,
+    scaffoldPadding: PaddingValues,
+    listState: LazyListState,
+    onEvent: AccountEventHandler,
+    flags: List<AccountFlag> = emptyList()
+) {
+    val context = LocalContext.current
+    val formatter = LocalCurrencyFormatter.current
+    val homeCurrency = LocalCurrencyContext.current.homeCurrencyUnit
+    val layoutDirection = LocalLayoutDirection.current
+
+    LazyColumnWithScrollbar(
+        modifier = Modifier.padding(
+            start = scaffoldPadding.calculateStartPadding(layoutDirection),
+            end = scaffoldPadding.calculateEndPadding(layoutDirection)
+        ),
+        state = listState,
+        itemsAvailable = accountData.size,
+        testTag = TEST_TAG_ACCOUNTS,
+        contentPadding = PaddingValues(
+            top = scaffoldPadding.calculateTopPadding(),
+            bottom = scaffoldPadding.calculateBottomPadding() +
+                dimensionResource(R.dimen.fab_related_bottom_padding)
+        )
+    ) {
+        accountData.forEach { account ->
+            item(key = account.id) {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 4.dp),
+                    shape = MaterialTheme.shapes.medium,
+                    color = MaterialTheme.colorScheme.surfaceContainer
+                ) {
+                    Column(
+                        modifier = Modifier.padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    account.label,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Text(
+                                    account.currencyUnit.code,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+
+                            Column(horizontalAlignment = Alignment.End) {
+                                Text(
+                                    "Initial budget",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    formatter.convAmount(
+                                        account.openingBalance,
+                                        account.currencyUnit
+                                    ),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+
+                            OverFlowMenu(
+                                menu = accountMenu(
+                                    context = context,
+                                    homeCurrency = homeCurrency,
+                                    account = account,
+                                    onEvent = onEvent,
+                                    flags = flags
+                                )
+                            )
+                        }
+
+                        HorizontalDivider()
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    "Total income",
+                                    style = MaterialTheme.typography.labelSmall
+                                )
+                                Text(
+                                    formatter.convAmount(
+                                        account.sumIncome,
+                                        account.currencyUnit
+                                    ),
+                                    color = Color(0xFF2E7D32),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.End
+                            ) {
+                                Text(
+                                    "Total expenses",
+                                    style = MaterialTheme.typography.labelSmall
+                                )
+                                Text(
+                                    formatter.convAmount(
+                                        -account.sumExpense,
+                                        account.currencyUnit
+                                    ),
+                                    color = MaterialTheme.colorScheme.error,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun AccountListV2(
     scaffoldPadding: PaddingValues = PaddingValues(0.dp),
     accountData: List<FullAccount>,

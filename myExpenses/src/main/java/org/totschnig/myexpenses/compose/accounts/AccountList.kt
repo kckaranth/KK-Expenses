@@ -151,7 +151,7 @@ fun KKDirectAccountList(
         contentPadding = PaddingValues(
             top = scaffoldPadding.calculateTopPadding(),
             bottom = scaffoldPadding.calculateBottomPadding() +
-                dimensionResource(R.dimen.fab_related_bottom_padding)
+                112.dp
         )
     ) {
         accountData.forEach { account ->

@@ -158,12 +158,12 @@ fun KKDirectAccountList(
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 4.dp),
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
                     shape = MaterialTheme.shapes.medium,
                     color = MaterialTheme.colorScheme.surfaceContainer
                 ) {
                     Column(
-                        modifier = Modifier.padding(12.dp),
+                        modifier = Modifier.padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Row(
@@ -174,7 +174,8 @@ fun KKDirectAccountList(
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     account.label,
-                                    style = MaterialTheme.typography.titleMedium
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.SemiBold
                                 )
                                 Text(
                                     account.currencyUnit.code,
@@ -194,7 +195,7 @@ fun KKDirectAccountList(
                                         account.openingBalance,
                                         account.currencyUnit
                                     ),
-                                    style = MaterialTheme.typography.bodyMedium
+                                    style = MaterialTheme.typography.bodyLarge
                                 )
                             }
 
@@ -225,7 +226,7 @@ fun KKDirectAccountList(
                                         account.sumIncome,
                                         account.currencyUnit
                                     ),
-                                    color = Color(0xFF2E7D32),
+                                    color = MaterialTheme.colorScheme.primary,
                                     style = MaterialTheme.typography.bodyMedium
                                 )
                             }

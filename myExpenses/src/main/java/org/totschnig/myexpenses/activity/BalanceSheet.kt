@@ -34,6 +34,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -454,27 +455,38 @@ fun BalanceSheetSectionHeaderView(
     absolute: Boolean = true,
 ) {
     val homeCurrency = LocalCurrencyContext.current.homeCurrencyUnit
-    Row(
+    Surface(
         modifier = modifier
-            .conditional(highlight) {
-                background(MaterialTheme.colorScheme.primaryContainer)
-            }
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .padding(vertical = 6.dp),
+        shape = MaterialTheme.shapes.large,
+        color = if (highlight) {
+            MaterialTheme.colorScheme.primaryContainer
+        } else {
+            MaterialTheme.colorScheme.surfaceContainer
+        }
     ) {
-        Text(
-            text = name,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.weight(1f)
-        )
-        ColoredAmountText(
-            amount = total,
-            currency = homeCurrency,
-            absolute = absolute,
-            fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.titleLarge
-        )
+        Row(
+            modifier = Modifier.padding(
+                horizontal = 16.dp,
+                vertical = 16.dp
+            ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = name,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f)
+            )
+            ColoredAmountText(
+                amount = total,
+                currency = homeCurrency,
+                absolute = absolute,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
     }
 }
 

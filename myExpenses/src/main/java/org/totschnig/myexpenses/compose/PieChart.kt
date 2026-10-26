@@ -33,8 +33,8 @@ fun PieChartCompose(
     onValueSelected: (Int?) -> Unit,
     data: List<PieEntry>,
     colors: List<Int>,
-    update: (PieChart) -> Unit = NoOpUpdate,
-    showEntryLabels: Boolean = true
+    showEntryLabels: Boolean = true,
+    update: (PieChart) -> Unit = NoOpUpdate
 ) {
     val color = MaterialTheme.colorScheme.onSurface.toArgb()
     AndroidView(

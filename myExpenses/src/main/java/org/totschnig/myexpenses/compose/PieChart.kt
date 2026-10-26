@@ -33,7 +33,8 @@ fun PieChartCompose(
     onValueSelected: (Int?) -> Unit,
     data: List<PieEntry>,
     colors: List<Int>,
-    update: (PieChart) -> Unit = NoOpUpdate
+    update: (PieChart) -> Unit = NoOpUpdate,
+    showEntryLabels: Boolean = true
 ) {
     val color = MaterialTheme.colorScheme.onSurface.toArgb()
     AndroidView(
@@ -73,6 +74,7 @@ fun PieChartCompose(
             }
         }) {
         it.maxAngle = angle
+        it.setDrawEntryLabels(showEntryLabels)
         it.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onValueSelected(e: Entry, highlight: Highlight) {
                 val index = highlight.x.toInt()

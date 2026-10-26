@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -300,6 +301,7 @@ fun ColumnScope.BalanceSheetViewInner(
             Box(
                 modifier = modifier
                     .fillMaxWidth()
+                      .aspectRatio(1f)
             ) {
                 RenderChart(
                     modifier = Modifier
@@ -588,6 +590,7 @@ fun RenderChart(
         },
         holeRadius = if (inner) 75f else 85f,
         angle = angle,
+        showEntryLabels = false,
         onValueSelected = { index ->
             highlight.value = index?.let { Triple(inner, index, accounts.getOrNull(index)?.id) }
         },

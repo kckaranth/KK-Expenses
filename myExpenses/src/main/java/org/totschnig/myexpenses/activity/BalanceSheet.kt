@@ -426,7 +426,8 @@ fun LazyListScope.accountTypeChapter(
     item {
         BalanceSheetSectionHeaderView(
             name = stringResource(title),
-            total = total
+            total = total,
+            absolute = false
         )
     }
 
@@ -500,7 +501,7 @@ fun LazyListScope.accountTypeSection(
             ColoredAmountText(
                 amount = section.total,
                 currency = homeCurrency,
-                absolute = true,
+                absolute = false,
                 style = MaterialTheme.typography.titleMedium
             )
         }
@@ -537,10 +538,10 @@ fun BalanceAccountItemView(
             modifier = Modifier.weight(1f)
         )
         Column(horizontalAlignment = Alignment.End) {
-            ColoredAmountText(account.equivalentEffectiveBalance, homeCurrency, absolute = true)
+            ColoredAmountText(account.equivalentEffectiveBalance, homeCurrency, absolute = false)
             if (account.currencyUnit.code != homeCurrency.code && account.effectiveBalance != 0L) {
                 AmountText(
-                    account.effectiveBalance.absoluteValue,
+                    account.effectiveBalance,
                     account.currencyUnit,
                     fontSize = 10.sp
                 )

@@ -453,14 +453,26 @@ fun ColumnScope.BalanceSheetViewInner(
             ) {
                 if (showChart && isSingleScrollLayout) {
                     item(key = "balance_sheet_chart") {
-                        chartContent(Modifier.fillMaxWidth())
+                        Column(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            chartContent(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        top = 12.dp,
+                                        bottom = 16.dp
+                                    )
+                            )
 
-                        HorizontalDivider(
-                            modifier = Modifier.padding(
-                                vertical = 8.dp
-                            ),
-                            color = MaterialTheme.colorScheme.outlineVariant
-                        )
+                            HorizontalDivider(
+                                modifier = Modifier.padding(
+                                    horizontal = 16.dp,
+                                    vertical = 8.dp
+                                ),
+                                color = MaterialTheme.colorScheme.outlineVariant
+                            )
+                        }
                     }
                 }
 

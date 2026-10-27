@@ -301,6 +301,19 @@ fun ColumnScope.BalanceSheetViewInner(
         assetsWithDebts.toFloat() / -liabilitiesWithDebts else 1f
     val angles = if (ratio > 1f) 360f to 360f / ratio else
         360f * ratio to 360f
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(showChart, scrollResetKey) {
+        listState.scrollToItem(0)
+    }
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.isScrollInProgress }
+            .collect { scrolling ->
+                onListScrollingChanged(scrolling)
+            }
+    }
+
     LayoutHelper(
         showChart = showChart,
         chart = { modifier ->
@@ -367,18 +380,7 @@ fun ColumnScope.BalanceSheetViewInner(
         },
         data = { modifier ->
 
-            val listState = rememberLazyListState()
 
-            LaunchedEffect(showChart, scrollResetKey) {
-                listState.scrollToItem(0)
-            }
-
-            LaunchedEffect(listState) {
-                snapshotFlow { listState.isScrollInProgress }
-                    .collect { scrolling ->
-                        onListScrollingChanged(scrolling)
-                    }
-            }
             fun lookup(id: Long?): Int {
                 var totalIndex = 0// Assets
                 assets.forEach { section ->

@@ -630,13 +630,18 @@ fun LayoutHelper(
 ) {
     if (showChart) {
         BoxWithConstraints {
-            if (this.maxHeight > 600.dp || this.maxWidth < 600.dp) {
-                Column {
-                    chart(Modifier.weight(1f))
+            if (this.maxWidth < 600.dp) {
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    chart(Modifier.fillMaxWidth())
                     data(Modifier.weight(1f))
                 }
             } else {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     chart(Modifier.weight(1f))
                     data(Modifier.weight(1f))
                 }

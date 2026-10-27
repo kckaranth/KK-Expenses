@@ -314,9 +314,8 @@ fun ColumnScope.BalanceSheetViewInner(
             }
     }
 
-    LayoutHelper(
-        showChart = showChart,
-        chart = { modifier ->
+    val chartContent: @Composable (Modifier) -> Unit = { modifier ->
+
             Box(
                 modifier = modifier
                     .fillMaxWidth(),
@@ -377,33 +376,67 @@ fun ColumnScope.BalanceSheetViewInner(
                 }
                   }
             }
-        },
+
+    }
+
+    BoxWithConstraints(
+        modifier = Modifier.weight(1f)
+    ) {
+        val isSingleScrollLayout = maxWidth < 600.dp
+
+        LayoutHelper(
+        showChart = showChart,
+        singleScroll = isSingleScrollLayout,
+        chart = chartContent,
         data = { modifier ->
 
 
             fun lookup(id: Long?): Int {
-                var totalIndex = 0// Assets
-                assets.forEach { section ->
-                    totalIndex++ // section header
-                    section.accounts.forEach {
-                        totalIndex++ //item
-                        if (it.id == id) {
-                            return totalIndex
+                var index = if (
+                    showChart && isSingleScrollLayout
+                ) 1 else 0
+
+                fun visibleAccounts(
+                    section: BalanceSection
+                ): List<FullAccount> =
+                    section.accounts.filter {
+                        (showHidden || it.isVisible) &&
+                            (showZero || it.effectiveBalance != 0L)
+                    }
+
+                fun scan(
+                    sections: List<BalanceSection>
+                ): Int? {
+                    sections.forEach { section ->
+                        index++ // Account-type header
+
+                        visibleAccounts(section).forEach { account ->
+                            if (account.id == id) {
+                                return index
+                            }
+                            index++
                         }
                     }
+                    return null
                 }
-                totalIndex += 2 //Divider / Liabilities
-                liabilities.forEach { section ->
-                    totalIndex++ // section header
-                    section.accounts.forEach {
-                        totalIndex++ //item
-                        if (it.id == id) {
-                            return totalIndex
-                        }
-                    }
+
+                index++ // Assets chapter header
+                scan(assets)?.let { return it }
+
+                index++ // Assets divider
+                index++ // Liabilities chapter header
+                scan(liabilities)?.let { return it }
+
+                index++ // Liabilities divider
+
+                if (debtSum != 0L) {
+                    val debtIndex = index
+                    index++ // Debts header
+                    index++ // Debts divider
+                    if (id == null) return debtIndex
                 }
-                totalIndex += 2 //Divider / Debts
-                return totalIndex
+
+                return if (id == null) index else -1
             }
             LazyColumn(
                 modifier = modifier
@@ -418,6 +451,18 @@ fun ColumnScope.BalanceSheetViewInner(
                 ),
                 state = listState
             ) {
+                if (showChart && isSingleScrollLayout) {
+                    item(key = "balance_sheet_chart") {
+                        chartContent(Modifier.fillMaxWidth())
+
+                        HorizontalDivider(
+                            modifier = Modifier.padding(
+                                vertical = 8.dp
+                            ),
+                            color = MaterialTheme.colorScheme.outlineVariant
+                        )
+                    }
+                }
 
                 accountTypeChapter(
                     title = R.string.balance_sheet_section_assets,
@@ -463,13 +508,14 @@ fun ColumnScope.BalanceSheetViewInner(
             LaunchedEffect(highlight.value) {
                 highlight.value?.let {
                     lookup(it.third)
-                }?.let {
+                }?.takeIf { it >= 0 }?.let {
                     Timber.d("Scrolling to $it")
                     listState.animateScrollToItem(it)
                 }
             }
         }
-    )
+        )
+    }
 }
 
 fun LazyListScope.accountTypeChapter(
@@ -672,10 +718,13 @@ fun RenderChart(
 @Composable
 fun LayoutHelper(
     showChart: Boolean,
+    singleScroll: Boolean = false,
     chart: @Composable (Modifier) -> Unit,
     data: @Composable (Modifier) -> Unit,
 ) {
-    if (showChart) {
+    if (showChart && singleScroll) {
+        data(Modifier.fillMaxSize())
+    } else if (showChart) {
         BoxWithConstraints {
             if (this.maxWidth < 600.dp) {
                 Column(
@@ -704,7 +753,7 @@ fun LayoutHelper(
             }
         }
     } else {
-        data(Modifier)
+        data(Modifier.fillMaxSize())
     }
 }
 

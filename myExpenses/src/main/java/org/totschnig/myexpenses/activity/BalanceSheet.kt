@@ -55,6 +55,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
@@ -66,6 +67,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -385,27 +387,40 @@ fun ColumnScope.BalanceSheetViewInner(
                     it.third == null && debtSum != 0L
                 } == true
 
+                val centerLabel = when {
+                    selectedAccount != null ->
+                        selectedAccount.label
+                    selectedDebt ->
+                        stringResource(R.string.debts)
+                    else ->
+                        stringResource(
+                            R.string.balance_sheet_net_worth
+                        )
+                }
+
+                val centerLabelStyle =
+                    if (centerLabel.length > 20) {
+                        MaterialTheme.typography.labelSmall
+                    } else {
+                        MaterialTheme.typography.labelMedium
+                    }
+
                 Column(
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .fillMaxWidth(0.60f),
+                        .fillMaxWidth(0.68f),
+                    verticalArrangement =
+                        androidx.compose.foundation.layout.Arrangement
+                            .spacedBy(4.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = when {
-                            selectedAccount != null ->
-                                selectedAccount.label
-                            selectedDebt ->
-                                stringResource(R.string.debts)
-                            else ->
-                                stringResource(
-                                    R.string.balance_sheet_net_worth
-                                )
-                        },
-                        style = MaterialTheme.typography.labelMedium,
+                        text = centerLabel,
+                        style = centerLabelStyle,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center,
-                        maxLines = 2
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                     )
 
                     ColoredAmountText(
@@ -672,8 +687,11 @@ fun BalanceAccountItemView(
     val homeCurrency =
         LocalCurrencyContext.current.homeCurrencyUnit
 
-    val selectedBackground =
-        MaterialTheme.colorScheme.secondaryContainer
+    val selectedBackground = lerp(
+        MaterialTheme.colorScheme.surfaceContainerLow,
+        MaterialTheme.colorScheme.secondaryContainer,
+        0.22f
+    )
 
     Surface(
         modifier = Modifier
@@ -717,11 +735,7 @@ fun BalanceAccountItemView(
                 text = account.label,
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.bodyLarge,
-                color = if (highlight) {
-                    MaterialTheme.colorScheme.onSecondaryContainer
-                } else {
-                    MaterialTheme.colorScheme.onSurface
-                }
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             Column(

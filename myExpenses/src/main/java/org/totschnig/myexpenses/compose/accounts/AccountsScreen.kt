@@ -92,18 +92,21 @@ fun AccountsScreen(
 
     val selectedTab = viewModel.currentAccountsTab.collectAsState()
 
-    val isAccountListScrolling =
-        viewModel.listState.isScrollInProgress
-
-    var isBalanceSheetScrolling by remember {
-        mutableStateOf(false)
+    var balanceSheetScrollResetKey by remember {
+        mutableStateOf(0)
     }
 
-    val hideAccountFab =
-        (selectedTab.value == AccountsScreenTab.LIST &&
-            isAccountListScrolling) ||
-        (selectedTab.value == AccountsScreenTab.BALANCE_SHEET &&
-            isBalanceSheetScrolling)
+    LaunchedEffect(selectedTab.value) {
+        if (selectedTab.value == AccountsScreenTab.BALANCE_SHEET) {
+            balanceSheetScrollResetKey++
+        }
+    }
+
+    val isAccountListScrolling =
+        viewModel.listState.isScrollInProgress
+val hideAccountFab =
+        selectedTab.value != AccountsScreenTab.LIST ||
+            isAccountListScrolling
 
     var accountSearchQuery by rememberSaveable {
         mutableStateOf("")
@@ -272,9 +275,7 @@ fun AccountsScreen(
                     showHidden = showHiddenState.value,
                     showZero = showZeroState.value,
                     bottomPadding = dimensionResource(R.dimen.fab_related_bottom_padding),
-                    onListScrollingChanged = { scrolling ->
-                        isBalanceSheetScrolling = scrolling
-                    }
+                    scrollResetKey = balanceSheetScrollResetKey
                 )
             }
         } else {

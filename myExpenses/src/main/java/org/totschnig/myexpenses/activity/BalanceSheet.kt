@@ -222,6 +222,7 @@ fun ColumnScope.BalanceSheetViewInner(
     showZero: Boolean,
     onNavigate: (FullAccount) -> Unit,
     bottomPadding: Dp,
+    scrollResetKey: Int = 0,
     onListScrollingChanged: (Boolean) -> Unit = {},
 ) {
 
@@ -368,17 +369,15 @@ fun ColumnScope.BalanceSheetViewInner(
 
             val listState = rememberLazyListState()
 
+            LaunchedEffect(showChart, scrollResetKey) {
+                listState.scrollToItem(0)
+            }
+
             LaunchedEffect(listState) {
                 snapshotFlow { listState.isScrollInProgress }
                     .collect { scrolling ->
                         onListScrollingChanged(scrolling)
                     }
-            }
-
-            LaunchedEffect(showChart) {
-                if (showChart) {
-                    listState.scrollToItem(0)
-                }
             }
             fun lookup(id: Long?): Int {
                 var totalIndex = 0// Assets

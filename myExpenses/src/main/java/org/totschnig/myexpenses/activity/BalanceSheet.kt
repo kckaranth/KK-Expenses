@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -299,10 +300,16 @@ fun ColumnScope.BalanceSheetViewInner(
         showChart = showChart,
         chart = { modifier ->
             Box(
-                modifier = modifier
-                    .fillMaxWidth()
-                      .aspectRatio(1f)
-            ) {
+                  modifier = modifier.fillMaxWidth(),
+                  contentAlignment = Alignment.Center
+              ) {
+                  Box(
+                      modifier = Modifier
+                          .widthIn(max = 320.dp)
+                          .fillMaxWidth()
+                          .aspectRatio(1f),
+                      contentAlignment = Alignment.Center
+                  ) {
                 RenderChart(
                     modifier = Modifier
                         .fillMaxSize(0.95f)
@@ -323,6 +330,7 @@ fun ColumnScope.BalanceSheetViewInner(
                     highlight = highlight,
                     angle = angles.second,
                 )
+                  }
             }
         },
         data = { modifier ->

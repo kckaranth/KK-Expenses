@@ -60,6 +60,7 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -330,6 +331,32 @@ fun ColumnScope.BalanceSheetViewInner(
                     highlight = highlight,
                     angle = angles.second,
                 )
+
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .fillMaxWidth(0.55f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(
+                            R.string.balance_sheet_net_worth
+                        ),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
+                    )
+                    ColoredAmountText(
+                        amount = totalAssets +
+                            totalLiabilities + debtSum,
+                        currency = LocalCurrencyContext.current.homeCurrencyUnit,
+                        absolute = false,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleMedium,
+                        textAlign = TextAlign.Center,
+                        maxLines = 2
+                    )
+                }
                   }
             }
         },
@@ -367,7 +394,7 @@ fun ColumnScope.BalanceSheetViewInner(
                 contentPadding = PaddingValues(
                     start = horizontalPadding,
                     end = horizontalPadding,
-                    bottom = bottomPadding
+                    bottom = bottomPadding + 112.dp
                 ),
                 state = listState
             ) {

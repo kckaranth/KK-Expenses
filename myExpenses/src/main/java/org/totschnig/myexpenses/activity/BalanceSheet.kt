@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -52,6 +54,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
@@ -497,7 +500,8 @@ fun ColumnScope.BalanceSheetViewInner(
                     showHidden = showHidden,
                     showZero = showZero,
                     highlight = highlight.value?.third,
-                    onNavigate = onNavigate
+                    onNavigate = onNavigate,
+                    accountColors = chartAccountColors
                 )
                 accountTypeChapter(
                     title = R.string.balance_sheet_section_liabilities,
@@ -506,7 +510,8 @@ fun ColumnScope.BalanceSheetViewInner(
                     showHidden = showHidden,
                     showZero = showZero,
                     highlight = highlight.value?.third,
-                    onNavigate = onNavigate
+                    onNavigate = onNavigate,
+                    accountColors = chartAccountColors
                 )
 
                 if (debtSum != 0L) {
@@ -545,6 +550,7 @@ fun LazyListScope.accountTypeChapter(
     showZero: Boolean,
     highlight: Long?,
     onNavigate: (FullAccount) -> Unit,
+    accountColors: Map<Long, Int>,
 ) {
     item {
         BalanceSheetSectionHeaderView(
@@ -560,7 +566,8 @@ fun LazyListScope.accountTypeChapter(
             showHidden = showHidden,
             showZero = showZero,
             highlight = highlight,
-            onNavigate = onNavigate
+            onNavigate = onNavigate,
+            accountColors = accountColors
         )
     }
     item {
@@ -618,6 +625,7 @@ fun LazyListScope.accountTypeSection(
     showZero: Boolean,
     highlight: Long?,
     onNavigate: (FullAccount) -> Unit,
+    accountColors: Map<Long, Int>,
 ) {
     item {
         val homeCurrency = LocalCurrencyContext.current.homeCurrencyUnit
@@ -644,7 +652,12 @@ fun LazyListScope.accountTypeSection(
         .filter { (showHidden || it.isVisible) && (showZero || it.effectiveBalance != 0L) }
         .forEach { account ->
             item {
-                BalanceAccountItemView(account = account, highlight == account.id, onNavigate)
+                BalanceAccountItemView(
+                    account = account,
+                    highlight = highlight == account.id,
+                    onNavigate = onNavigate,
+                    accentColor = accountColors[account.id]
+                )
             }
         }
 }
@@ -654,9 +667,13 @@ fun BalanceAccountItemView(
     account: FullAccount,
     highlight: Boolean,
     onNavigate: (FullAccount) -> Unit,
+    accentColor: Int? = null,
 ) {
     val homeCurrency =
         LocalCurrencyContext.current.homeCurrencyUnit
+
+    val selectedBackground =
+        MaterialTheme.colorScheme.secondaryContainer
 
     Surface(
         modifier = Modifier
@@ -667,7 +684,7 @@ fun BalanceAccountItemView(
             },
         shape = MaterialTheme.shapes.medium,
         color = if (highlight) {
-            MaterialTheme.colorScheme.primaryContainer
+            selectedBackground
         } else {
             MaterialTheme.colorScheme.surfaceContainerLow
         }
@@ -681,11 +698,30 @@ fun BalanceAccountItemView(
                 ),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            if (highlight) {
+                Box(
+                    modifier = Modifier
+                        .padding(end = 10.dp)
+                        .width(4.dp)
+                        .height(44.dp)
+                        .background(
+                            color = accentColor?.let {
+                                Color(it)
+                            } ?: MaterialTheme.colorScheme.primary,
+                            shape = MaterialTheme.shapes.small
+                        )
+                )
+            }
+
             Text(
                 text = account.label,
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface
+                color = if (highlight) {
+                    MaterialTheme.colorScheme.onSecondaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                }
             )
 
             Column(
@@ -904,12 +940,26 @@ fun BalanceSheet() {
                 id = 10,
                 type = AccountType.CASH,
                 currencyUnit = CurrencyUnit.DebugInstance,
-                currentBalance = 10000, // $100.00 (loan debt)
+                currentBalance = 10000,
+            ),
+            FullAccount(
+                label = "Emergency Savings Account",
+                id = 11,
+                type = AccountType.BANK,
+                currencyUnit = CurrencyUnit.DebugInstance,
+                currentBalance = 875000,
+            ),
+            FullAccount(
+                label = "Long Term Investment Portfolio",
+                id = 12,
+                type = AccountType.ASSET,
+                currencyUnit = CurrencyUnit.DebugInstance,
+                currentBalance = 3250000,
             )
         ),
         showHiddenState = remember { mutableStateOf(false) },
         showZeroState = remember { mutableStateOf(false) },
-        showChartState = remember { mutableStateOf(false) },
+        showChartState = remember { mutableStateOf(true) },
     )
 }
 

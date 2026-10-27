@@ -301,6 +301,22 @@ fun ColumnScope.BalanceSheetViewInner(
         assetsWithDebts.toFloat() / -liabilitiesWithDebts else 1f
     val angles = if (ratio > 1f) 360f to 360f / ratio else
         360f * ratio to 360f
+    val chartAccountColors = remember(accounts) {
+        (
+            assets.flatMap { it.accounts } +
+            liabilities.flatMap { it.accounts }
+        )
+            .map { it.id }
+            .distinct()
+            .sorted()
+            .mapIndexed { index, id ->
+                id to balanceSheetChartColors[
+                    index % balanceSheetChartColors.size
+                ]
+            }
+            .toMap()
+    }
+
     val listState = rememberLazyListState()
 
     LaunchedEffect(showChart, scrollResetKey) {
@@ -336,6 +352,7 @@ fun ColumnScope.BalanceSheetViewInner(
                     accounts = assets.flatMap { it.accounts },
                     debts = debtSum.takeIf { it > 0 },
                     highlight = highlight,
+                    accountColors = chartAccountColors,
                     angle = angles.first,
                 )
                 RenderChart(
@@ -346,26 +363,56 @@ fun ColumnScope.BalanceSheetViewInner(
                     accounts = liabilities.flatMap { it.accounts },
                     debts = debtSum.takeIf { it < 0 },
                     highlight = highlight,
+                    accountColors = chartAccountColors,
                     angle = angles.second,
                 )
+
+                val selectedAccount = highlight.value?.let { selected ->
+                    val chartAccounts = if (selected.first) {
+                        liabilities.flatMap { it.accounts }
+                    } else {
+                        assets.flatMap { it.accounts }
+                    }
+                    chartAccounts.firstOrNull {
+                        it.id == selected.third
+                    }
+                }
+
+                val selectedDebt = highlight.value?.let {
+                    it.third == null && debtSum != 0L
+                } == true
 
                 Column(
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .fillMaxWidth(0.55f),
+                        .fillMaxWidth(0.60f),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = stringResource(
-                            R.string.balance_sheet_net_worth
-                        ),
+                        text = when {
+                            selectedAccount != null ->
+                                selectedAccount.label
+                            selectedDebt ->
+                                stringResource(R.string.debts)
+                            else ->
+                                stringResource(
+                                    R.string.balance_sheet_net_worth
+                                )
+                        },
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        maxLines = 2
                     )
+
                     ColoredAmountText(
-                        amount = totalAssets +
-                            totalLiabilities + debtSum,
+                        amount = when {
+                            selectedAccount != null ->
+                                selectedAccount.equivalentEffectiveBalance
+                            selectedDebt -> debtSum
+                            else -> totalAssets +
+                                totalLiabilities + debtSum
+                        },
                         currency = LocalCurrencyContext.current.homeCurrencyUnit,
                         absolute = false,
                         fontWeight = FontWeight.Bold,
@@ -373,6 +420,19 @@ fun ColumnScope.BalanceSheetViewInner(
                         textAlign = TextAlign.Center,
                         maxLines = 2
                     )
+
+                    if (
+                        selectedAccount != null &&
+                        selectedAccount.currencyUnit.code !=
+                        LocalCurrencyContext.current.homeCurrencyUnit.code &&
+                        selectedAccount.effectiveBalance != 0L
+                    ) {
+                        AmountText(
+                            selectedAccount.effectiveBalance,
+                            selectedAccount.currencyUnit,
+                            fontSize = 12.sp
+                        )
+                    }
                 }
                   }
             }
@@ -391,53 +451,7 @@ fun ColumnScope.BalanceSheetViewInner(
         data = { modifier ->
 
 
-            fun lookup(id: Long?): Int {
-                var index = if (
-                    showChart && isSingleScrollLayout
-                ) 1 else 0
 
-                fun visibleAccounts(
-                    section: BalanceSection
-                ): List<FullAccount> =
-                    section.accounts.filter {
-                        (showHidden || it.isVisible) &&
-                            (showZero || it.effectiveBalance != 0L)
-                    }
-
-                fun scan(
-                    sections: List<BalanceSection>
-                ): Int? {
-                    sections.forEach { section ->
-                        index++ // Account-type header
-
-                        visibleAccounts(section).forEach { account ->
-                            if (account.id == id) {
-                                return index
-                            }
-                            index++
-                        }
-                    }
-                    return null
-                }
-
-                index++ // Assets chapter header
-                scan(assets)?.let { return it }
-
-                index++ // Assets divider
-                index++ // Liabilities chapter header
-                scan(liabilities)?.let { return it }
-
-                index++ // Liabilities divider
-
-                if (debtSum != 0L) {
-                    val debtIndex = index
-                    index++ // Debts header
-                    index++ // Debts divider
-                    if (id == null) return debtIndex
-                }
-
-                return if (id == null) index else -1
-            }
             LazyColumn(
                 modifier = modifier
                     .clipToBounds()
@@ -517,14 +531,7 @@ fun ColumnScope.BalanceSheetViewInner(
                     )
                 }
             }
-            LaunchedEffect(highlight.value) {
-                highlight.value?.let {
-                    lookup(it.third)
-                }?.takeIf { it >= 0 }?.let {
-                    Timber.d("Scrolling to $it")
-                    listState.animateScrollToItem(it)
-                }
-            }
+
         }
         )
     }
@@ -707,6 +714,21 @@ fun BalanceAccountItemView(
     }
 }
 
+private val balanceSheetChartColors = listOf(
+    0xFF00BFA5.toInt(), // Teal
+    0xFF38BDF8.toInt(), // Blue
+    0xFFA78BFA.toInt(), // Purple
+    0xFFF59E0B.toInt(), // Amber
+    0xFFF472B6.toInt(), // Pink
+    0xFF34D399.toInt(), // Green
+    0xFF818CF8.toInt(), // Indigo
+    0xFFFB7185.toInt(), // Coral
+    0xFF22D3EE.toInt(), // Cyan
+    0xFFEAB308.toInt(), // Yellow
+    0xFFC084FC.toInt(), // Violet
+    0xFF2DD4BF.toInt()  // Aqua
+)
+
 @Composable
 fun RenderChart(
     modifier: Modifier,
@@ -714,6 +736,7 @@ fun RenderChart(
     accounts: List<FullAccount>,
     debts: Long?,
     highlight: MutableState<Triple<Boolean, Int, Long?>?>,
+    accountColors: Map<Long, Int>,
     angle: Float = 360f,
 ) {
     val context = LocalContext.current
@@ -724,7 +747,9 @@ fun RenderChart(
             account.label
         )
     }
-    val colors = accounts.map { it.color }
+    val colors = accounts.map { account ->
+        accountColors.getValue(account.id)
+    }
     PieChartCompose(
         modifier = modifier,
         factory = { ctx ->

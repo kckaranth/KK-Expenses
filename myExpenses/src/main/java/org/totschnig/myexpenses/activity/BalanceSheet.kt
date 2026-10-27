@@ -43,6 +43,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -221,6 +222,7 @@ fun ColumnScope.BalanceSheetViewInner(
     showZero: Boolean,
     onNavigate: (FullAccount) -> Unit,
     bottomPadding: Dp,
+    onListScrollingChanged: (Boolean) -> Unit = {},
 ) {
 
     val horizontalPadding = dimensionResource(R.dimen.padding_main_screen)
@@ -365,6 +367,19 @@ fun ColumnScope.BalanceSheetViewInner(
         data = { modifier ->
 
             val listState = rememberLazyListState()
+
+            LaunchedEffect(listState) {
+                snapshotFlow { listState.isScrollInProgress }
+                    .collect { scrolling ->
+                        onListScrollingChanged(scrolling)
+                    }
+            }
+
+            LaunchedEffect(showChart) {
+                if (showChart) {
+                    listState.scrollToItem(0)
+                }
+            }
             fun lookup(id: Long?): Int {
                 var totalIndex = 0// Assets
                 assets.forEach { section ->

@@ -95,9 +95,15 @@ fun AccountsScreen(
     val isAccountListScrolling =
         viewModel.listState.isScrollInProgress
 
+    var isBalanceSheetScrolling by remember {
+        mutableStateOf(false)
+    }
+
     val hideAccountFab =
-        selectedTab.value == AccountsScreenTab.LIST &&
-        isAccountListScrolling
+        (selectedTab.value == AccountsScreenTab.LIST &&
+            isAccountListScrolling) ||
+        (selectedTab.value == AccountsScreenTab.BALANCE_SHEET &&
+            isBalanceSheetScrolling)
 
     var accountSearchQuery by rememberSaveable {
         mutableStateOf("")
@@ -265,7 +271,10 @@ fun AccountsScreen(
                     highlight = highlight,
                     showHidden = showHiddenState.value,
                     showZero = showZeroState.value,
-                    bottomPadding = dimensionResource(R.dimen.fab_related_bottom_padding)
+                    bottomPadding = dimensionResource(R.dimen.fab_related_bottom_padding),
+                    onListScrollingChanged = { scrolling ->
+                        isBalanceSheetScrolling = scrolling
+                    }
                 )
             }
         } else {

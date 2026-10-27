@@ -648,35 +648,64 @@ fun BalanceAccountItemView(
     highlight: Boolean,
     onNavigate: (FullAccount) -> Unit,
 ) {
-    val homeCurrency = LocalCurrencyContext.current.homeCurrencyUnit
-    Row(
+    val homeCurrency =
+        LocalCurrencyContext.current.homeCurrencyUnit
+
+    Surface(
         modifier = Modifier
-            .conditional(highlight) {
-                background(MaterialTheme.colorScheme.primaryContainer)
-            }
-            .clickable {
-                onNavigate(account)
-            }
             .fillMaxWidth()
             .padding(vertical = 3.dp)
+            .clickable {
+                onNavigate(account)
+            },
+        shape = MaterialTheme.shapes.medium,
+        color = if (highlight) {
+            MaterialTheme.colorScheme.primaryContainer
+        } else {
+            MaterialTheme.colorScheme.surfaceContainerLow
+        }
     ) {
-        Text(
-            text = account.label,
-            modifier = Modifier.weight(1f)
-        )
-        Column(horizontalAlignment = Alignment.End) {
-            ColoredAmountText(account.equivalentEffectiveBalance, homeCurrency, absolute = false)
-            if (account.currencyUnit.code != homeCurrency.code && account.effectiveBalance != 0L) {
-                AmountText(
-                    account.effectiveBalance,
-                    account.currencyUnit,
-                    fontSize = 10.sp
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = 14.dp,
+                    vertical = 12.dp
+                ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = account.label,
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Column(
+                horizontalAlignment = Alignment.End
+            ) {
+                ColoredAmountText(
+                    amount = account.equivalentEffectiveBalance,
+                    currency = homeCurrency,
+                    absolute = false,
+                    fontWeight = FontWeight.Medium,
+                    style = MaterialTheme.typography.bodyLarge
                 )
+
+                if (
+                    account.currencyUnit.code != homeCurrency.code &&
+                    account.effectiveBalance != 0L
+                ) {
+                    AmountText(
+                        account.effectiveBalance,
+                        account.currencyUnit,
+                        fontSize = 12.sp
+                    )
+                }
             }
         }
     }
 }
-
 
 @Composable
 fun RenderChart(

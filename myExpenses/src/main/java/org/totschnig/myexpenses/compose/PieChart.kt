@@ -34,6 +34,7 @@ fun PieChartCompose(
     data: List<PieEntry>,
     colors: List<Int>,
     showEntryLabels: Boolean = true,
+    showSelectionCenterText: Boolean = true,
     update: (PieChart) -> Unit = NoOpUpdate
 ) {
     val color = MaterialTheme.colorScheme.onSurface.toArgb()
@@ -79,7 +80,11 @@ fun PieChartCompose(
             override fun onValueSelected(e: Entry, highlight: Highlight) {
                 val index = highlight.x.toInt()
                 onValueSelected(index)
-                it.setCenterText(index)
+                if (showSelectionCenterText) {
+                    it.setCenterText(index)
+                } else {
+                    it.centerText = null
+                }
             }
 
             override fun onNothingSelected() {

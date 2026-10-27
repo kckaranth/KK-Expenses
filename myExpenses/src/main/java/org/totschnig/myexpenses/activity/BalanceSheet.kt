@@ -733,6 +733,7 @@ fun RenderChart(
         holeRadius = if (inner) 75f else 85f,
         angle = angle,
         showEntryLabels = false,
+        showSelectionCenterText = false,
         onValueSelected = { index ->
             highlight.value = index?.let { Triple(inner, index, accounts.getOrNull(index)?.id) }
         },
@@ -749,9 +750,13 @@ fun RenderChart(
                     context.theme
                 )
     ) {
+        // The Balance Sheet renders Net Worth using a
+        // Compose overlay. Suppress MPAndroidChart's
+        // own center text to prevent overlapping labels.
+        it.centerText = ""
+
         if (highlight.value?.first == !inner) {
             it.highlightValue(null)
-            it.centerText = ""
         }
     }
 }

@@ -51,6 +51,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -389,9 +390,11 @@ fun ColumnScope.BalanceSheetViewInner(
                 return totalIndex
             }
             LazyColumn(
-                modifier = modifier.optional(nestedScrollConnection) {
-                    nestedScroll(it)
-                },
+                modifier = modifier
+                    .clipToBounds()
+                    .optional(nestedScrollConnection) {
+                        nestedScroll(it)
+                    },
                 contentPadding = PaddingValues(
                     start = horizontalPadding,
                     end = horizontalPadding,

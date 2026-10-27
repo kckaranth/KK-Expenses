@@ -301,16 +301,17 @@ fun ColumnScope.BalanceSheetViewInner(
         showChart = showChart,
         chart = { modifier ->
             Box(
-                  modifier = modifier.fillMaxWidth(),
-                  contentAlignment = Alignment.Center
-              ) {
-                  Box(
-                      modifier = Modifier
-                          .widthIn(max = 320.dp)
-                          .fillMaxWidth()
-                          .aspectRatio(1f),
-                      contentAlignment = Alignment.Center
-                  ) {
+                modifier = modifier
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .widthIn(max = 280.dp)
+                        .fillMaxWidth()
+                        .aspectRatio(1f),
+                    contentAlignment = Alignment.Center
+                ) {
                 RenderChart(
                     modifier = Modifier
                         .fillMaxSize(0.95f)
@@ -662,6 +663,15 @@ fun LayoutHelper(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     chart(Modifier.fillMaxWidth())
+
+                    HorizontalDivider(
+                        modifier = Modifier.padding(
+                            horizontal = 16.dp,
+                            vertical = 8.dp
+                        ),
+                        color = MaterialTheme.colorScheme.outlineVariant
+                    )
+
                     data(Modifier.weight(1f))
                 }
             } else {

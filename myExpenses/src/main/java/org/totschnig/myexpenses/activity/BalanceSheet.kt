@@ -54,6 +54,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.draw.clipToBounds
@@ -408,7 +410,8 @@ fun ColumnScope.BalanceSheetViewInner(
                 Column(
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .fillMaxWidth(0.68f),
+                        .fillMaxWidth(0.68f)
+                        .semantics(mergeDescendants = true) {},
                     verticalArrangement =
                         androidx.compose.foundation.layout.Arrangement
                             .spacedBy(4.dp),
@@ -699,6 +702,9 @@ fun BalanceAccountItemView(
             .padding(vertical = 3.dp)
             .clickable {
                 onNavigate(account)
+            }
+            .semantics {
+                selected = highlight
             },
         shape = MaterialTheme.shapes.medium,
         color = if (highlight) {

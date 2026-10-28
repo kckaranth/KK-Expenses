@@ -54,6 +54,14 @@ jobs:
             -alias "$KK_ALIAS" > /dev/null
           echo "Permanent signing keystore validated"
           
+      - name: Run monthly financial regression tests
+        run: |
+          chmod +x gradlew
+          ./gradlew :myExpenses:testExternDebugUnitTest \
+            --tests "org.totschnig.myexpenses.compose.main.MonthlyActivityCalculationsTest" \
+            --no-daemon \
+            --stacktrace
+
       - name: Build signed debug APK
         env:
           KK_SIGNING_STORE_FILE: ${{ runner.temp }}/kk-expenses.jks

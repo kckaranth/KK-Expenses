@@ -69,41 +69,6 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-// Financial amounts are stored in the upstream database's integer minor units.
-private data class ActivityEntry(
-    val id: Long,
-    val accountId: Long,
-    val amount: Long,
-    val epoch: Long,
-    val description: String,
-    val categoryId: Long
-)
-private fun incomeExpenseTotals(
-    entries: List<ActivityEntry>
-): Pair<Long, Long> {
-    var income = 0L
-    var expense = 0L
-
-    entries.forEach { entry ->
-        when {
-            entry.amount > 0L -> income += entry.amount
-            entry.amount < 0L -> expense += entry.amount
-        }
-    }
-
-    return income to expense
-}
-
-private fun categorySpending(
-    entries: List<ActivityEntry>
-): Map<Long, Long> =
-    entries
-        .filter { it.amount < 0 }
-        .groupBy { it.categoryId }
-        .mapValues { (_, items) ->
-            items.sumOf { -it.amount }
-        }
-
 private data class MonthlyAccountSummary(
     val current: List<ActivityEntry>,
     val previous: List<ActivityEntry>,
@@ -329,6 +294,10 @@ onClick = { expanded = !expanded }) {
                     accounts.filter { it.id > 0 }
                 }
                 val entriesByAccount = remember(data) {
+                    data.entries.groupBy { it.accountId }
+                }
+
+                val categoryEntriesByAccount = remember(data) {
                     data.categoryEntries.groupBy { it.accountId }
                 }
 
@@ -336,6 +305,9 @@ onClick = { expanded = !expanded }) {
                     key(account.id) {
                     val accountEntries =
                         entriesByAccount[account.id].orEmpty()
+
+                    val accountCategoryEntries =
+                        categoryEntriesByAccount[account.id].orEmpty()
 
                     val monthlySummary = remember(
                         data,
@@ -357,6 +329,18 @@ onClick = { expanded = !expanded }) {
                         val (previousIncome, previousExpense) =
                             incomeExpenseTotals(previous)
 
+                        val currentCategoryEntries =
+                            accountCategoryEntries.filter {
+                                it.epoch >= start &&
+                                    it.epoch < end
+                            }
+
+                        val previousCategoryEntries =
+                            accountCategoryEntries.filter {
+                                it.epoch >= previousStart &&
+                                    it.epoch < start
+                            }
+
                         MonthlyAccountSummary(
                             current = current,
                             previous = previous,
@@ -364,8 +348,10 @@ onClick = { expanded = !expanded }) {
                             expense = expense,
                             previousIncome = previousIncome,
                             previousExpense = previousExpense,
-                            currentCategorySpending = categorySpending(current),
-                            previousCategorySpending = categorySpending(previous)
+                            currentCategorySpending =
+                                categorySpending(currentCategoryEntries),
+                            previousCategorySpending =
+                                categorySpending(previousCategoryEntries)
                         )
                     }
 

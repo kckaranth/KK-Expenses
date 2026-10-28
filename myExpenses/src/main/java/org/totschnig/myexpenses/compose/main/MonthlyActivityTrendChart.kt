@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
@@ -33,6 +34,8 @@ import org.totschnig.myexpenses.compose.LocalCurrencyFormatter
 import org.totschnig.myexpenses.model.CurrencyUnit
 import org.totschnig.myexpenses.util.convAmount
 import java.time.format.DateTimeFormatter
+import java.text.NumberFormat
+import java.util.Locale
 import kotlin.math.roundToInt
 
 @Composable
@@ -69,9 +72,48 @@ internal fun MonthlyActivityTrendChart(
     val maximum = maxOf(0.0, values.maxOrNull() ?: 0.0)
     val range = (maximum - minimum).coerceAtLeast(1.0)
 
+    val axisFormatter = remember(currency.code) {
+        NumberFormat.getNumberInstance(
+            Locale.getDefault()
+        ).apply {
+            maximumFractionDigits = 1
+            minimumFractionDigits = 0
+        }
+    }
+
+    val fractionDigits = remember(currency.code) {
+        runCatching {
+            java.util.Currency.getInstance(
+                currency.code
+            ).defaultFractionDigits
+        }.getOrDefault(2).coerceAtLeast(0)
+    }
+
+    fun axisLabel(value: Double): String {
+        val major = value /
+            Math.pow(10.0, fractionDigits.toDouble())
+
+        val absolute = kotlin.math.abs(major)
+
+        val divisor = when {
+            absolute >= 1_000_000.0 -> 1_000_000.0
+            absolute >= 1_000.0 -> 1_000.0
+            else -> 1.0
+        }
+
+        val suffix = when (divisor) {
+            1_000_000.0 -> "M"
+            1_000.0 -> "K"
+            else -> ""
+        }
+
+        return axisFormatter.format(major / divisor) +
+            suffix
+    }
+
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         Text(
             text = "Six-month trends",
@@ -92,8 +134,8 @@ internal fun MonthlyActivityTrendChart(
                 .height(190.dp)
                 .pointerInput(points) {
                     detectTapGestures { tap ->
-                        val left = 12.dp.toPx()
-                        val right = size.width - left
+                        val left = 48.dp.toPx()
+                        val right = size.width - 12.dp.toPx()
                         val width = (right - left)
                             .coerceAtLeast(1f)
 
@@ -109,7 +151,7 @@ internal fun MonthlyActivityTrendChart(
                     }
                 }
         ) {
-            val left = 12.dp.toPx()
+            val left = 48.dp.toPx()
             val right = size.width - 12.dp.toPx()
             val top = 12.dp.toPx()
             val bottom = size.height - 12.dp.toPx()
@@ -135,15 +177,35 @@ internal fun MonthlyActivityTrendChart(
                 bottom - ((0.0 - minimum) / range) * height
             ).toFloat()
 
-            // Subtle horizontal reference gridlines.
+            // Subtle gridlines with compact axis values.
+            val axisPaint = android.graphics.Paint(
+                android.graphics.Paint.ANTI_ALIAS_FLAG
+            ).apply {
+                color = android.graphics.Color.LTGRAY
+                alpha = 180
+                textSize = 10.sp.toPx()
+                textAlign =
+                    android.graphics.Paint.Align.RIGHT
+            }
+
             for (step in 0..4) {
+                val fraction = step / 4.0
                 val gridY = top + height * step / 4f
+                val gridValue =
+                    maximum - fraction * range
 
                 drawLine(
                     color = Color.Gray.copy(alpha = 0.12f),
                     start = Offset(left, gridY),
                     end = Offset(right, gridY),
                     strokeWidth = 0.7.dp.toPx()
+                )
+
+                drawContext.canvas.nativeCanvas.drawText(
+                    axisLabel(gridValue),
+                    left - 7.dp.toPx(),
+                    gridY + axisPaint.textSize * 0.35f,
+                    axisPaint
                 )
             }
 
@@ -235,7 +297,11 @@ internal fun MonthlyActivityTrendChart(
                     text = point.month.format(
                         DateTimeFormatter.ofPattern("MMM")
                     ),
-                    style = MaterialTheme.typography.labelSmall,
+                    style = if (index == selectedIndex) {
+                        MaterialTheme.typography.labelMedium
+                    } else {
+                        MaterialTheme.typography.labelSmall
+                    },
                     color = if (index == selectedIndex) {
                         MaterialTheme.colorScheme.primary
                     } else {

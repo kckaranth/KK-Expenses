@@ -122,4 +122,127 @@ class MonthlyActivityCalculationsTest {
             incomeExpenseTotals(accountTwo)
         ).isEqualTo(20000L to 0L)
     }
+
+    @Test
+    fun sixMonthTrendIncludesEmptyMonths() {
+        val zone = java.time.ZoneId.of("UTC")
+        val selected = java.time.YearMonth.of(2026, 10)
+
+        val points = monthlyActivityTrend(
+            emptyList(), selected, zone
+        )
+
+        assertThat(points).hasSize(6)
+        assertThat(points.first().month)
+            .isEqualTo(java.time.YearMonth.of(2026, 5))
+        assertThat(points.last().month)
+            .isEqualTo(selected)
+
+        points.forEach {
+            assertThat(it.income).isEqualTo(0L)
+            assertThat(it.expenses).isEqualTo(0L)
+            assertThat(it.netCashFlow).isEqualTo(0L)
+        }
+    }
+
+    @Test
+    fun trendCalculatesIncomeExpensesAndNetFlow() {
+        val zone = java.time.ZoneId.of("UTC")
+        val epoch = java.time.LocalDate.of(2026, 10, 15)
+            .atStartOfDay(zone).toEpochSecond()
+
+        val entries = listOf(
+            entry(1, 1, 500000, epoch = epoch),
+            entry(2, 1, -200000, epoch = epoch)
+        )
+
+        val october = monthlyActivityTrend(
+            entries,
+            java.time.YearMonth.of(2026, 10),
+            zone
+        ).last()
+
+        assertThat(october.income).isEqualTo(500000L)
+        assertThat(october.expenses).isEqualTo(200000L)
+        assertThat(october.netCashFlow).isEqualTo(300000L)
+    }
+
+    @Test
+    fun trendSupportsNegativeCashFlow() {
+        val zone = java.time.ZoneId.of("UTC")
+        val epoch = java.time.LocalDate.of(2026, 10, 10)
+            .atStartOfDay(zone).toEpochSecond()
+
+        val points = monthlyActivityTrend(
+            listOf(
+                entry(1, 1, 100000, epoch = epoch),
+                entry(2, 1, -250000, epoch = epoch)
+            ),
+            java.time.YearMonth.of(2026, 10),
+            zone
+        )
+
+        assertThat(points.last().netCashFlow)
+            .isEqualTo(-150000L)
+    }
+
+    @Test
+    fun trendExcludesTransactionsOutsideWindow() {
+        val zone = java.time.ZoneId.of("UTC")
+
+        fun epoch(year: Int, month: Int) =
+            java.time.LocalDate.of(year, month, 15)
+                .atStartOfDay(zone).toEpochSecond()
+
+        val entries = listOf(
+            entry(1, 1, 10000, epoch = epoch(2026, 4)),
+            entry(2, 1, 20000, epoch = epoch(2026, 5)),
+            entry(3, 1, 30000, epoch = epoch(2026, 10)),
+            entry(4, 1, 40000, epoch = epoch(2026, 11))
+        )
+
+        val points = monthlyActivityTrend(
+            entries,
+            java.time.YearMonth.of(2026, 10),
+            zone
+        )
+
+        assertThat(points.sumOf { it.income })
+            .isEqualTo(50000L)
+    }
+
+    @Test
+    fun trendHandlesYearBoundary() {
+        val points = monthlyActivityTrend(
+            emptyList(),
+            java.time.YearMonth.of(2026, 2),
+            java.time.ZoneId.of("UTC")
+        )
+
+        assertThat(points.map { it.month }).containsExactly(
+            java.time.YearMonth.of(2025, 9),
+            java.time.YearMonth.of(2025, 10),
+            java.time.YearMonth.of(2025, 11),
+            java.time.YearMonth.of(2025, 12),
+            java.time.YearMonth.of(2026, 1),
+            java.time.YearMonth.of(2026, 2)
+        ).inOrder()
+    }
+
+    @Test
+    fun trendRespectsLocalTimezone() {
+        val zone = java.time.ZoneId.of("Asia/Kolkata")
+
+        val epoch = java.time.Instant.parse(
+            "2026-09-30T20:00:00Z"
+        ).epochSecond
+
+        val points = monthlyActivityTrend(
+            listOf(entry(1, 1, 5000, epoch = epoch)),
+            java.time.YearMonth.of(2026, 10),
+            zone
+        )
+
+        assertThat(points.last().income).isEqualTo(5000L)
+    }
 }

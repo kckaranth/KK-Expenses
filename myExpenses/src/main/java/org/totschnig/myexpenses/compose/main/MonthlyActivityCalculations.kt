@@ -34,3 +34,56 @@ internal fun categorySpending(
         .mapValues { (_, items) ->
             items.sumOf { -it.amount }
         }
+
+internal data class MonthlyTrendPoint(
+    val month: java.time.YearMonth,
+    val income: Long,
+    val expenses: Long,
+    val netCashFlow: Long
+)
+
+internal fun monthlyActivityTrend(
+    entries: List<ActivityEntry>,
+    selectedMonth: java.time.YearMonth,
+    zone: java.time.ZoneId,
+    monthCount: Int = 6
+): List<MonthlyTrendPoint> {
+    require(monthCount > 0)
+
+    val firstMonth = selectedMonth.minusMonths(
+        (monthCount - 1).toLong()
+    )
+
+    val totalsByMonth = entries
+        .asSequence()
+        .map { entry ->
+            val month = java.time.YearMonth.from(
+                java.time.Instant.ofEpochSecond(entry.epoch)
+                    .atZone(zone)
+            )
+            month to entry
+        }
+        .filter { (month, _) ->
+            month >= firstMonth && month <= selectedMonth
+        }
+        .groupBy(
+            keySelector = { it.first },
+            valueTransform = { it.second }
+        )
+        .mapValues { (_, monthEntries) ->
+            incomeExpenseTotals(monthEntries)
+        }
+
+    return (0 until monthCount).map { offset ->
+        val month = firstMonth.plusMonths(offset.toLong())
+        val (income, expense) =
+            totalsByMonth[month] ?: (0L to 0L)
+
+        MonthlyTrendPoint(
+            month = month,
+            income = income,
+            expenses = -expense,
+            netCashFlow = income + expense
+        )
+    }
+}

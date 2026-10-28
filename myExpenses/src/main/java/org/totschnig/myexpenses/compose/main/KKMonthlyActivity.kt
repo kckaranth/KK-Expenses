@@ -66,6 +66,7 @@ import org.totschnig.myexpenses.provider.STATUS_ARCHIVED
 import org.totschnig.myexpenses.viewmodel.data.FullAccount
 import java.time.Instant
 import java.time.LocalDate
+import java.time.YearMonth
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
@@ -466,6 +467,27 @@ onClick = { expanded = !expanded }) {
                         }
                     }
                     if (account.id in expandedAccounts) {
+                    val trendPoints = remember(
+                        data,
+                        monthStart,
+                        account.id,
+                        zone
+                    ) {
+                        monthlyActivityTrend(
+                            entries = accountEntries,
+                            selectedMonth = YearMonth.from(monthStart),
+                            zone = zone
+                        )
+                    }
+
+                    MonthlyActivityTrendChart(
+                        points = trendPoints,
+                        currency = account.currencyUnit,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp)
+                    )
+
                     if (month.isEmpty() && previousMonth.isEmpty()) {
                         Text(
                             "No activity in the previous month either.",

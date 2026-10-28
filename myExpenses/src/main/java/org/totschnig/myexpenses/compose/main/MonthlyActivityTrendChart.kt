@@ -135,10 +135,37 @@ internal fun MonthlyActivityTrendChart(
                 bottom - ((0.0 - minimum) / range) * height
             ).toFloat()
 
+            // Subtle horizontal reference gridlines.
+            for (step in 0..4) {
+                val gridY = top + height * step / 4f
+
+                drawLine(
+                    color = Color.Gray.copy(alpha = 0.12f),
+                    start = Offset(left, gridY),
+                    end = Offset(right, gridY),
+                    strokeWidth = 0.7.dp.toPx()
+                )
+            }
+
+            // Keep the zero baseline distinguishable.
             drawLine(
-                color = Color.Gray.copy(alpha = 0.35f),
+                color = Color.Gray.copy(alpha = 0.40f),
                 start = Offset(left, baseline),
                 end = Offset(right, baseline),
+                strokeWidth = 1.dp.toPx()
+            )
+
+            // Highlight the selected month.
+            val safeSelectedIndex = selectedIndex.coerceIn(
+                0, points.lastIndex
+            )
+
+            val selectedX = x(safeSelectedIndex)
+
+            drawLine(
+                color = Color.Gray.copy(alpha = 0.45f),
+                start = Offset(selectedX, top),
+                end = Offset(selectedX, bottom),
                 strokeWidth = 1.dp.toPx()
             )
 
@@ -175,13 +202,22 @@ internal fun MonthlyActivityTrendChart(
                 )
                 val point = points[safeIndex]
 
+                val markerCenter = Offset(
+                    x(safeIndex),
+                    y(selector(point))
+                )
+
+                // Outer ring improves visibility.
+                drawCircle(
+                    color = color.copy(alpha = 0.25f),
+                    radius = 8.dp.toPx(),
+                    center = markerCenter
+                )
+
                 drawCircle(
                     color = color,
-                    radius = 5.dp.toPx(),
-                    center = Offset(
-                        x(safeIndex),
-                        y(selector(point))
-                    )
+                    radius = 4.5.dp.toPx(),
+                    center = markerCenter
                 )
             }
 

@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.totschnig.myexpenses.compose.LocalCurrencyFormatter
 import org.totschnig.myexpenses.model.CurrencyUnit
 import org.totschnig.myexpenses.util.convAmount

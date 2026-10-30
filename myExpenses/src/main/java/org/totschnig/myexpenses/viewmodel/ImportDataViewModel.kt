@@ -1,4 +1,5 @@
 package org.totschnig.myexpenses.viewmodel
+import org.totschnig.myexpenses.model.canCreateAnotherAccount
 
 import android.app.Application
 import android.net.Uri
@@ -81,8 +82,11 @@ abstract class ImportDataViewModel(application: Application) :
                 } ?: throw IllegalArgumentException("Account type is null")
                 account.toAccount(currencyUnit, accountType).let {
                     importCount++
-                    if (!hasUnlimitedAccounts &&
-                        nrOfAccounts + importCount > ContribFeature.FREE_ACCOUNTS
+                    if (!canCreateAnotherAccount(
+                            accountCount =
+                                nrOfAccounts + importCount - 1,
+                            hasUnlimitedAccess = hasUnlimitedAccounts
+                        )
                     ) {
                         throw ContribFeatureNotAvailableException(
                             localizedContext.getString(

@@ -59,6 +59,7 @@ jobs:
           chmod +x gradlew
           ./gradlew :myExpenses:testExternDebugUnitTest \
             --tests "org.totschnig.myexpenses.compose.main.MonthlyActivityCalculationsTest" \
+            --tests "org.totschnig.myexpenses.model.AccountLimitPolicyTest" \
             --no-daemon \
             --stacktrace
 

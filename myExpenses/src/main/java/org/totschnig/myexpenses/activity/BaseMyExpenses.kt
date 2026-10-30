@@ -1,4 +1,5 @@
 package org.totschnig.myexpenses.activity
+import org.totschnig.myexpenses.model.canCreateAnotherAccount
 
 import android.content.ComponentName
 import android.content.Intent
@@ -755,10 +756,19 @@ abstract class BaseMyExpenses<T : MyExpensesViewModel> : LaunchActivity(),
     }
 
     open fun createAccountWithCheck() {
-        if (accountCount < ContribFeature.FREE_ACCOUNTS) {
+        if (canCreateAnotherAccount(
+                accountCount = accountCount,
+                hasUnlimitedAccess = licenceHandler.hasAccessTo(
+                    ContribFeature.ACCOUNTS_UNLIMITED
+                )
+            )
+        ) {
             createAccountDo()
         } else {
-            showContribDialog(ContribFeature.ACCOUNTS_UNLIMITED, null)
+            showContribDialog(
+                ContribFeature.ACCOUNTS_UNLIMITED,
+                null
+            )
         }
     }
 

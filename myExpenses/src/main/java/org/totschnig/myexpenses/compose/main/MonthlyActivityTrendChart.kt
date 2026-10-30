@@ -6,6 +6,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -326,16 +329,39 @@ internal fun MonthlyActivityTrendChart(
             drawSeries(netColor) { it.netCashFlow }
         }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        BoxWithConstraints(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
         ) {
+            val plotLeft = 48.dp
+            val plotRight = maxWidth - 12.dp
+            val plotWidth = plotRight - plotLeft
+            val labelWidth = 44.dp
+
             points.forEachIndexed { index, point ->
                 val isSelected = index == selectedIndex
 
+                val center = if (points.size == 1) {
+                    plotLeft + plotWidth / 2
+                } else {
+                    plotLeft +
+                        plotWidth * index.toFloat() /
+                        points.lastIndex.toFloat()
+                }
+
+                val labelLeft = (
+                    center - labelWidth / 2
+                ).coerceIn(
+                    0.dp,
+                    (maxWidth - labelWidth).coerceAtLeast(0.dp)
+                )
+
                 Box(
                     modifier = Modifier
+                        .offset(x = labelLeft)
+                        .width(labelWidth)
+                        .height(48.dp)
                         .background(
                             color = if (isSelected) {
                                 MaterialTheme.colorScheme
@@ -347,11 +373,7 @@ internal fun MonthlyActivityTrendChart(
                         )
                         .clickable {
                             selectedIndex = index
-                        }
-                        .padding(
-                            horizontal = 5.dp,
-                            vertical = 8.dp
-                        ),
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -369,7 +391,8 @@ internal fun MonthlyActivityTrendChart(
                         } else {
                             MaterialTheme.colorScheme
                                 .onSurfaceVariant
-                        }
+                        },
+                        maxLines = 1
                     )
                 }
             }

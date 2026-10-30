@@ -501,7 +501,11 @@ onClick = { expanded = !expanded }) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "Compared with " +
+                            monthStart.format(
+                                DateTimeFormatter.ofPattern(
+                                    "MMMM yyyy"
+                                )
+                            ) + " compared with " +
                                 monthStart.minusMonths(1).format(
                                     DateTimeFormatter.ofPattern(
                                         "MMMM yyyy"

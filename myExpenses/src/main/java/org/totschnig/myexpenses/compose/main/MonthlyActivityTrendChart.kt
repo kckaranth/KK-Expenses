@@ -202,20 +202,44 @@ internal fun MonthlyActivityTrendChart(
                     strokeWidth = 0.7.dp.toPx()
                 )
 
-                drawContext.canvas.nativeCanvas.drawText(
-                    axisLabel(gridValue),
-                    left - 7.dp.toPx(),
-                    gridY + axisPaint.textSize * 0.35f,
-                    axisPaint
-                )
+                val zeroLabelClearance =
+                    axisPaint.textSize * 1.4f
+
+                if (
+                    kotlin.math.abs(gridY - baseline) >
+                    zeroLabelClearance
+                ) {
+                    drawContext.canvas.nativeCanvas.drawText(
+                        axisLabel(gridValue),
+                        left - 7.dp.toPx(),
+                        gridY + axisPaint.textSize * 0.35f,
+                        axisPaint
+                    )
+                }
             }
 
-            // Keep the zero baseline distinguishable.
+            // Emphasize the exact zero baseline.
             drawLine(
-                color = Color.Gray.copy(alpha = 0.40f),
+                color = Color.Gray.copy(alpha = 0.65f),
                 start = Offset(left, baseline),
                 end = Offset(right, baseline),
-                strokeWidth = 1.dp.toPx()
+                strokeWidth = 1.3.dp.toPx()
+            )
+
+            // Always label zero at its actual position.
+            val zeroPaint = android.graphics.Paint(
+                axisPaint
+            ).apply {
+                color = android.graphics.Color.WHITE
+                alpha = 220
+                isFakeBoldText = true
+            }
+
+            drawContext.canvas.nativeCanvas.drawText(
+                "0",
+                left - 7.dp.toPx(),
+                baseline + zeroPaint.textSize * 0.35f,
+                zeroPaint
             )
 
             // Highlight the selected month.

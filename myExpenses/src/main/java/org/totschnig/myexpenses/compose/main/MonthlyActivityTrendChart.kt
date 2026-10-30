@@ -1,6 +1,7 @@
 package org.totschnig.myexpenses.compose.main
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -69,6 +70,10 @@ internal fun MonthlyActivityTrendChart(
         )
     }
 
+    val hasFinancialActivity = points.any {
+        it.income != 0L || it.expenses != 0L
+    }
+
     val minimum = minOf(0.0, values.minOrNull() ?: 0.0)
     val maximum = maxOf(0.0, values.maxOrNull() ?: 0.0)
     val range = (maximum - minimum).coerceAtLeast(1.0)
@@ -127,6 +132,14 @@ internal fun MonthlyActivityTrendChart(
             TrendLegend("Income", incomeColor)
             TrendLegend("Expenses", expenseColor)
             TrendLegend("Net", netColor)
+        }
+
+        if (!hasFinancialActivity) {
+            Text(
+                text = "No income or expenses in this period",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
 
         Canvas(
@@ -315,24 +328,50 @@ internal fun MonthlyActivityTrendChart(
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             points.forEachIndexed { index, point ->
-                Text(
-                    text = point.month.format(
-                        DateTimeFormatter.ofPattern("MMM")
-                    ),
-                    style = if (index == selectedIndex) {
-                        MaterialTheme.typography.labelMedium
-                    } else {
-                        MaterialTheme.typography.labelSmall
-                    },
-                    color = if (index == selectedIndex) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    }
-                )
+                val isSelected = index == selectedIndex
+
+                Box(
+                    modifier = Modifier
+                        .background(
+                            color = if (isSelected) {
+                                MaterialTheme.colorScheme
+                                    .secondaryContainer
+                            } else {
+                                Color.Transparent
+                            },
+                            shape = MaterialTheme.shapes.small
+                        )
+                        .clickable {
+                            selectedIndex = index
+                        }
+                        .padding(
+                            horizontal = 5.dp,
+                            vertical = 8.dp
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = point.month.format(
+                            DateTimeFormatter.ofPattern("MMM")
+                        ),
+                        style = if (isSelected) {
+                            MaterialTheme.typography.labelMedium
+                        } else {
+                            MaterialTheme.typography.labelSmall
+                        },
+                        color = if (isSelected) {
+                            MaterialTheme.colorScheme
+                                .onSecondaryContainer
+                        } else {
+                            MaterialTheme.colorScheme
+                                .onSurfaceVariant
+                        }
+                    )
+                }
             }
         }
 

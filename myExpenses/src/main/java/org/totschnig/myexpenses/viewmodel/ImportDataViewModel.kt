@@ -1,12 +1,11 @@
 package org.totschnig.myexpenses.viewmodel
-import org.totschnig.myexpenses.model.canCreateAnotherAccount
+import org.totschnig.myexpenses.model.KKLocalAccountPolicy
 
 import android.app.Application
 import android.net.Uri
 import android.text.TextUtils
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import org.totschnig.myexpenses.MyApplication
 import org.totschnig.myexpenses.R
 import org.totschnig.myexpenses.db2.AutoFillInfo
 import org.totschnig.myexpenses.db2.CategoryHelper
@@ -65,8 +64,6 @@ abstract class ImportDataViewModel(application: Application) :
 
     fun insertAccounts(accounts: List<ImportAccount>, currencyUnit: CurrencyUnit, uri: Uri): Int {
         val nrOfAccounts = repository.countAccounts()
-        val hasUnlimitedAccounts = getApplication<MyApplication>().appComponent.licenceHandler()
-            .hasAccessTo(ContribFeature.ACCOUNTS_UNLIMITED)
         var importCount = 0
         for (account: ImportAccount in accounts) {
             val dbAccountId =
@@ -81,11 +78,9 @@ abstract class ImportDataViewModel(application: Application) :
                     repository.findAccountType(it)
                 } ?: throw IllegalArgumentException("Account type is null")
                 account.toAccount(currencyUnit, accountType).let {
-                    importCount++
-                    if (!canCreateAnotherAccount(
-                            accountCount =
-                                nrOfAccounts + importCount - 1,
-                            hasUnlimitedAccess = hasUnlimitedAccounts
+                    if (!KKLocalAccountPolicy.canImport(
+                            existingAccountCount = nrOfAccounts,
+                            newAccountCount = importCount + 1
                         )
                     ) {
                         throw ContribFeatureNotAvailableException(
@@ -104,7 +99,9 @@ abstract class ImportDataViewModel(application: Application) :
                     }
                     repository.createAccount(
                         if (it.label.isEmpty()) it.copy(label = getDefaultAccountName(uri)) else it
-                    )
+                    ).also {
+                        importCount++
+                    }
                 }
             }
             accountTitleToAccount[account.memo] = dbAccount

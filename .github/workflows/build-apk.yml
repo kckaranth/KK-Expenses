@@ -60,6 +60,7 @@ jobs:
           ./gradlew :myExpenses:testExternDebugUnitTest \
             --tests "org.totschnig.myexpenses.compose.main.MonthlyActivityCalculationsTest" \
             --tests "org.totschnig.myexpenses.model.AccountLimitPolicyTest" \
+            --tests "org.totschnig.myexpenses.model.KKLocalAccountPolicyTest" \
             --no-daemon \
             --stacktrace
 

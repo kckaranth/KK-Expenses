@@ -31,7 +31,7 @@ import org.totschnig.myexpenses.db2.Repository
 import org.totschnig.myexpenses.db2.countAccounts
 import org.totschnig.myexpenses.db2.updateNewPlanEnabled
 import org.totschnig.myexpenses.model.ContribFeature
-import org.totschnig.myexpenses.model.canCreateAnotherAccount
+import org.totschnig.myexpenses.model.KKLocalAccountPolicy
 import org.totschnig.myexpenses.model.CurrencyUnit
 import org.totschnig.myexpenses.preference.PrefHandler
 import org.totschnig.myexpenses.preference.PrefKey
@@ -442,13 +442,13 @@ open class LicenceHandler(
     }
 
     fun updateNewAccountEnabled() {
-        val newAccountEnabled = canCreateAnotherAccount(
-            accountCount = repository.countAccounts(),
-            hasUnlimitedAccess = hasAccessTo(
-                ContribFeature.ACCOUNTS_UNLIMITED
-            )
+        val newAccountEnabled = KKLocalAccountPolicy.canCreate(
+            existingAccountCount = repository.countAccounts()
         )
-        prefHandler.putBoolean(PrefKey.NEW_ACCOUNT_ENABLED, newAccountEnabled)
+        prefHandler.putBoolean(
+            PrefKey.NEW_ACCOUNT_ENABLED,
+            newAccountEnabled
+        )
     }
 
     fun recordUsage(feature: ContribFeature) {

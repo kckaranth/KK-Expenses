@@ -1,5 +1,5 @@
 package org.totschnig.myexpenses.activity
-import org.totschnig.myexpenses.model.canCreateAnotherAccount
+import org.totschnig.myexpenses.model.KKLocalAccountPolicy
 
 import android.content.ComponentName
 import android.content.Intent
@@ -748,19 +748,14 @@ abstract class BaseMyExpenses<T : MyExpensesViewModel> : LaunchActivity(),
         }
 
     protected fun createAccount() {
-        if (licenceHandler.hasAccessTo(ContribFeature.ACCOUNTS_UNLIMITED)) {
-            createAccountDo()
-        } else {
-            createAccountWithCheck()
-        }
+        createAccountWithCheck()
     }
 
     open fun createAccountWithCheck() {
-        if (canCreateAnotherAccount(
-                accountCount = accountCount,
-                hasUnlimitedAccess = licenceHandler.hasAccessTo(
-                    ContribFeature.ACCOUNTS_UNLIMITED
-                )
+        if (KKLocalAccountPolicy.canCreate(
+                existingAccountCount = accountCount
+            ) || licenceHandler.hasAccessTo(
+                ContribFeature.ACCOUNTS_UNLIMITED
             )
         ) {
             createAccountDo()

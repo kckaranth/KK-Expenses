@@ -120,7 +120,8 @@ private fun readActivity(context: Context): ActivitySnapshot {
             KEY_ROWID, KEY_ACCOUNTID, KEY_AMOUNT,
             KEY_DATE, KEY_COMMENT, KEY_CATID, KEY_PARENTID
         ),
-        "$KEY_PARENTID IS NOT NULL AND $KEY_TRANSFER_PEER IS NULL",
+        "$KEY_PARENTID IS NOT NULL AND $KEY_TRANSFER_PEER IS NULL AND " +
+            "$KEY_STATUS != $STATUS_ARCHIVED AND $KEY_CR_STATUS != 'VOID'",
         null,
         "$KEY_DATE DESC"
     )?.use { cursor ->

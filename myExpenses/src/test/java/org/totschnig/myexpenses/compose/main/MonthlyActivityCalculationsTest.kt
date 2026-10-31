@@ -245,4 +245,58 @@ class MonthlyActivityCalculationsTest {
 
         assertThat(points.last().income).isEqualTo(5000L)
     }
+
+    @Test
+    fun mixedSplitReconciliationBalances() {
+        val parents = listOf(
+            entry(1, 1, -40000)
+        )
+
+        val categories = listOf(
+            entry(2, 1, -50000, 10),
+            entry(3, 1, 10000, 20)
+        )
+
+        val result = mixedSplitReconciliation(
+            parents,
+            categories
+        )
+
+        assertThat(result.grossCategoryExpenses)
+            .isEqualTo(50000L)
+        assertThat(result.netTransactionExpenses)
+            .isEqualTo(40000L)
+        assertThat(result.reconciliationDifference)
+            .isEqualTo(10000L)
+    }
+
+    @Test
+    fun ordinaryExpenseHasNoOffset() {
+        val entries = listOf(
+            entry(1, 1, -20000, 10)
+        )
+
+        val result = mixedSplitReconciliation(
+            entries,
+            entries
+        )
+
+        assertThat(result.reconciliationDifference)
+            .isEqualTo(0L)
+    }
+
+    @Test
+    fun emptyReconciliationIsZero() {
+        val result = mixedSplitReconciliation(
+            emptyList(),
+            emptyList()
+        )
+
+        assertThat(result.grossCategoryExpenses)
+            .isEqualTo(0L)
+        assertThat(result.netTransactionExpenses)
+            .isEqualTo(0L)
+        assertThat(result.reconciliationDifference)
+            .isEqualTo(0L)
+    }
 }

@@ -87,3 +87,37 @@ internal fun monthlyActivityTrend(
         )
     }
 }
+
+
+/**
+ * Reconciles gross category expenses with net parent
+ * transaction expenses.
+ *
+ * All amounts use integer minor currency units.
+ *
+ * This is a reporting calculation only.
+ */
+internal data class MixedSplitReconciliation(
+    val grossCategoryExpenses: Long,
+    val netTransactionExpenses: Long,
+    val reconciliationDifference: Long
+)
+
+internal fun mixedSplitReconciliation(
+    parentEntries: List<ActivityEntry>,
+    categoryEntries: List<ActivityEntry>
+): MixedSplitReconciliation {
+    val gross = categoryEntries
+        .filter { it.amount < 0L }
+        .sumOf { -it.amount }
+
+    val net = parentEntries
+        .filter { it.amount < 0L }
+        .sumOf { -it.amount }
+
+    return MixedSplitReconciliation(
+        grossCategoryExpenses = gross,
+        netTransactionExpenses = net,
+        reconciliationDifference = gross - net
+    )
+}

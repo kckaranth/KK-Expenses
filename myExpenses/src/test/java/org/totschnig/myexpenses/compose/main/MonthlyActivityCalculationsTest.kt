@@ -299,4 +299,132 @@ class MonthlyActivityCalculationsTest {
         assertThat(result.reconciliationDifference)
             .isEqualTo(0L)
     }
+
+    @Test
+    fun multipleMixedSplitsReconcile() {
+        val parents = listOf(
+            entry(1, 1, -40000),
+            entry(2, 1, -25000)
+        )
+
+        val categories = listOf(
+            entry(3, 1, -50000, 10),
+            entry(4, 1, 10000, 20),
+            entry(5, 1, -30000, 30),
+            entry(6, 1, 5000, 40)
+        )
+
+        val result = mixedSplitReconciliation(
+            parents,
+            categories
+        )
+
+        assertThat(result.grossCategoryExpenses)
+            .isEqualTo(80000L)
+
+        assertThat(result.netTransactionExpenses)
+            .isEqualTo(65000L)
+
+        assertThat(result.reconciliationDifference)
+            .isEqualTo(15000L)
+    }
+
+    @Test
+    fun positiveOnlyTransactionsHaveNoExpenses() {
+        val entries = listOf(
+            entry(1, 1, 10000, 10),
+            entry(2, 1, 5000, 20)
+        )
+
+        val result = mixedSplitReconciliation(
+            entries,
+            entries
+        )
+
+        assertThat(result.grossCategoryExpenses)
+            .isEqualTo(0L)
+
+        assertThat(result.netTransactionExpenses)
+            .isEqualTo(0L)
+
+        assertThat(result.reconciliationDifference)
+            .isEqualTo(0L)
+    }
+
+    @Test
+    fun multipleOrdinaryExpensesHaveNoDifference() {
+        val entries = listOf(
+            entry(1, 1, -10000, 10),
+            entry(2, 1, -20000, 20),
+            entry(3, 1, -5000, 30)
+        )
+
+        val result = mixedSplitReconciliation(
+            entries,
+            entries
+        )
+
+        assertThat(result.grossCategoryExpenses)
+            .isEqualTo(35000L)
+
+        assertThat(result.netTransactionExpenses)
+            .isEqualTo(35000L)
+
+        assertThat(result.reconciliationDifference)
+            .isEqualTo(0L)
+    }
+
+    @Test
+    fun mixedSplitAndOrdinaryExpenseReconcile() {
+        val parents = listOf(
+            entry(1, 1, -40000),
+            entry(2, 1, -20000, 30)
+        )
+
+        val categories = listOf(
+            entry(3, 1, -50000, 10),
+            entry(4, 1, 10000, 20),
+            entry(2, 1, -20000, 30)
+        )
+
+        val result = mixedSplitReconciliation(
+            parents,
+            categories
+        )
+
+        assertThat(result.grossCategoryExpenses)
+            .isEqualTo(70000L)
+
+        assertThat(result.netTransactionExpenses)
+            .isEqualTo(60000L)
+
+        assertThat(result.reconciliationDifference)
+            .isEqualTo(10000L)
+    }
+
+    @Test
+    fun categoryShortfallProducesNegativeDifference() {
+        val parents = listOf(
+            entry(1, 1, -50000)
+        )
+
+        val categories = listOf(
+            entry(2, 1, -30000, 10)
+        )
+
+        val result = mixedSplitReconciliation(
+            parents,
+            categories
+        )
+
+        assertThat(result.grossCategoryExpenses)
+            .isEqualTo(30000L)
+
+        assertThat(result.netTransactionExpenses)
+            .isEqualTo(50000L)
+
+        assertThat(result.reconciliationDifference)
+            .isEqualTo(-20000L)
+    }
+
 }

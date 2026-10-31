@@ -78,7 +78,8 @@ private data class MonthlyAccountSummary(
     val previousIncome: Long,
     val previousExpense: Long,
     val currentCategorySpending: Map<Long, Long>,
-    val previousCategorySpending: Map<Long, Long>
+    val previousCategorySpending: Map<Long, Long>,
+    val reconciliation: MixedSplitReconciliation
 )
 
 private data class ActivitySnapshot(
@@ -352,7 +353,11 @@ onClick = { expanded = !expanded }) {
                             currentCategorySpending =
                                 categorySpending(currentCategoryEntries),
                             previousCategorySpending =
-                                categorySpending(previousCategoryEntries)
+                                categorySpending(previousCategoryEntries),
+                            reconciliation = mixedSplitReconciliation(
+                                parentEntries = current,
+                                categoryEntries = currentCategoryEntries
+                            )
                         )
                     }
 
@@ -699,6 +704,54 @@ onClick = { expanded = !expanded }) {
                         currency = account.currencyUnit,
                         modifier = Modifier.fillMaxWidth()
                     )
+
+                    val reconciliation = monthlySummary.reconciliation
+
+                    if (reconciliation.reconciliationDifference != 0L) {
+                        Text(
+                            "Category spending reconciliation",
+                            style = MaterialTheme.typography.labelLarge
+                        )
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Gross category expenses")
+                            Text(
+                                formatter.convAmount(
+                                    reconciliation.grossCategoryExpenses,
+                                    account.currencyUnit
+                                )
+                            )
+                        }
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Reconciliation difference")
+                            Text(
+                                formatter.convAmount(
+                                    reconciliation.reconciliationDifference,
+                                    account.currencyUnit
+                                )
+                            )
+                        }
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Net transaction expenses")
+                            Text(
+                                formatter.convAmount(
+                                    reconciliation.netTransactionExpenses,
+                                    account.currencyUnit
+                                )
+                            )
+                        }
+                    }
 
                     val currentCategories =
                         monthlySummary.currentCategorySpending

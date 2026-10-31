@@ -692,6 +692,14 @@ onClick = { expanded = !expanded }) {
                         higherIsBetter = true
                     )
 
+                    KKCategoryDistributionChart(
+                        categoryTotals =
+                            monthlySummary.currentCategorySpending,
+                        categoryNames = data.categories,
+                        currency = account.currencyUnit,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
                     val currentCategories =
                         monthlySummary.currentCategorySpending
 

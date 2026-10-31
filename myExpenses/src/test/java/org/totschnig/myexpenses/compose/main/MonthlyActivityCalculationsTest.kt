@@ -427,4 +427,39 @@ class MonthlyActivityCalculationsTest {
             .isEqualTo(-20000L)
     }
 
+
+    @Test
+    fun splitSelectionRequiresParent() {
+        assertThat(monthlySplitChildSelection())
+            .contains("parent_id IS NOT NULL")
+    }
+
+    @Test
+    fun splitSelectionExcludesTransfers() {
+        assertThat(monthlySplitChildSelection())
+            .contains("transfer_peer IS NULL")
+    }
+
+    @Test
+    fun splitSelectionExcludesArchived() {
+        assertThat(monthlySplitChildSelection())
+            .contains("status != 5")
+    }
+
+    @Test
+    fun splitSelectionExcludesVoid() {
+        assertThat(monthlySplitChildSelection())
+            .contains("cr_status != 'VOID'")
+    }
+
+    @Test
+    fun splitSelectionContainsAllEligibilityConditions() {
+        val selection = monthlySplitChildSelection()
+
+        assertThat(selection).contains("parent_id IS NOT NULL")
+        assertThat(selection).contains("transfer_peer IS NULL")
+        assertThat(selection).contains("status != 5")
+        assertThat(selection).contains("cr_status != 'VOID'")
+    }
+
 }

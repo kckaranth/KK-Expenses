@@ -121,3 +121,11 @@ internal fun mixedSplitReconciliation(
         reconciliationDifference = gross - net
     )
 }
+
+/**
+ * Selection for eligible split transaction children.
+ * Excludes transfers, archived entries and void entries.
+ */
+internal fun monthlySplitChildSelection(): String =
+    "parent_id IS NOT NULL AND transfer_peer IS NULL AND " +
+        "status != 5 AND cr_status != 'VOID'"

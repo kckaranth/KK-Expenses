@@ -129,3 +129,15 @@ internal fun mixedSplitReconciliation(
 internal fun monthlySplitChildSelection(): String =
     "parent_id IS NOT NULL AND transfer_peer IS NULL AND " +
         "status != 5 AND cr_status != 'VOID'"
+
+/**
+ * Determines whether a monthly trend has financial
+ * activity requiring nonzero axis labels.
+ */
+internal fun hasMonthlyTrendActivity(
+    points: List<MonthlyTrendPoint>
+): Boolean = points.any {
+    it.income != 0L ||
+        it.expenses != 0L ||
+        it.netCashFlow != 0L
+}

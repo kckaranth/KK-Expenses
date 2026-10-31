@@ -462,4 +462,69 @@ class MonthlyActivityCalculationsTest {
         assertThat(selection).contains("cr_status != 'VOID'")
     }
 
+
+    @Test
+    fun emptyTrendHasNoFinancialActivity() {
+        assertThat(
+            hasMonthlyTrendActivity(emptyList())
+        ).isFalse()
+    }
+
+    @Test
+    fun zeroTrendHasNoFinancialActivity() {
+        val points = monthlyActivityTrend(
+            entries = emptyList(),
+            selectedMonth = java.time.YearMonth.of(2026, 10),
+            zone = java.time.ZoneId.of("UTC")
+        )
+
+        assertThat(hasMonthlyTrendActivity(points))
+            .isFalse()
+    }
+
+    @Test
+    fun incomeTrendHasFinancialActivity() {
+        val points = listOf(
+            MonthlyTrendPoint(
+                month = java.time.YearMonth.of(2026, 10),
+                income = 1000L,
+                expenses = 0L,
+                netCashFlow = 1000L
+            )
+        )
+
+        assertThat(hasMonthlyTrendActivity(points))
+            .isTrue()
+    }
+
+    @Test
+    fun expenseTrendHasFinancialActivity() {
+        val points = listOf(
+            MonthlyTrendPoint(
+                month = java.time.YearMonth.of(2026, 10),
+                income = 0L,
+                expenses = 300L,
+                netCashFlow = -300L
+            )
+        )
+
+        assertThat(hasMonthlyTrendActivity(points))
+            .isTrue()
+    }
+
+    @Test
+    fun negativeNetTrendHasFinancialActivity() {
+        val points = listOf(
+            MonthlyTrendPoint(
+                month = java.time.YearMonth.of(2026, 10),
+                income = 100L,
+                expenses = 500L,
+                netCashFlow = -400L
+            )
+        )
+
+        assertThat(hasMonthlyTrendActivity(points))
+            .isTrue()
+    }
+
 }

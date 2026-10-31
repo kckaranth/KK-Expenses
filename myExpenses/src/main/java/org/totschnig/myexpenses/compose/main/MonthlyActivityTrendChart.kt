@@ -73,9 +73,8 @@ internal fun MonthlyActivityTrendChart(
         )
     }
 
-    val hasFinancialActivity = points.any {
-        it.income != 0L || it.expenses != 0L
-    }
+    val hasFinancialActivity =
+        hasMonthlyTrendActivity(points)
 
     val minimum = minOf(0.0, values.minOrNull() ?: 0.0)
     val maximum = maxOf(0.0, values.maxOrNull() ?: 0.0)
@@ -222,6 +221,7 @@ internal fun MonthlyActivityTrendChart(
                     axisPaint.textSize * 1.4f
 
                 if (
+                    hasFinancialActivity &&
                     kotlin.math.abs(gridY - baseline) >
                     zeroLabelClearance
                 ) {

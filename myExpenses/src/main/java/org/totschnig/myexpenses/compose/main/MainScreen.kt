@@ -81,6 +81,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
@@ -715,19 +716,25 @@ accounts.forEach { account ->
                         ) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
                                 Text(
                                     account.label,
                                     style = MaterialTheme.typography.titleSmall,
-                                    modifier = Modifier.weight(1f),
+                                    modifier = Modifier.weight(1.2f),
+                                    maxLines = 2,
+                                    softWrap = true,
+                                    overflow = TextOverflow.Ellipsis,
                                 )
                                 Text(
                                     formatter.convAmount(
                                         account.currentBalance,
                                         account.currencyUnit
                                     ),
+                                    modifier = Modifier.weight(1f),
                                     style = MaterialTheme.typography.titleMedium,
+                                    textAlign = TextAlign.End,
+                                    softWrap = true,
                                 )
                             }
                             Text(

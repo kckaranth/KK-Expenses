@@ -667,7 +667,7 @@ private fun KKHomeDashboard(
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
         Text("Arthvexa", style = MaterialTheme.typography.headlineMedium)
-        Text("Your finances, clearly organized", color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text("Your Finances. In Focus.", color = MaterialTheme.colorScheme.onSurfaceVariant)
 
         Text("Quick entry", style = MaterialTheme.typography.titleMedium)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {

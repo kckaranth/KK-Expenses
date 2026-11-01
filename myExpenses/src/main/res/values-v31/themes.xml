@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Starting" parent="android:Theme.DeviceDefault.DayNight" />
+    <style name="Starting" parent="android:Theme.DeviceDefault.DayNight">
+        <item name="android:windowSplashScreenBackground">@color/arthvexa_launcher_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/arthvexa_launcher_background</item>
+    </style>
 </resources>

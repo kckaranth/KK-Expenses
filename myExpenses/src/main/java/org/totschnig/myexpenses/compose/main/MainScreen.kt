@@ -82,6 +82,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
@@ -702,8 +704,37 @@ private fun KKHomeDashboard(
                     Text("No accounts yet. Create your first account to begin tracking.")
                 } else {
 accounts.forEach { account ->
+                    val accessibleSummary = buildString {
+                        append(account.label)
+                        append(". Balance ")
+                        append(
+                            formatter.convAmount(
+                                account.currentBalance,
+                                account.currencyUnit
+                            )
+                        )
+                        append(". Income ")
+                        append(
+                            formatter.convAmount(
+                                account.sumIncome,
+                                account.currencyUnit
+                            )
+                        )
+                        append(". Expenses ")
+                        append(
+                            formatter.convAmount(
+                                account.sumExpense,
+                                account.currencyUnit
+                            )
+                        )
+                    }
+
                     Surface(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clearAndSetSemantics {
+                                contentDescription = accessibleSummary
+                            },
                         color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(12.dp),
                     ) {

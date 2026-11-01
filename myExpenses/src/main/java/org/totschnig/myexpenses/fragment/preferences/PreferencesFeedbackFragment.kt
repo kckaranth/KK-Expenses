@@ -3,6 +3,7 @@ package org.totschnig.myexpenses.fragment.preferences
 import android.content.Intent
 import androidx.annotation.Keep
 import androidx.preference.Preference
+import org.totschnig.myexpenses.R
 import org.totschnig.myexpenses.preference.PrefKey
 
 

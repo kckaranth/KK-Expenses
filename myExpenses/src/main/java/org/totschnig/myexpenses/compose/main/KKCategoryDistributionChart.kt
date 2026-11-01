@@ -199,7 +199,8 @@ internal fun KKCategoryDistributionChart(
                         text = categoryNames[id]
                             ?: "Uncategorized",
                         modifier = Modifier.weight(1f),
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        softWrap = true
                     )
 
                     Column(

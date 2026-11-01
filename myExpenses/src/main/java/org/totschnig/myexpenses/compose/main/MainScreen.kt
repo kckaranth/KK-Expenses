@@ -768,17 +768,48 @@ accounts.forEach { account ->
                                     softWrap = true,
                                 )
                             }
-                            Text(
-                                "Income " + formatter.convAmount(
-                                    account.sumIncome,
-                                    account.currencyUnit
-                                ) + "  ·  Expenses " + formatter.convAmount(
-                                    account.sumExpense,
-                                    account.currencyUnit
-                                ),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            ) {
+                                Column(
+                                    modifier = Modifier.weight(1f),
+                                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                                ) {
+                                    Text(
+                                        "Income",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                    Text(
+                                        formatter.convAmount(
+                                            account.sumIncome,
+                                            account.currencyUnit
+                                        ),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        softWrap = true,
+                                    )
+                                }
+
+                                Column(
+                                    modifier = Modifier.weight(1f),
+                                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                                ) {
+                                    Text(
+                                        "Expenses",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                    Text(
+                                        formatter.convAmount(
+                                            account.sumExpense,
+                                            account.currencyUnit
+                                        ),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        softWrap = true,
+                                    )
+                                }
+                            }
                         }
                     }
                 }

@@ -666,7 +666,7 @@ private fun KKHomeDashboard(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
-        Text("KK Expenses", style = MaterialTheme.typography.headlineMedium)
+        Text("Arthvexa", style = MaterialTheme.typography.headlineMedium)
         Text("Your finances, clearly organized", color = MaterialTheme.colorScheme.onSurfaceVariant)
 
         Text("Quick entry", style = MaterialTheme.typography.titleMedium)

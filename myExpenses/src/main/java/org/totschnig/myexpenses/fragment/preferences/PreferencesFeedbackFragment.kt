@@ -5,6 +5,7 @@ import android.net.Uri
 import android.content.ActivityNotFoundException
 import androidx.annotation.Keep
 import androidx.preference.Preference
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.totschnig.myexpenses.R
 import org.totschnig.myexpenses.preference.PrefKey
 
@@ -18,6 +19,11 @@ class PreferencesFeedbackFragment : BasePreferenceFragment() {
         preference: Preference
     ): Boolean = when {
         super.onPreferenceTreeClick(preference) -> true
+
+        preference.key == "arthvexa_help_faq" -> {
+            showArthvexaFaq()
+            true
+        }
 
         preference.key == "arthvexa_report_problem" -> {
             openArthvexaIssue(
@@ -53,6 +59,52 @@ class PreferencesFeedbackFragment : BasePreferenceFragment() {
         }
 
         else -> false
+    }
+
+    private fun showArthvexaFaq() {
+        val titles = arrayOf(
+            "Accounts",
+            "Transactions",
+            "Transfers",
+            "Monthly activity",
+            "Budgets",
+            "Backup and restore"
+        )
+
+        val answers = arrayOf(
+            "Open Accounts to manage your accounts. " +
+                "Each account maintains its own balance and currency.",
+
+            "Open Transactions to record income and expenses. " +
+                "Select a transaction to review or edit its details.",
+
+            "Use Transfer to move money between accounts. " +
+                "Transfers are not treated as ordinary income or expenses.",
+
+            "Expand Monthly activity on the Home screen " +
+                "to view account trends and monthly comparisons.",
+
+            "Use Budgets to plan spending and review " +
+                "progress against your configured budgets.",
+
+            "Open Settings and locate Backup and restore. " +
+                "Create a backup before changing devices."
+        )
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Arthvexa Help & FAQs")
+            .setItems(titles) { _, index ->
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(titles[index])
+                    .setMessage(answers[index])
+                    .setPositiveButton("OK", null)
+                    .setNeutralButton("Topics") { _, _ ->
+                        showArthvexaFaq()
+                    }
+                    .show()
+            }
+            .setNegativeButton("Close", null)
+            .show()
     }
 
     private fun openArthvexaIssue(title: String) {

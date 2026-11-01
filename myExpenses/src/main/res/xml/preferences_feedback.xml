@@ -1,26 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:title="@string/help_and_feedback">
-
-    <PreferenceCategory
-        android:title="Arthvexa Support">
-
-        <Preference
-            android:key="arthvexa_report_problem"
-            android:title="Report a problem"
-            android:summary="Report bugs and technical issues" />
-
-        <Preference
-            android:key="arthvexa_request_feature"
-            android:title="Request a feature"
-            android:summary="Suggest improvements to Arthvexa" />
-
-        <Preference
-            android:key="@string/pref_tell_a_friend_key"
-            android:title="Share Arthvexa"
-            android:summary="Your Finances. In Focus." />
-
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:title="@string/help_and_feedback">
+    <PreferenceCategory android:title="Arthvexa Support">
+        <Preference android:key="arthvexa_help_faq" android:title="Help &amp; FAQs" android:summary="Guides available offline" />
+        <Preference android:key="arthvexa_report_problem" android:title="Report a problem" android:summary="Report bugs and technical issues" />
+        <Preference android:key="arthvexa_request_feature" android:title="Request a feature" android:summary="Suggest improvements to Arthvexa" />
+        <Preference android:key="@string/pref_tell_a_friend_key" android:title="Share Arthvexa" android:summary="Your Finances. In Focus." />
     </PreferenceCategory>
-
 </PreferenceScreen>

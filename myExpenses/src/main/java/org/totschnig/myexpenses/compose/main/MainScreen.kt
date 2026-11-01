@@ -274,6 +274,9 @@ fun MainScreenAdaptive(
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     var showHome by remember { mutableStateOf(false) }
+    var accountOverviewExpanded by rememberSaveable {
+        mutableStateOf(false)
+    }
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
 
@@ -480,6 +483,10 @@ fun MainScreenAdaptive(
             if (showHome && !is2Pane) {
                 KKHomeDashboard(
                     accounts = accounts,
+                    accountOverviewExpanded = accountOverviewExpanded,
+                    onAccountOverviewExpandedChange = {
+                        accountOverviewExpanded = it
+                    },
                     onAccounts = {
                         showHome = false
                         scope.launch { navigator.navigateToRoot(ListDetailPaneScaffoldRole.List) }
@@ -647,14 +654,13 @@ private fun PaneSurface(
 @Composable
 private fun KKHomeDashboard(
     accounts: List<FullAccount>,
+    accountOverviewExpanded: Boolean,
+    onAccountOverviewExpandedChange: (Boolean) -> Unit,
     onAccounts: () -> Unit,
     onTransactions: () -> Unit,
     onQuickTransaction: (Action) -> Unit,
 ) {
     val formatter = LocalCurrencyFormatter.current
-    var accountOverviewExpanded by rememberSaveable {
-        mutableStateOf(false)
-    }
 
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
@@ -713,8 +719,9 @@ private fun KKHomeDashboard(
                     )
                     IconButton(
                         onClick = {
-                            accountOverviewExpanded =
+                            onAccountOverviewExpandedChange(
                                 !accountOverviewExpanded
+                            )
                         }
                     ) {
                         Icon(

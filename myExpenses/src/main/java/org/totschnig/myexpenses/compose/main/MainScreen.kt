@@ -34,6 +34,8 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.outlined.CropLandscape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -69,6 +71,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -649,6 +652,10 @@ private fun KKHomeDashboard(
     onQuickTransaction: (Action) -> Unit,
 ) {
     val formatter = LocalCurrencyFormatter.current
+    var accountOverviewExpanded by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp),
@@ -694,7 +701,36 @@ private fun KKHomeDashboard(
 
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text("Account overview", style = MaterialTheme.typography.titleLarge)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                ) {
+                    Text(
+                        "Account overview",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.weight(1f),
+                    )
+                    IconButton(
+                        onClick = {
+                            accountOverviewExpanded =
+                                !accountOverviewExpanded
+                        }
+                    ) {
+                        Icon(
+                            imageVector = if (accountOverviewExpanded) {
+                                Icons.Filled.ExpandLess
+                            } else {
+                                Icons.Filled.ExpandMore
+                            },
+                            contentDescription = if (accountOverviewExpanded) {
+                                "Collapse account overview"
+                            } else {
+                                "Expand account overview"
+                            },
+                        )
+                    }
+                }
                 Text(
                     if (accounts.size == 1) "1 account" else "${accounts.size} accounts",
                     style = MaterialTheme.typography.labelLarge,
@@ -702,7 +738,7 @@ private fun KKHomeDashboard(
                 )
                 if (accounts.isEmpty()) {
                     Text("No accounts yet. Create your first account to begin tracking.")
-                } else {
+                } else if (accountOverviewExpanded) {
 accounts.forEach { account ->
                     val accessibleSummary = buildString {
                         append(account.label)
@@ -815,11 +851,13 @@ accounts.forEach { account ->
                 }
                  }
                 }
-                Text(
-                    "Income and expenses reflect the existing account summary, not a new monthly calculation. Currencies remain separate.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                if (accountOverviewExpanded) {
+                    Text(
+                        "Income and expenses reflect the existing account summary, not a new monthly calculation. Currencies remain separate.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
 
         KKMonthlyActivity(accounts = accounts)

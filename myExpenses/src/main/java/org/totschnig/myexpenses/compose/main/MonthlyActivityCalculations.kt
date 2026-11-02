@@ -25,6 +25,43 @@ internal fun incomeExpenseTotals(
     return income to expense
 }
 
+internal data class MonthlyFinancialSnapshot(
+    val income: Long,
+    val expenses: Long,
+    val netCashFlow: Long,
+    val transactionCount: Int
+)
+
+/**
+ * Calculates one account's monthly totals.
+ * Amounts remain in the account's integer minor units.
+ * Callers must provide eligible, already-filtered entries.
+ */
+internal fun monthlyFinancialSnapshot(
+    entries: List<ActivityEntry>,
+    accountId: Long,
+    startEpoch: Long,
+    endEpoch: Long
+): MonthlyFinancialSnapshot {
+    require(startEpoch < endEpoch)
+
+    val selected = entries.filter {
+        it.accountId == accountId &&
+            it.epoch >= startEpoch &&
+            it.epoch < endEpoch
+    }
+
+    val (income, signedExpense) =
+        incomeExpenseTotals(selected)
+
+    return MonthlyFinancialSnapshot(
+        income = income,
+        expenses = -signedExpense,
+        netCashFlow = income + signedExpense,
+        transactionCount = selected.size
+    )
+}
+
 internal fun categorySpending(
     entries: List<ActivityEntry>
 ): Map<Long, Long> =

@@ -527,4 +527,67 @@ class MonthlyActivityCalculationsTest {
             .isTrue()
     }
 
+
+    @Test
+    fun snapshotCalculatesIncomeExpenseAndNet() {
+        val entries = listOf(
+            ActivityEntry(1, 10, 10000, 100, "", 1),
+            ActivityEntry(2, 10, -3500, 200, "", 2)
+        )
+
+        val result = monthlyFinancialSnapshot(
+            entries, 10, 0, 1000
+        )
+
+        org.junit.Assert.assertEquals(10000L, result.income)
+        org.junit.Assert.assertEquals(3500L, result.expenses)
+        org.junit.Assert.assertEquals(6500L, result.netCashFlow)
+        org.junit.Assert.assertEquals(2, result.transactionCount)
+    }
+
+    @Test
+    fun snapshotKeepsAccountsSeparate() {
+        val entries = listOf(
+            ActivityEntry(1, 10, 5000, 100, "", 1),
+            ActivityEntry(2, 20, -2000, 100, "", 1)
+        )
+
+        val result = monthlyFinancialSnapshot(
+            entries, 10, 0, 1000
+        )
+
+        org.junit.Assert.assertEquals(5000L, result.income)
+        org.junit.Assert.assertEquals(0L, result.expenses)
+        org.junit.Assert.assertEquals(1, result.transactionCount)
+    }
+
+    @Test
+    fun snapshotEmptyMonthReturnsZero() {
+        val result = monthlyFinancialSnapshot(
+            emptyList(), 10, 0, 1000
+        )
+
+        org.junit.Assert.assertEquals(0L, result.income)
+        org.junit.Assert.assertEquals(0L, result.expenses)
+        org.junit.Assert.assertEquals(0L, result.netCashFlow)
+        org.junit.Assert.assertEquals(0, result.transactionCount)
+    }
+
+    @Test
+    fun snapshotExcludesOutsideDateRange() {
+        val entries = listOf(
+            ActivityEntry(1, 10, 5000, 99, "", 1),
+            ActivityEntry(2, 10, -2000, 100, "", 1),
+            ActivityEntry(3, 10, 9000, 1000, "", 1)
+        )
+
+        val result = monthlyFinancialSnapshot(
+            entries, 10, 100, 1000
+        )
+
+        org.junit.Assert.assertEquals(0L, result.income)
+        org.junit.Assert.assertEquals(2000L, result.expenses)
+        org.junit.Assert.assertEquals(-2000L, result.netCashFlow)
+        org.junit.Assert.assertEquals(1, result.transactionCount)
+    }
 }

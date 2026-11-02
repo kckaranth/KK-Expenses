@@ -282,6 +282,132 @@ onClick = { expanded = !expanded }) {
                     )
                 }
             }
+            if (!expanded) {
+                if (error) {
+                    Text(
+                        "Monthly snapshot is temporarily unavailable.",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                } else if (data == null) {
+                    Text("Loading monthly snapshot...")
+                } else {
+                    val zone = ZoneId.systemDefault()
+                    val start = monthStart.atStartOfDay(zone)
+                        .toEpochSecond()
+                    val end = monthStart.plusMonths(1)
+                        .atStartOfDay(zone).toEpochSecond()
+
+                    Text(
+                        "Financial snapshot",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+
+                    val activeAccounts = accounts.filter {
+                        it.id > 0
+                    }
+
+                    if (activeAccounts.isEmpty()) {
+                        Text("No accounts available")
+                    }
+
+                    activeAccounts.forEach { account ->
+                        key(account.id) {
+                            val summary = remember(
+                                data,
+                                account.id,
+                                start,
+                                end
+                            ) {
+                                monthlyFinancialSnapshot(
+                                    entries = data.entries,
+                                    accountId = account.id,
+                                    startEpoch = start,
+                                    endEpoch = end
+                                )
+                            }
+
+                            Column(
+                                verticalArrangement =
+                                    Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text(
+                                    account.label,
+                                    style = MaterialTheme.typography.titleSmall
+                                )
+
+                                if (summary.transactionCount == 0) {
+                                    Text(
+                                        "No activity this month",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                } else {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement =
+                                            Arrangement.spacedBy(12.dp)
+                                    ) {
+                                        Column(
+                                            modifier = Modifier.weight(1f)
+                                        ) {
+                                            Text(
+                                                "Income",
+                                                style = MaterialTheme.typography.labelSmall
+                                            )
+                                            Text(
+                                                formatter.convAmount(
+                                                    summary.income,
+                                                    account.currencyUnit
+                                                )
+                                            )
+                                        }
+
+                                        Column(
+                                            modifier = Modifier.weight(1f)
+                                        ) {
+                                            Text(
+                                                "Expenses",
+                                                style = MaterialTheme.typography.labelSmall
+                                            )
+                                            Text(
+                                                formatter.convAmount(
+                                                    summary.expenses,
+                                                    account.currencyUnit
+                                                )
+                                            )
+                                        }
+                                    }
+
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement =
+                                            Arrangement.SpaceBetween
+                                    ) {
+                                        Text("Net cash flow")
+                                        Text(
+                                            formatter.convAmount(
+                                                summary.netCashFlow,
+                                                account.currencyUnit
+                                            ),
+                                            textAlign = TextAlign.End
+                                        )
+                                    }
+                                }
+                            }
+
+                            HorizontalDivider()
+                        }
+                    }
+
+                    Text(
+                        "Expand for trends, comparisons, and category spending. " +
+                            "Currencies remain separate.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
             if (expanded) {
             if (error) {
                 Text("Monthly activity is temporarily unavailable. Account balances are unaffected.")

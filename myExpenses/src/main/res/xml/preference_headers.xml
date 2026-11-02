@@ -90,6 +90,11 @@
         android:title="@string/expand_button_title" />
 
     <Preference
+        android:key="arthvexa_about"
+        android:title="About Arthvexa"
+        android:summary="Your Finances. In Focus." />
+
+    <Preference
         android:key="@string/pref_more_info_dialog_key"
         android:title="@string/pref_more_info_dialog_title" />
 </PreferenceScreen>

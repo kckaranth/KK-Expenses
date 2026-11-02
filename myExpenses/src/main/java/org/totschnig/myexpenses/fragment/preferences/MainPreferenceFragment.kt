@@ -10,6 +10,7 @@ import androidx.preference.*
 import com.evernote.android.state.State
 import com.evernote.android.state.StateSaver
 import org.totschnig.myexpenses.R
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.totschnig.myexpenses.dialog.ConfirmationDialogFragment
 import org.totschnig.myexpenses.dialog.MoreInfoDialogFragment
 import org.totschnig.myexpenses.feature.BankingFeature
@@ -183,6 +184,11 @@ class MainPreferenceFragment : BasePreferenceFragment(),
         }
 
     override fun onPreferenceTreeClick(preference: Preference) = when {
+        preference.key == "arthvexa_about" -> {
+            showArthvexaAbout()
+            true
+        }
+
         matches(preference, PrefKey.MORE_INFO_DIALOG) -> {
             MoreInfoDialogFragment().show(parentFragmentManager, "MORE_INFO")
             true
@@ -223,6 +229,33 @@ class MainPreferenceFragment : BasePreferenceFragment(),
 
         handleContrib(PrefKey.BANKING_FINTS, ContribFeature.BANKING, preference) -> true
         else -> false
+    }
+
+    private fun showArthvexaAbout() {
+        val version = try {
+            requireContext().packageManager.getPackageInfo(
+                requireContext().packageName,
+                0
+            ).versionName ?: "Unknown"
+        } catch (_: Exception) {
+            "Unknown"
+        }
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Arthvexa")
+            .setMessage(
+                "Your Finances. In Focus.\n\n" +
+                    "Version: $version\n\n" +
+                    "Arthvexa helps you manage accounts, " +
+                    "transactions, budgets, and financial " +
+                    "activity in one place.\n\n" +
+                    "Designed for clear, organized " +
+                    "personal finance management.\n\n" +
+                    "Licence and third-party credits " +
+                    "are available in Settings."
+            )
+            .setPositiveButton("OK", null)
+            .show()
     }
 
     private fun loadAppDirSummary() {

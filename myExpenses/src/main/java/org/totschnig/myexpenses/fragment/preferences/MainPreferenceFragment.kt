@@ -232,29 +232,29 @@ class MainPreferenceFragment : BasePreferenceFragment(),
     }
 
     private fun showArthvexaAbout() {
+        val context = requireContext()
+
         val version = try {
-            requireContext().packageManager.getPackageInfo(
-                requireContext().packageName,
+            context.packageManager.getPackageInfo(
+                context.packageName,
                 0
             ).versionName ?: "Unknown"
         } catch (_: Exception) {
             "Unknown"
         }
 
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Arthvexa")
-            .setMessage(
-                "Your Finances. In Focus.\n\n" +
-                    "Version: $version\n\n" +
-                    "Arthvexa helps you manage accounts, " +
-                    "transactions, budgets, and financial " +
-                    "activity in one place.\n\n" +
-                    "Designed for clear, organized " +
-                    "personal finance management.\n\n" +
-                    "Licence and third-party credits " +
-                    "are available in Settings."
-            )
-            .setPositiveButton("OK", null)
+        val view = layoutInflater.inflate(
+            R.layout.arthvexa_about_dialog,
+            null
+        )
+
+        view.findViewById<android.widget.TextView>(
+            R.id.arthvexa_about_version
+        ).text = "Version $version"
+
+        MaterialAlertDialogBuilder(context)
+            .setView(view)
+            .setPositiveButton("Close", null)
             .show()
     }
 

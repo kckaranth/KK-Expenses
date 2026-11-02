@@ -26,14 +26,14 @@ class PreferencesFeedbackFragment : BasePreferenceFragment() {
         }
 
         preference.key == "arthvexa_report_problem" -> {
-            openArthvexaIssue(
+            confirmArthvexaIssue(
                 "Bug report: "
             )
             true
         }
 
         preference.key == "arthvexa_request_feature" -> {
-            openArthvexaIssue(
+            confirmArthvexaIssue(
                 "Feature request: "
             )
             true
@@ -104,6 +104,24 @@ class PreferencesFeedbackFragment : BasePreferenceFragment() {
                     .show()
             }
             .setNegativeButton("Close", null)
+            .show()
+    }
+
+    private fun confirmArthvexaIssue(title: String) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Before continuing")
+            .setMessage(
+                "GitHub issues are public. Do not include " +
+                    "account numbers, balances, transaction " +
+                    "details, passwords, or other personal " +
+                    "financial information.\n\n" +
+                    "Arthvexa will not automatically attach " +
+                    "your financial data."
+            )
+            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Continue to GitHub") { _, _ ->
+                openArthvexaIssue(title)
+            }
             .show()
     }
 

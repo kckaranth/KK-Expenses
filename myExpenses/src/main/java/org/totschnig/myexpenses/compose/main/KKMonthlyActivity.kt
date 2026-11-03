@@ -635,9 +635,9 @@ onClick = { expanded = !expanded }) {
                         color = MaterialTheme.colorScheme.surfaceVariant
                     ) {
                         Column(
-                            modifier = Modifier.padding(16.dp),
+                            modifier = Modifier.padding(12.dp),
                             verticalArrangement =
-                                Arrangement.spacedBy(10.dp)
+                                Arrangement.spacedBy(8.dp)
                         ) {
                             Text(
                                 "Spending insights",
@@ -767,7 +767,7 @@ onClick = { expanded = !expanded }) {
                         currency = account.currencyUnit,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 12.dp)
+                            .padding(vertical = 6.dp)
                     )
 
                     if (month.isEmpty() && previousMonth.isEmpty()) {

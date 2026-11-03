@@ -615,6 +615,152 @@ onClick = { expanded = !expanded }) {
                         )
                     }
 
+                    val insights = remember(
+                        monthlySummary
+                    ) {
+                        monthlySpendingInsights(
+                            currentCategories =
+                                monthlySummary.currentCategorySpending,
+                            currentSignedExpense =
+                                monthlySummary.expense,
+                            previousSignedExpense =
+                                monthlySummary.previousExpense
+                        )
+                    }
+
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.surfaceVariant
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            verticalArrangement =
+                                Arrangement.spacedBy(10.dp)
+                        ) {
+                            Text(
+                                "Spending insights",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement =
+                                    Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    "Net monthly expenses",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+
+                                Text(
+                                    formatter.convAmount(
+                                        insights.currentNetExpenses,
+                                        account.currencyUnit
+                                    ),
+                                    style = MaterialTheme.typography.titleSmall
+                                )
+                            }
+
+                            val changeLabel = when {
+                                insights.expenseChange > 0L ->
+                                    "Spending increased"
+                                insights.expenseChange < 0L ->
+                                    "Spending decreased"
+                                else -> "Spending unchanged"
+                            }
+
+                            val changeColor = when {
+                                insights.expenseChange > 0L ->
+                                    MaterialTheme.colorScheme.error
+                                insights.expenseChange < 0L ->
+                                    MaterialTheme.colorScheme.primary
+                                else ->
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                            }
+
+                            val changePercent =
+                                insights.expenseChangePercent?.let {
+                                    String.format(
+                                        java.util.Locale.getDefault(),
+                                        "%.1f%%",
+                                        kotlin.math.abs(it)
+                                    )
+                                } ?: "N/A"
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement =
+                                    Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    changeLabel,
+                                    modifier = Modifier.weight(1f),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = changeColor
+                                )
+
+                                Text(
+                                    changePercent,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = changeColor
+                                )
+                            }
+
+                            if (insights.topCategoryId != null) {
+                                HorizontalDivider()
+
+                                Text(
+                                    "Top spending category",
+                                    style = MaterialTheme.typography.labelLarge
+                                )
+
+                                Text(
+                                    data.categories[
+                                        insights.topCategoryId
+                                    ]?.ifBlank {
+                                        "Uncategorized"
+                                    } ?: "Uncategorized",
+                                    style = MaterialTheme.typography.titleSmall
+                                )
+
+                                Text(
+                                    formatter.convAmount(
+                                        insights.topCategoryAmount,
+                                        account.currencyUnit
+                                    ) + "  •  " +
+                                        String.format(
+                                            java.util.Locale.getDefault(),
+                                            "%.1f%% of gross category spending",
+                                            insights.topCategoryPercent
+                                        ),
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            } else {
+                                Text(
+                                    "No category spending this month",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color =
+                                        MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+
+                            if (
+                                insights.grossCategorySpending !=
+                                insights.currentNetExpenses
+                            ) {
+                                Text(
+                                    "Gross category spending differs from " +
+                                        "net transaction expenses because of " +
+                                        "transaction category allocation.",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color =
+                                        MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+
                     MonthlyActivityTrendChart(
                         points = trendPoints,
                         currency = account.currencyUnit,

@@ -590,4 +590,131 @@ class MonthlyActivityCalculationsTest {
         org.junit.Assert.assertEquals(-2000L, result.netCashFlow)
         org.junit.Assert.assertEquals(1, result.transactionCount)
     }
+
+    @Test
+    fun insightsIdentifiesTopCategory() {
+        val result = monthlySpendingInsights(
+            mapOf(10L to 5000L, 20L to 2000L),
+            -7000L,
+            -6000L
+        )
+
+        org.junit.Assert.assertEquals(
+            10L, result.topCategoryId
+        )
+        org.junit.Assert.assertEquals(
+            5000L, result.topCategoryAmount
+        )
+        org.junit.Assert.assertEquals(
+            7000L, result.grossCategorySpending
+        )
+        org.junit.Assert.assertEquals(
+            5000.0 / 70.0,
+            result.topCategoryPercent,
+            0.0001
+        )
+    }
+
+    @Test
+    fun insightsCalculatesExpenseIncrease() {
+        val result = monthlySpendingInsights(
+            emptyMap(),
+            -12000L,
+            -10000L
+        )
+
+        org.junit.Assert.assertEquals(
+            2000L, result.expenseChange
+        )
+        org.junit.Assert.assertEquals(
+            20.0,
+            result.expenseChangePercent!!,
+            0.0001
+        )
+    }
+
+    @Test
+    fun insightsCalculatesExpenseDecrease() {
+        val result = monthlySpendingInsights(
+            emptyMap(),
+            -8000L,
+            -10000L
+        )
+
+        org.junit.Assert.assertEquals(
+            -2000L, result.expenseChange
+        )
+        org.junit.Assert.assertEquals(
+            -20.0,
+            result.expenseChangePercent!!,
+            0.0001
+        )
+    }
+
+    @Test
+    fun insightsHandlesZeroPreviousExpenses() {
+        val result = monthlySpendingInsights(
+            mapOf(10L to 3000L),
+            -3000L,
+            0L
+        )
+
+        org.junit.Assert.assertNull(
+            result.expenseChangePercent
+        )
+    }
+
+    @Test
+    fun insightsHandlesEmptyCategories() {
+        val result = monthlySpendingInsights(
+            emptyMap(),
+            0L,
+            0L
+        )
+
+        org.junit.Assert.assertNull(
+            result.topCategoryId
+        )
+        org.junit.Assert.assertEquals(
+            0L, result.grossCategorySpending
+        )
+        org.junit.Assert.assertEquals(
+            0.0, result.topCategoryPercent,
+            0.0001
+        )
+    }
+
+    @Test
+    fun insightsPreservesMixedSplitDifference() {
+        val result = monthlySpendingInsights(
+            mapOf(10L to 50000L),
+            -40000L,
+            -30000L
+        )
+
+        org.junit.Assert.assertEquals(
+            50000L, result.grossCategorySpending
+        )
+        org.junit.Assert.assertEquals(
+            40000L, result.currentNetExpenses
+        )
+        org.junit.Assert.assertEquals(
+            10000L,
+            result.grossCategorySpending -
+                result.currentNetExpenses
+        )
+    }
+
+    @Test
+    fun insightsTopCategoryTieUsesLowestId() {
+        val result = monthlySpendingInsights(
+            mapOf(20L to 5000L, 10L to 5000L),
+            -10000L,
+            -10000L
+        )
+
+        org.junit.Assert.assertEquals(
+            10L, result.topCategoryId
+        )
+    }
 }

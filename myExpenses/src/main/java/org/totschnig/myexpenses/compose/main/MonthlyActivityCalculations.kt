@@ -72,6 +72,76 @@ internal fun categorySpending(
             items.sumOf { -it.amount }
         }
 
+internal data class MonthlySpendingInsights(
+    val topCategoryId: Long?,
+    val topCategoryAmount: Long,
+    val grossCategorySpending: Long,
+    val topCategoryPercent: Double,
+    val currentNetExpenses: Long,
+    val previousNetExpenses: Long,
+    val expenseChange: Long,
+    val expenseChangePercent: Double?
+)
+
+/**
+ * Read-only account-level spending insights.
+ *
+ * Expense totals and category amounts are supplied
+ * by the existing monthly reporting calculations.
+ * Values remain in integer minor currency units.
+ */
+internal fun monthlySpendingInsights(
+    currentCategories: Map<Long, Long>,
+    currentSignedExpense: Long,
+    previousSignedExpense: Long
+): MonthlySpendingInsights {
+    require(currentSignedExpense <= 0L)
+    require(previousSignedExpense <= 0L)
+    require(currentCategories.values.all { it >= 0L })
+
+    val ordered = currentCategories
+        .filterValues { it > 0L }
+        .toList()
+        .sortedWith(
+            compareByDescending<Pair<Long, Long>> {
+                it.second
+            }.thenBy { it.first }
+        )
+
+    val top = ordered.firstOrNull()
+
+    val gross = ordered.sumOf { it.second }
+
+    val current = -currentSignedExpense
+    val previous = -previousSignedExpense
+    val change = current - previous
+
+    val percent = if (previous > 0L) {
+        change.toDouble() * 100.0 /
+            previous.toDouble()
+    } else {
+        null
+    }
+
+    val topPercent = if (gross > 0L) {
+        (top?.second ?: 0L).toDouble() *
+            100.0 / gross.toDouble()
+    } else {
+        0.0
+    }
+
+    return MonthlySpendingInsights(
+        topCategoryId = top?.first,
+        topCategoryAmount = top?.second ?: 0L,
+        grossCategorySpending = gross,
+        topCategoryPercent = topPercent,
+        currentNetExpenses = current,
+        previousNetExpenses = previous,
+        expenseChange = change,
+        expenseChangePercent = percent
+    )
+}
+
 internal data class MonthlyTrendPoint(
     val month: java.time.YearMonth,
     val income: Long,

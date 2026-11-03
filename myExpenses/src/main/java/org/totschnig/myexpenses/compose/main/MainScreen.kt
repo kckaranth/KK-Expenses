@@ -663,8 +663,8 @@ private fun KKHomeDashboard(
     val formatter = LocalCurrencyFormatter.current
 
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(18.dp),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Text("Arthvexa", style = MaterialTheme.typography.headlineMedium)
         Text("Your Finances. In Focus.", color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -706,7 +706,7 @@ private fun KKHomeDashboard(
 
 
         Card(modifier = Modifier.fillMaxWidth()) {
-            Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,

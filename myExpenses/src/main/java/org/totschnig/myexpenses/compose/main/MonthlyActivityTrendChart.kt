@@ -33,6 +33,9 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.totschnig.myexpenses.compose.LocalCurrencyFormatter
@@ -64,6 +67,21 @@ internal fun MonthlyActivityTrendChart(
     val selected = points[
         selectedIndex.coerceIn(0, points.lastIndex)
     ]
+
+    val selectedMonthDescription = selected.month.format(
+        DateTimeFormatter.ofPattern("MMMM yyyy")
+    )
+
+    val chartAccessibilitySummary = buildString {
+        append("Six-month trends. ")
+        append(selectedMonthDescription)
+        append(". Income ")
+        append(formatter.convAmount(selected.income, currency))
+        append(". Expenses ")
+        append(formatter.convAmount(selected.expenses, currency))
+        append(". Net cash flow ")
+        append(formatter.convAmount(selected.netCashFlow, currency))
+    }
 
     val values = points.flatMap {
         listOf(
@@ -148,6 +166,9 @@ internal fun MonthlyActivityTrendChart(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(190.dp)
+                .semantics {
+                    contentDescription = chartAccessibilitySummary
+                }
                 .pointerInput(points) {
                     detectTapGestures { tap ->
                         val left = 48.dp.toPx()
@@ -373,6 +394,12 @@ internal fun MonthlyActivityTrendChart(
                         )
                         .clickable {
                             selectedIndex = index
+                        }
+                        .semantics {
+                            contentDescription = point.month.format(
+                                DateTimeFormatter.ofPattern("MMMM yyyy")
+                            )
+                            selected = isSelected
                         },
                     contentAlignment = Alignment.Center
                 ) {

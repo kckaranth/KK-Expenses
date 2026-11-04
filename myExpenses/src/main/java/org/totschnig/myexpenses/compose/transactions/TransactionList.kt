@@ -494,7 +494,12 @@ fun TransactionList(
                                         color = MaterialTheme.colorScheme.primary
                                     )
                                 } else {
-                                    HorizontalDivider()
+                                    HorizontalDivider(
+                                        thickness = 0.5.dp,
+                                        color = MaterialTheme.colorScheme.outlineVariant.copy(
+                                            alpha = 0.45f
+                                        )
+                                    )
                                 }
                             }
                         } else if (isFirstInGroup || isLastInGroup) {

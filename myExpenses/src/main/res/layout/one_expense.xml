@@ -47,6 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/padding_form"
+                android:paddingTop="8dp"
                 android:shrinkColumns="1"
                 android:stretchColumns="1"
                 tools:ignore="UselessParent">

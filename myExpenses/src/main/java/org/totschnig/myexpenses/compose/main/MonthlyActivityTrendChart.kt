@@ -399,7 +399,7 @@ internal fun MonthlyActivityTrendChart(
                             contentDescription = point.month.format(
                                 DateTimeFormatter.ofPattern("MMMM yyyy")
                             )
-                            selected = isSelected
+                            this.selected = isSelected
                         },
                     contentAlignment = Alignment.Center
                 ) {

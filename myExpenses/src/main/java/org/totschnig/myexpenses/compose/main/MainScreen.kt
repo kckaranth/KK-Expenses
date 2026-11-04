@@ -277,6 +277,9 @@ fun MainScreenAdaptive(
     var accountOverviewExpanded by rememberSaveable {
         mutableStateOf(false)
     }
+    var monthlyActivityExpanded by rememberSaveable {
+        mutableStateOf(false)
+    }
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
 
@@ -484,6 +487,10 @@ fun MainScreenAdaptive(
                 KKHomeDashboard(
                     accounts = accounts,
                     accountOverviewExpanded = accountOverviewExpanded,
+                    monthlyActivityExpanded = monthlyActivityExpanded,
+                    onMonthlyActivityExpandedChange = {
+                        monthlyActivityExpanded = it
+                    },
                     onAccountOverviewExpandedChange = {
                         accountOverviewExpanded = it
                     },
@@ -655,6 +662,8 @@ private fun PaneSurface(
 private fun KKHomeDashboard(
     accounts: List<FullAccount>,
     accountOverviewExpanded: Boolean,
+    monthlyActivityExpanded: Boolean,
+    onMonthlyActivityExpandedChange: (Boolean) -> Unit,
     onAccountOverviewExpandedChange: (Boolean) -> Unit,
     onAccounts: () -> Unit,
     onTransactions: () -> Unit,
@@ -872,7 +881,11 @@ accounts.forEach { account ->
                 }
             }
 
-        KKMonthlyActivity(accounts = accounts)
+        KKMonthlyActivity(
+            accounts = accounts,
+            expanded = monthlyActivityExpanded,
+            onExpandedChange = onMonthlyActivityExpandedChange
+        )
 
         Surface(
             modifier = Modifier.fillMaxWidth(),

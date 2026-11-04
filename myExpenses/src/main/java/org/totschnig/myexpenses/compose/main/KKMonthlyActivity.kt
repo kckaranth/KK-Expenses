@@ -184,13 +184,16 @@ private fun readActivity(context: Context): ActivitySnapshot {
 }
 
 @Composable
-internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
+internal fun KKMonthlyActivity(
+    accounts: List<FullAccount>,
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit
+) {
     val context = LocalContext.current
     val formatter = LocalCurrencyFormatter.current
     var revision by remember { mutableStateOf(0) }
     var snapshot by remember { mutableStateOf<ActivitySnapshot?>(null) }
     var error by remember { mutableStateOf(false) }
-    var expanded by remember { mutableStateOf(false) }
     var recentExpanded by remember {
         mutableStateOf(false)
     }
@@ -272,7 +275,7 @@ internal fun KKMonthlyActivity(accounts: List<FullAccount>) {
                                 stateDescription = if (expanded) "Expanded" else "Collapsed"
                                 contentDescription = "Monthly activity"
                             },
-onClick = { expanded = !expanded }) {
+onClick = { onExpandedChange(!expanded) }) {
                     Icon(
                         imageVector = if (expanded) {
                             Icons.Filled.ExpandLess

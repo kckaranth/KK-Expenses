@@ -861,6 +861,7 @@ accounts.forEach { account ->
                 if (accountOverviewExpanded) {
                     Text(
                         "Income and expenses reflect the existing account summary, not a new monthly calculation. Currencies remain separate.",
+                        modifier = Modifier.padding(horizontal = 8.dp),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )

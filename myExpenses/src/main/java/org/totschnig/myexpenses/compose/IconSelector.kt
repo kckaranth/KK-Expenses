@@ -4,11 +4,15 @@ import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.content.res.Resources
 import android.os.Build
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +24,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Surface
@@ -37,6 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -66,15 +72,49 @@ fun IconSelector(
 ) {
     val resources = LocalResources.current
     val categories = IconCategory.values
-    var selectedTabIndex by rememberSaveable { mutableIntStateOf(1) }
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(-1) }
     var searchTerm by rememberSaveable { mutableStateOf("") }
-    val icons = remember {
+    var lastAdvancedTab by rememberSaveable {
+        mutableIntStateOf(1)
+    }
+    val popularCategories = listOf(
+        IconCategory.FoodBeverage,
+        IconCategory.Shopping,
+        IconCategory.Transportation,
+        IconCategory.Household,
+        IconCategory.MedicalHealth,
+        IconCategory.Education,
+        IconCategory.Money,
+        IconCategory.Business,
+        IconCategory.TravelHotel,
+        IconCategory.SportsFitness,
+        IconCategory.MusicAudio,
+        IconCategory.ClothingFashion
+    )
+    val icons = remember(
+        resources,
+        categories,
+        popularCategories,
+        iconsForCategory,
+        iconsForSearch
+    ) {
         derivedStateOf {
-            (if (selectedTabIndex > 0)
-                iconsForCategory(resources, categories[selectedTabIndex - 1])
-            else
-                if (searchTerm.isNotEmpty()) iconsForSearch(resources, searchTerm) else emptyMap()
-                    )
+            (when {
+                selectedTabIndex == -1 ->
+                    popularCategories
+                        .flatMap { category ->
+                            iconsForCategory(resources, category)
+                                .entries.take(2)
+                        }
+                        .distinctBy { it.key }
+                        .take(24)
+                        .associate { it.key to it.value }
+                selectedTabIndex > 0 ->
+                    iconsForCategory(resources, categories[selectedTabIndex - 1])
+                searchTerm.isNotEmpty() ->
+                    iconsForSearch(resources, searchTerm)
+                else -> emptyMap()
+            })
                 .map { Triple(it.key, it.value, resources.getString(it.value.label)) }
                 .sortedBy { it.third }
         }
@@ -88,6 +128,27 @@ fun IconSelector(
         var initialFocusProcessed by remember { mutableStateOf(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) }
         // Get safe drawing insets
 
+        Button(
+            onClick = {
+                selectedTabIndex =
+                    if (selectedTabIndex == -1)
+                        lastAdvancedTab
+                    else -1
+            },
+            modifier = Modifier.padding(
+                horizontal = 16.dp,
+                vertical = 8.dp
+            )
+        ) {
+            Text(
+                if (selectedTabIndex == -1)
+                    "More icons"
+                else
+                    "Popular icons"
+            )
+        }
+
+        if (selectedTabIndex >= 0) {
         ScrollableTabRow(
             selectedTabIndex = selectedTabIndex,
 /*            edgePadding = maxOf(
@@ -126,9 +187,23 @@ fun IconSelector(
                     selected = selectedTabIndex == effectiveIndex
                 ) {
                     selectedTabIndex = effectiveIndex
+                    lastAdvancedTab = effectiveIndex
                 }
             }
         }
+
+        }
+
+        val iconColors = listOf(
+            Color(0xFFF59E0B),
+            Color(0xFF3B82F6),
+            Color(0xFF10B981),
+            Color(0xFFA855F7),
+            Color(0xFFF43F5E),
+            Color(0xFF06B6D4),
+            Color(0xFFEC4899),
+            Color(0xFF6366F1)
+        )
 
         val minSize = with(LocalDensity.current) { 96.sp.toDp() }
         Timber.d("minSize: $minSize")
@@ -141,7 +216,7 @@ fun IconSelector(
             columns = GridCells.Adaptive(minSize = minSize)
         ) {
             for (icon in icons.value) {
-                item {
+                item(key = icon.first) {
                     Column(
                         modifier = Modifier
                             .clickable {
@@ -149,7 +224,28 @@ fun IconSelector(
                             }
                             .padding(vertical = 10.dp),
                         horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(icon.second)
+                        val iconColor =
+                            iconColors[
+                                (icon.first.hashCode().toLong()
+                                    .and(0x7FFFFFFFL) %
+                                    iconColors.size).toInt()
+                            ]
+
+                        Box(
+                            modifier = Modifier
+                                .size(52.dp)
+                                .background(
+                                    iconColor.copy(alpha = 0.14f),
+                                    CircleShape
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                iconInfo = icon.second,
+                                color = iconColor
+                            )
+                        }
+
                         Text(
                             modifier = Modifier.horizontalScroll(rememberScrollState()),
                             text = icon.third,

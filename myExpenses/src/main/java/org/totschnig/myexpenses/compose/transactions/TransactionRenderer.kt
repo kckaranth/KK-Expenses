@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
@@ -416,6 +417,7 @@ abstract class ItemRenderer(
         text: AnnotatedString,
         icons: List<String>,
         tagStyle: TagStyle = TagStyle.OUTLINE,
+        style: TextStyle = LocalTextStyle.current,
     ) {
         var layoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
         val onSurface = MaterialTheme.colorScheme.onSurface
@@ -473,6 +475,7 @@ abstract class ItemRenderer(
                 }
             },
             text = text,
+            style = style,
             onTextLayout = { layoutResult = it },
             inlineContent = buildMap {
                 icons.forEach {
@@ -615,13 +618,18 @@ class NewTransactionRenderer(
             }
             primaryInfo.takeIf { it.isNotEmpty() }
                 ?.let { info ->
-                    Text(text = info)
+                    Text(
+                        text = info,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Medium
+                    )
                 }
             secondaryInfo.first.takeIf { it.isNotEmpty() }?.let { info ->
                 TextWithInlineContent(
                     text = info,
                     icons = secondaryInfo.second,
-                    tagStyle = tagStyle
+                    tagStyle = tagStyle,
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
             if (transaction.tagList.isNotEmpty()) {

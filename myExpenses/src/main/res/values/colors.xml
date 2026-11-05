@@ -68,14 +68,21 @@
     <color name="arthvexa_on_primary_container">#003B35</color>
     <color name="arthvexa_secondary">#008F7A</color>
     <color name="arthvexa_on_secondary">#FFFFFF</color>
-    <color name="arthvexa_background">#F5FAF7</color>
+    <color name="arthvexa_background">#F3F7F5</color>
     <color name="arthvexa_on_background">#17332D</color>
     <color name="arthvexa_surface">#FFFFFF</color>
     <color name="arthvexa_on_surface">#17332D</color>
-    <color name="arthvexa_surface_variant">#E0EEE8</color>
+    <color name="arthvexa_surface_variant">#E8F4EF</color>
     <color name="arthvexa_on_surface_variant">#45675D</color>
     <color name="arthvexa_outline">#78938B</color>
-    <color name="arthvexa_outline_variant">#C4D8D0</color>
+    <color name="arthvexa_outline_variant">#D5E3DD</color>
     <color name="arthvexa_error">#C45136</color>
     <color name="arthvexa_on_error">#FFFFFF</color>
+
+    <!-- Arthvexa light surface hierarchy -->
+    <color name="arthvexa_surface_container_lowest">#FFFFFF</color>
+    <color name="arthvexa_surface_container_low">#F8FBF9</color>
+    <color name="arthvexa_surface_container">#EFF5F1</color>
+    <color name="arthvexa_surface_container_high">#E8F1EC</color>
+    <color name="arthvexa_surface_container_highest">#DCEBE5</color>
 </resources>

@@ -77,38 +77,48 @@ fun IconSelector(
     var lastAdvancedTab by rememberSaveable {
         mutableIntStateOf(1)
     }
-    val popularCategories = listOf(
-        IconCategory.FoodBeverage,
-        IconCategory.Shopping,
-        IconCategory.Transportation,
-        IconCategory.Household,
-        IconCategory.MedicalHealth,
-        IconCategory.Education,
-        IconCategory.Money,
-        IconCategory.Business,
-        IconCategory.TravelHotel,
-        IconCategory.SportsFitness,
-        IconCategory.MusicAudio,
-        IconCategory.ClothingFashion
+    val popularIconIds = listOf(
+        "utensils",
+        "burger",
+        "pizza-slice",
+        "basket-shopping",
+        "cart-shopping",
+        "car",
+        "bus",
+        "gas-pump",
+        "house",
+        "wallet",
+        "credit-card",
+        "money-bill",
+        "piggy-bank",
+        "building-columns",
+        "coins",
+        "receipt",
+        "briefcase",
+        "graduation-cap",
+        "heart-pulse",
+        "plane",
+        "gift",
+        "shirt",
+        "mobile-screen",
+        "book"
     )
     val icons = remember(
         resources,
         categories,
-        popularCategories,
+        popularIconIds,
         iconsForCategory,
         iconsForSearch
     ) {
         derivedStateOf {
             (when {
                 selectedTabIndex == -1 ->
-                    popularCategories
-                        .flatMap { category ->
-                            iconsForCategory(resources, category)
-                                .entries.take(2)
+                    popularIconIds
+                        .mapNotNull { id ->
+                            IIconInfo.resolveIcon(id)
+                                ?.let { id to it }
                         }
-                        .distinctBy { it.key }
-                        .take(24)
-                        .associate { it.key to it.value }
+                        .toMap()
                 selectedTabIndex > 0 ->
                     iconsForCategory(resources, categories[selectedTabIndex - 1])
                 searchTerm.isNotEmpty() ->

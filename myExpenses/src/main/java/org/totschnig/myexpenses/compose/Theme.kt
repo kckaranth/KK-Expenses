@@ -5,10 +5,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
@@ -21,32 +18,19 @@ import org.totschnig.myexpenses.util.getDateTimeFormatter
 @Composable
 fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val context = LocalContext.current
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+    // Retained for compatibility with existing callers.
+    // Arthvexa brand colors take precedence over dynamic colors.
+    @Suppress("UNUSED_VARIABLE")
+    val dynamicColorsRequested = dynamicColor
 
-        darkTheme -> darkColorScheme(
-            primary = Color(0xFF80D5C3),
-            onPrimary = Color(0xFF00382E),
-            secondary = Color(0xFFA4D0C3),
-            background = Color(0xFF101B1A),
-            surface = Color(0xFF152220),
-            surfaceVariant = Color(0xFF394945)
-        )
-        else -> lightColorScheme(
-            primary = Color(0xFF006B5A),
-            onPrimary = Color.White,
-            secondary = Color(0xFF45675D),
-            background = Color(0xFFF5FAF7),
-            surface = Color(0xFFFFFFFF),
-            surfaceVariant = Color(0xFFDCEBE4)
-        )
+    val context = LocalContext.current
+    val colorScheme = if (darkTheme) {
+        ArthvexaThemeColors.Dark
+    } else {
+        ArthvexaThemeColors.Light
     }
 
     MaterialTheme(

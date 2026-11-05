@@ -312,23 +312,9 @@ fun CategoryRenderer(
             }
         }
         if (category.icon != null) {
-            val palette = listOf(
-                Color(0xFFF59E0B),
-                Color(0xFF3B82F6),
-                Color(0xFF10B981),
-                Color(0xFFA855F7),
-                Color(0xFFF43F5E),
-                Color(0xFF06B6D4),
-                Color(0xFFEC4899),
-                Color(0xFF6366F1)
-            )
-
-            val fallbackIndex =
-                ((category.id xor (category.id ushr 32))
-                    .and(0x7FFFFFFFL) % palette.size).toInt()
-
-            val iconColor = category.color?.let { Color(it) }
-                ?: palette[fallbackIndex]
+            val iconColor =
+                category.color?.let { Color(it) }
+                    ?: ArthvexaIconColors.forIcon(category.icon)
 
             Box(
                 modifier = Modifier

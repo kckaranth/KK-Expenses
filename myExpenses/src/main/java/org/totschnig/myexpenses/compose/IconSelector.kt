@@ -42,7 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -204,24 +204,13 @@ fun IconSelector(
 
         }
 
-        val iconColors = listOf(
-            Color(0xFFF59E0B),
-            Color(0xFF3B82F6),
-            Color(0xFF10B981),
-            Color(0xFFA855F7),
-            Color(0xFFF43F5E),
-            Color(0xFF06B6D4),
-            Color(0xFFEC4899),
-            Color(0xFF6366F1)
-        )
-
         val minSize = with(LocalDensity.current) { 96.sp.toDp() }
         Timber.d("minSize: $minSize")
         LazyVerticalGrid(
             modifier = Modifier
                 .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
                 .padding(horizontal = 16.dp)
-                .padding(top = 12.dp, bottom = 4.dp),
+                .padding(top = 12.dp, bottom = 24.dp),
             horizontalArrangement = Arrangement.spacedBy(5.dp),
             columns = GridCells.Adaptive(minSize = minSize)
         ) {
@@ -235,11 +224,7 @@ fun IconSelector(
                             .padding(vertical = 10.dp),
                         horizontalAlignment = Alignment.CenterHorizontally) {
                         val iconColor =
-                            iconColors[
-                                (icon.first.hashCode().toLong()
-                                    .and(0x7FFFFFFFL) %
-                                    iconColors.size).toInt()
-                            ]
+                            ArthvexaIconColors.forIcon(icon.first)
 
                         Box(
                             modifier = Modifier
@@ -259,7 +244,8 @@ fun IconSelector(
                         Text(
                             modifier = Modifier.horizontalScroll(rememberScrollState()),
                             text = icon.third,
-                            maxLines = 1
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }

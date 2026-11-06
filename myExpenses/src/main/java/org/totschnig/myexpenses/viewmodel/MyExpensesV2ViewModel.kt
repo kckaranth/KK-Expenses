@@ -542,7 +542,7 @@ open class MyExpensesV2ViewModel(
     }
 
     private val _startScreen: StartScreen by lazy {
-        prefHandler.enumValueOrDefault(PrefKey.UI_START_SCREEN, StartScreen.LastVisited)
+        prefHandler.enumValueOrDefault(PrefKey.UI_START_SCREEN, StartScreen.Home)
     }
 
     val startScreen: StartScreen by lazy {

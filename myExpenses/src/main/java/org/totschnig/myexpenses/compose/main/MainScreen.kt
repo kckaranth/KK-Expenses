@@ -273,7 +273,7 @@ fun MainScreenAdaptive(
     val is2Pane = navigator.scaffoldDirective.maxHorizontalPartitions > 1
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-    var showHome by remember { mutableStateOf(false) }
+    var showHome by remember { mutableStateOf(!is2Pane && viewModel.startScreen == StartScreen.Home) }
     var accountOverviewExpanded by rememberSaveable {
         mutableStateOf(false)
     }

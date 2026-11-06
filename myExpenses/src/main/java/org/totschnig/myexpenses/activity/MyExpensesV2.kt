@@ -80,7 +80,7 @@ import java.util.Optional
 import javax.inject.Inject
 
 enum class StartScreen {
-    LastVisited, Accounts, Transactions, BalanceSheet
+    LastVisited, Home, Accounts, Transactions, BalanceSheet
 }
 
 

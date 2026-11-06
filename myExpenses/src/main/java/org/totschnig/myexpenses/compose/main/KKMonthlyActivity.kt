@@ -9,6 +9,7 @@ import android.os.Looper
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
@@ -46,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
@@ -217,6 +219,7 @@ private fun ArthvexaMonthlyAccountCard(
 
 @Composable
 private fun ArthvexaMonthlyAnalyticsCard(
+    subtleDark: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val configuration =
@@ -230,7 +233,9 @@ private fun ArthvexaMonthlyAnalyticsCard(
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        color = if (isDark) {
+        color = if (isDark && subtleDark) {
+            Color(0xFF303138)
+        } else if (isDark) {
             MaterialTheme.colorScheme.surfaceVariant
         } else {
             MaterialTheme.colorScheme.surfaceContainerLow
@@ -878,7 +883,7 @@ onClick = { onExpandedChange(!expanded) }) {
                         return if (value > 0L) "+$formatted" else formatted
                     }
 
-                    ArthvexaMonthlyAnalyticsCard {
+                    ArthvexaMonthlyAnalyticsCard(subtleDark = true) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -925,6 +930,7 @@ onClick = { onExpandedChange(!expanded) }) {
                         }
                     }
                     if (account.id in expandedComparisons) {
+                    Spacer(modifier = Modifier.height(12.dp))
                     val incomeChange = income - previousIncome
                     val expenseChange = (-expense) - (-previousExpense)
                     val netChange = (income + expense) -
@@ -1054,12 +1060,16 @@ onClick = { onExpandedChange(!expanded) }) {
                         percentage = incomePercent
                     )
 
+                    Spacer(modifier = Modifier.height(12.dp))
+
                     ChangeRow(
                         label = "Expense change",
                         change = expenseChange,
                         higherIsBetter = false,
                         percentage = expensePercent
                     )
+
+                    Spacer(modifier = Modifier.height(12.dp))
 
                     ChangeRow(
                         label = "Net cash flow change",

@@ -544,6 +544,7 @@ onClick = { onExpandedChange(!expanded) }) {
                     val expense = monthlySummary.expense
                     val previousIncome = monthlySummary.previousIncome
                     val previousExpense = monthlySummary.previousExpense
+                    ArthvexaMonthlyAccountCard {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -660,6 +661,7 @@ onClick = { onExpandedChange(!expanded) }) {
                                 softWrap = true
                             )
                         }
+                    }
                     }
                     if (account.id in expandedAccounts) {
                     val trendPoints = remember(

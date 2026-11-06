@@ -55,7 +55,7 @@
     <color name="CLEARED">#0000FF</color>
     <color name="VOID">#FF0000</color>
     <color name="RECONCILED">#00FF00</color>
-    <color name="settings_two_pane_background_color">#FFDBD9DD</color>
+    <color name="settings_two_pane_background_color">#F3F7F5</color>
 
     <color name="overspent">#c00100</color>
     <color name="overspentDaily">#dddd00</color>
@@ -85,4 +85,9 @@
     <color name="arthvexa_surface_container">#EFF5F1</color>
     <color name="arthvexa_surface_container_high">#E8F1EC</color>
     <color name="arthvexa_surface_container_highest">#DCEBE5</color>
+
+    <!-- Arthvexa Settings surfaces -->
+    <color name="arthvexa_settings_card">#FFFFFF</color>
+    <color name="arthvexa_settings_border">#D5E3DD</color>
+    <color name="arthvexa_settings_accent">#E8F4EF</color>
 </resources>

@@ -4,6 +4,10 @@ import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.content.res.Configuration
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.*
@@ -164,6 +168,29 @@ class MainPreferenceFragment : BasePreferenceFragment(),
                     )
                     flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 })
+            }
+        }
+    }
+
+    override fun onCreateRecyclerView(
+        inflater: LayoutInflater,
+        parent: ViewGroup,
+        savedInstanceState: Bundle?,
+    ): RecyclerView {
+        return super.onCreateRecyclerView(
+            inflater,
+            parent,
+            savedInstanceState
+        ).apply {
+            val isDark =
+                (resources.configuration.uiMode and
+                    Configuration.UI_MODE_NIGHT_MASK) ==
+                    Configuration.UI_MODE_NIGHT_YES
+
+            if (!isDark) {
+                addItemDecoration(
+                    ArthvexaSettingsDecoration(context)
+                )
             }
         }
     }

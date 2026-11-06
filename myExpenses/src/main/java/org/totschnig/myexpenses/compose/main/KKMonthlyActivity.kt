@@ -870,6 +870,7 @@ onClick = { onExpandedChange(!expanded) }) {
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     } else {
+                    ArthvexaMonthlyAnalyticsCard {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -915,7 +916,6 @@ onClick = { onExpandedChange(!expanded) }) {
                             )
                         }
                     }
-
                     if (account.id in expandedComparisons) {
                     val incomeChange = income - previousIncome
                     val expenseChange = (-expense) - (-previousExpense)
@@ -1066,7 +1066,10 @@ onClick = { onExpandedChange(!expanded) }) {
                         change = netChange,
                         higherIsBetter = true
                     )
+                    }
+                    }
 
+                    if (account.id in expandedComparisons) {
                     KKCategoryDistributionChart(
                         categoryTotals =
                             monthlySummary.currentCategorySpending,

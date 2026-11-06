@@ -870,6 +870,14 @@ onClick = { onExpandedChange(!expanded) }) {
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     } else {
+                    fun signedAmount(value: Long): String {
+                        val formatted = formatter.convAmount(
+                            value,
+                            account.currencyUnit
+                        )
+                        return if (value > 0L) "+$formatted" else formatted
+                    }
+
                     ArthvexaMonthlyAnalyticsCard {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -942,14 +950,6 @@ onClick = { onExpandedChange(!expanded) }) {
                         )
                     } else {
                         "N/A"
-                    }
-
-                    fun signedAmount(value: Long): String {
-                        val formatted = formatter.convAmount(
-                            value,
-                            account.currencyUnit
-                        )
-                        return if (value > 0L) "+$formatted" else formatted
                     }
 
                     fun performanceLabel(

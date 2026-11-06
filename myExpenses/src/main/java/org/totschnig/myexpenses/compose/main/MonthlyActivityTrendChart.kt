@@ -1,6 +1,7 @@
 package org.totschnig.myexpenses.compose.main
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -27,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
@@ -55,6 +57,9 @@ internal fun MonthlyActivityTrendChart(
     if (points.isEmpty()) return
 
     val formatter = LocalCurrencyFormatter.current
+    val isDarkTheme = isSystemInDarkTheme()
+    val lightAxisTextColor = MaterialTheme.colorScheme.onSurfaceVariant.toArgb()
+    val lightZeroTextColor = MaterialTheme.colorScheme.onSurface.toArgb()
 
     val incomeColor = Color(0xFF00BFA5)
     val expenseColor = Color(0xFFF59E0B)
@@ -218,8 +223,12 @@ internal fun MonthlyActivityTrendChart(
             val axisPaint = android.graphics.Paint(
                 android.graphics.Paint.ANTI_ALIAS_FLAG
             ).apply {
-                color = android.graphics.Color.LTGRAY
-                alpha = 180
+                color = if (isDarkTheme) {
+                    android.graphics.Color.LTGRAY
+                } else {
+                    lightAxisTextColor
+                }
+                alpha = if (isDarkTheme) 180 else 255
                 textSize = 10.sp.toPx()
                 textAlign =
                     android.graphics.Paint.Align.RIGHT
@@ -267,8 +276,12 @@ internal fun MonthlyActivityTrendChart(
             val zeroPaint = android.graphics.Paint(
                 axisPaint
             ).apply {
-                color = android.graphics.Color.WHITE
-                alpha = 220
+                color = if (isDarkTheme) {
+                    android.graphics.Color.WHITE
+                } else {
+                    lightZeroTextColor
+                }
+                alpha = if (isDarkTheme) 220 else 255
                 isFakeBoldText = true
             }
 

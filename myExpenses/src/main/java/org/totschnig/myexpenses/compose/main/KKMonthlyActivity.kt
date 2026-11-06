@@ -214,6 +214,36 @@ private fun ArthvexaMonthlyAccountCard(
     }
 }
 
+
+@Composable
+private fun ArthvexaMonthlyAnalyticsCard(
+    content: @Composable () -> Unit
+) {
+    val configuration =
+        androidx.compose.ui.platform.LocalConfiguration.current
+
+    val isDark =
+        (configuration.uiMode and
+            android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+            android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        color = if (isDark) {
+            MaterialTheme.colorScheme.surfaceVariant
+        } else {
+            MaterialTheme.colorScheme.surfaceContainerLow
+        }
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp)
+        ) {
+            content()
+        }
+    }
+}
+
 @Composable
 internal fun KKMonthlyActivity(
     accounts: List<FullAccount>,
@@ -823,6 +853,7 @@ onClick = { onExpandedChange(!expanded) }) {
                         }
                     }
 
+                    ArthvexaMonthlyAnalyticsCard {
                     MonthlyActivityTrendChart(
                         points = trendPoints,
                         currency = account.currencyUnit,
@@ -830,6 +861,7 @@ onClick = { onExpandedChange(!expanded) }) {
                             .fillMaxWidth()
                             .padding(vertical = 6.dp)
                     )
+                    }
 
                     if (month.isEmpty() && previousMonth.isEmpty()) {
                         Text(

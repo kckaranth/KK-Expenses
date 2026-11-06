@@ -1225,6 +1225,7 @@ onClick = { onExpandedChange(!expanded) }) {
                                     signedAmount(change),
                                     modifier = Modifier.weight(1f),
                                     style = MaterialTheme.typography.bodySmall,
+                                    color = spendingColor,
                                     textAlign = TextAlign.End,
                                     softWrap = true
                                 )
@@ -1361,7 +1362,15 @@ onClick = { onExpandedChange(!expanded) }) {
                             Text(entry.description.ifBlank { data.categories[entry.categoryId] ?: "Transaction" }, style = MaterialTheme.typography.bodyMedium)
                             Text(account.label + " · " + Instant.ofEpochSecond(entry.epoch).atZone(zone).toLocalDate(), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
-                        Text(formatter.convAmount(entry.amount, account.currencyUnit), style = MaterialTheme.typography.bodyMedium)
+                        Text(
+                            formatter.convAmount(entry.amount, account.currencyUnit),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = when {
+                                entry.amount > 0L -> arthvexaFinancialColor("income")
+                                entry.amount < 0L -> arthvexaFinancialColor("expense")
+                                else -> MaterialTheme.colorScheme.onSurfaceVariant
+                            }
+                        )
                     }
                 }
                 Text("Transfers excluded. Split expenses are grouped by their assigned categories. Amounts are not combined across currencies.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)

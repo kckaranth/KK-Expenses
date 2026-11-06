@@ -64,6 +64,8 @@ internal fun MonthlyActivityTrendChart(
     val incomeColor = Color(0xFF00BFA5)
     val expenseColor = Color(0xFFF59E0B)
     val netColor = Color(0xFF818CF8)
+    val semanticIncomeColor = if (isDarkTheme) Color(0xFF80E0C7) else Color(0xFF00796B)
+    val semanticExpenseColor = if (isDarkTheme) Color(0xFFFF9B86) else Color(0xFFB54745)
 
     var selectedIndex by remember(points) {
         mutableIntStateOf(points.lastIndex)
@@ -445,12 +447,19 @@ internal fun MonthlyActivityTrendChart(
             style = MaterialTheme.typography.labelLarge
         )
 
+        val semanticNetColor = when {
+            selected.netCashFlow > 0L -> semanticIncomeColor
+            selected.netCashFlow < 0L -> semanticExpenseColor
+            else -> MaterialTheme.colorScheme.onSurfaceVariant
+        }
+
         TrendValue(
             label = "Income",
             value = formatter.convAmount(
                 selected.income, currency
             ),
-            color = incomeColor
+            color = incomeColor,
+            amountColor = semanticIncomeColor
         )
 
         TrendValue(
@@ -458,7 +467,8 @@ internal fun MonthlyActivityTrendChart(
             value = formatter.convAmount(
                 selected.expenses, currency
             ),
-            color = expenseColor
+            color = expenseColor,
+            amountColor = semanticExpenseColor
         )
 
         TrendValue(
@@ -466,7 +476,8 @@ internal fun MonthlyActivityTrendChart(
             value = formatter.convAmount(
                 selected.netCashFlow, currency
             ),
-            color = netColor
+            color = netColor,
+            amountColor = semanticNetColor
         )
     }
 }
@@ -496,7 +507,8 @@ private fun TrendLegend(
 private fun TrendValue(
     label: String,
     value: String,
-    color: Color
+    color: Color,
+    amountColor: Color
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -509,7 +521,8 @@ private fun TrendValue(
         )
         Text(
             text = value,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
+            color = amountColor
         )
     }
 }

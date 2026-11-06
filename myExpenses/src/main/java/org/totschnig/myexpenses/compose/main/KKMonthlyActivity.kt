@@ -781,7 +781,8 @@ onClick = { onExpandedChange(!expanded) }) {
                                         insights.currentNetExpenses,
                                         account.currencyUnit
                                     ),
-                                    style = MaterialTheme.typography.titleSmall
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = arthvexaFinancialColor("expense")
                                 )
                             }
 

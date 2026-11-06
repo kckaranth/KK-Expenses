@@ -188,6 +188,26 @@ private fun readActivity(context: Context): ActivitySnapshot {
 
 
 @Composable
+private fun arthvexaFinancialColor(kind: String, amount: Long = 0L): Color {
+    val configuration = androidx.compose.ui.platform.LocalConfiguration.current
+    val dark = (configuration.uiMode and
+        android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+        android.content.res.Configuration.UI_MODE_NIGHT_YES
+    val income = if (dark) Color(0xFF80E0C7) else Color(0xFF00796B)
+    val expense = if (dark) Color(0xFFFF9B86) else Color(0xFFB54745)
+    return when (kind) {
+        "income" -> income
+        "expense" -> expense
+        "net" -> when {
+            amount > 0L -> income
+            amount < 0L -> expense
+            else -> MaterialTheme.colorScheme.onSurfaceVariant
+        }
+        else -> MaterialTheme.colorScheme.onSurface
+    }
+}
+
+@Composable
 private fun ArthvexaMonthlyAccountCard(
     content: @Composable () -> Unit
 ) {
@@ -434,6 +454,7 @@ onClick = { onExpandedChange(!expanded) }) {
                                                 style = MaterialTheme.typography.titleMedium.copy(
                                                     fontFeatureSettings = "tnum"
                                                 ),
+                                                color = arthvexaFinancialColor("income"),
                                                 fontWeight = FontWeight.SemiBold
                                             )
                                         }
@@ -453,6 +474,7 @@ onClick = { onExpandedChange(!expanded) }) {
                                                 style = MaterialTheme.typography.titleMedium.copy(
                                                     fontFeatureSettings = "tnum"
                                                 ),
+                                                color = arthvexaFinancialColor("expense"),
                                                 fontWeight = FontWeight.SemiBold
                                             )
                                         }
@@ -473,6 +495,7 @@ onClick = { onExpandedChange(!expanded) }) {
                                                 fontFeatureSettings = "tnum"
                                             ),
                                             fontWeight = FontWeight.SemiBold,
+                                            color = arthvexaFinancialColor("net", summary.netCashFlow),
                                             textAlign = TextAlign.End
                                         )
                                     }
@@ -647,6 +670,7 @@ onClick = { onExpandedChange(!expanded) }) {
                                         fontFeatureSettings = "tnum"
                                     ),
                                     fontWeight = FontWeight.SemiBold,
+                                    color = arthvexaFinancialColor("income"),
                                     softWrap = true
                                 )
                             }
@@ -668,6 +692,7 @@ onClick = { onExpandedChange(!expanded) }) {
                                         fontFeatureSettings = "tnum"
                                     ),
                                     fontWeight = FontWeight.SemiBold,
+                                    color = arthvexaFinancialColor("expense"),
                                     softWrap = true
                                 )
                             }
@@ -692,6 +717,7 @@ onClick = { onExpandedChange(!expanded) }) {
                                     fontFeatureSettings = "tnum"
                                 ),
                                 fontWeight = FontWeight.SemiBold,
+                                color = arthvexaFinancialColor("net", income + expense),
                                 textAlign = TextAlign.End,
                                 softWrap = true
                             )
@@ -1036,6 +1062,7 @@ onClick = { onExpandedChange(!expanded) }) {
                                 Text(
                                     amount,
                                     style = MaterialTheme.typography.bodySmall,
+                                    color = performanceColor(change, higherIsBetter),
                                     textAlign = TextAlign.End,
                                     softWrap = true
                                 )

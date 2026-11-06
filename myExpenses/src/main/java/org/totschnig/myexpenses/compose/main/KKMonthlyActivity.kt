@@ -42,6 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.key
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.Modifier
@@ -181,6 +182,36 @@ private fun readActivity(context: Context): ActivitySnapshot {
         entries.filter { it.id !in splitParentIds } + categoryEntries
 
     return ActivitySnapshot(entries, categoryReportEntries, categories)
+}
+
+
+@Composable
+private fun ArthvexaMonthlyAccountCard(
+    content: @Composable () -> Unit
+) {
+    val configuration =
+        androidx.compose.ui.platform.LocalConfiguration.current
+
+    val isDark =
+        (configuration.uiMode and
+            android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+            android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+    if (isDark) {
+        content()
+    } else {
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            color = MaterialTheme.colorScheme.surfaceContainerLow
+        ) {
+            Column(
+                modifier = Modifier.padding(12.dp)
+            ) {
+                content()
+            }
+        }
+    }
 }
 
 @Composable
@@ -330,13 +361,15 @@ onClick = { onExpandedChange(!expanded) }) {
                                 )
                             }
 
+                            ArthvexaMonthlyAccountCard {
                             Column(
                                 verticalArrangement =
                                     Arrangement.spacedBy(6.dp)
                             ) {
                                 Text(
                                     account.label,
-                                    style = MaterialTheme.typography.titleSmall
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.SemiBold
                                 )
 
                                 if (summary.transactionCount == 0) {
@@ -362,7 +395,11 @@ onClick = { onExpandedChange(!expanded) }) {
                                                 formatter.convAmount(
                                                     summary.income,
                                                     account.currencyUnit
-                                                )
+                                                ),
+                                                style = MaterialTheme.typography.titleMedium.copy(
+                                                    fontFeatureSettings = "tnum"
+                                                ),
+                                                fontWeight = FontWeight.SemiBold
                                             )
                                         }
 
@@ -377,7 +414,11 @@ onClick = { onExpandedChange(!expanded) }) {
                                                 formatter.convAmount(
                                                     summary.expenses,
                                                     account.currencyUnit
-                                                )
+                                                ),
+                                                style = MaterialTheme.typography.titleMedium.copy(
+                                                    fontFeatureSettings = "tnum"
+                                                ),
+                                                fontWeight = FontWeight.SemiBold
                                             )
                                         }
                                     }
@@ -393,10 +434,15 @@ onClick = { onExpandedChange(!expanded) }) {
                                                 summary.netCashFlow,
                                                 account.currencyUnit
                                             ),
+                                            style = MaterialTheme.typography.titleMedium.copy(
+                                                fontFeatureSettings = "tnum"
+                                            ),
+                                            fontWeight = FontWeight.SemiBold,
                                             textAlign = TextAlign.End
                                         )
                                     }
                                 }
+                            }
                             }
 
                             HorizontalDivider()
@@ -506,6 +552,7 @@ onClick = { onExpandedChange(!expanded) }) {
                         Text(
                             account.label,
                             style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.weight(1f),
                             maxLines = 2,
                             softWrap = true,
@@ -560,7 +607,10 @@ onClick = { onExpandedChange(!expanded) }) {
                                     formatter.convAmount(
                                         income, account.currencyUnit
                                     ),
-                                    style = MaterialTheme.typography.titleMedium,
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontFeatureSettings = "tnum"
+                                    ),
+                                    fontWeight = FontWeight.SemiBold,
                                     softWrap = true
                                 )
                             }
@@ -578,7 +628,10 @@ onClick = { onExpandedChange(!expanded) }) {
                                     formatter.convAmount(
                                         -expense, account.currencyUnit
                                     ),
-                                    style = MaterialTheme.typography.titleMedium,
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontFeatureSettings = "tnum"
+                                    ),
+                                    fontWeight = FontWeight.SemiBold,
                                     softWrap = true
                                 )
                             }
@@ -599,7 +652,10 @@ onClick = { onExpandedChange(!expanded) }) {
                                     account.currencyUnit
                                 ),
                                 modifier = Modifier.weight(1f),
-                                style = MaterialTheme.typography.titleMedium,
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontFeatureSettings = "tnum"
+                                ),
+                                fontWeight = FontWeight.SemiBold,
                                 textAlign = TextAlign.End,
                                 softWrap = true
                             )

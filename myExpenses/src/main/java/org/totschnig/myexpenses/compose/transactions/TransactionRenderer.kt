@@ -96,6 +96,7 @@ import org.totschnig.myexpenses.preference.ColorSource
 import org.totschnig.myexpenses.preference.TagStyle
 import org.totschnig.myexpenses.provider.SPLIT_CATID
 import org.totschnig.myexpenses.provider.STATUS_ARCHIVE
+import org.totschnig.myexpenses.util.arthvexaCategoryAccentArgb
 import org.totschnig.myexpenses.ui.DisplayParty
 import org.totschnig.myexpenses.viewmodel.ResolvedExtraInfo
 import org.totschnig.myexpenses.viewmodel.data.Tag
@@ -110,20 +111,7 @@ import kotlin.text.Typography.ellipsis
 // Presentation-only palette. Existing category icons and category assignments are unchanged.
 @Composable
 private fun transactionCategoryAccent(categoryPath: String?): Color {
-    val category = categoryPath.orEmpty().substringBefore(" > ").trim().lowercase()
-    val dark = MaterialTheme.colorScheme.background.luminance() < 0.5f
-    val tone = when {
-        category.contains("hous") || category.contains("rent") -> 0xFF00A99A
-        category.contains("food") || category.contains("grocer") -> 0xFFE58A16
-        category.contains("transport") || category.contains("travel") -> 0xFF238BCB
-        category.contains("saving") || category.contains("invest") -> 0xFF8B65D6
-        category.contains("loan") || category.contains("mortgage") -> 0xFFD16A55
-        category.contains("income") || category.contains("salary") -> 0xFF148C65
-        category.contains("health") || category.contains("medical") -> 0xFFD05A8A
-        else -> 0xFF537C94
-    }
-    val base = Color(tone)
-    return if (dark) base.copy(alpha = 1f) else base
+    return Color(arthvexaCategoryAccentArgb(categoryPath))
 }
 
 val inlineIconSize = 13.sp

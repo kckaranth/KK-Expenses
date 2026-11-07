@@ -58,13 +58,13 @@
 
                     <TextView
                         android:id="@+id/TitleLabel"
-                        style="@style/FormLabel"
+                        style="@style/ArthvexaEditorLabel"
                         android:labelFor="@+id/Title"
                         android:text="@string/title" />
 
                     <EditText
                         android:id="@+id/Title"
-                        style="@style/FormField"
+                        style="@style/ArthvexaEditorField"
                         android:layout_height="wrap_content"
                         android:inputType="textCapSentences"
                         android:maxLines="1" />
@@ -74,13 +74,13 @@
 
                     <TextView
                         android:id="@+id/AccountLabel"
-                        style="@style/FormLabel"
+                        style="@style/ArthvexaEditorLabel"
                         android:labelFor="@+id/Account"
                         android:text="@string/account" />
 
                     <Spinner
                         android:id="@+id/Account"
-                        style="@style/FormField" />
+                        style="@style/ArthvexaEditorField" />
                 </TableRow>
 
 
@@ -90,12 +90,12 @@
 
                     <TextView
                         android:id="@+id/OriginalAmountLabel"
-                        style="@style/FormLabel"
+                        style="@style/ArthvexaEditorLabel"
                         android:text="@string/menu_original_amount" />
 
                     <org.totschnig.myexpenses.ui.AmountInput
                         android:id="@+id/OriginalAmount"
-                        style="@style/FormField"
+                        style="@style/ArthvexaEditorField"
                         android:contentDescription="@string/content_description_original_amount"
                         app:downStreamDependency="@id/Amount"
                         app:purpose="@string/menu_original_amount"
@@ -109,12 +109,12 @@
 
                     <TextView
                         android:id="@+id/AmountLabel"
-                        style="@style/FormLabel"
+                        style="@style/ArthvexaEditorLabel"
                         tools:ignore="LabelFor" />
 
                     <org.totschnig.myexpenses.ui.AmountInput
                         android:id="@+id/Amount"
-                        style="@style/FormField"
+                        style="@style/ArthvexaEditorField"
                         android:visibility="gone"
                         tools:visibility="visible" />
                 </TableRow>
@@ -129,12 +129,12 @@
 
                     <TextView
                         android:id="@+id/EquivalentAmountLabel"
-                        style="@style/FormLabel"
+                        style="@style/ArthvexaEditorLabel"
                         android:text="@string/menu_equivalent_amount" />
 
                     <org.totschnig.myexpenses.ui.AmountInput
                         android:id="@+id/EquivalentAmount"
-                        style="@style/FormField"
+                        style="@style/ArthvexaEditorField"
                         android:contentDescription="@string/content_description_equivalent_amount"
                         app:alternateLayout="true"
                         app:purpose="@string/menu_equivalent_amount"
@@ -150,12 +150,12 @@
 
                     <TextView
                         android:id="@+id/TransferAmountLabel"
-                        style="@style/FormLabel"
+                        style="@style/ArthvexaEditorLabel"
                         tools:ignore="LabelFor" />
 
                     <org.totschnig.myexpenses.ui.AmountInput
                         android:id="@+id/TransferAmount"
-                        style="@style/FormField"
+                        style="@style/ArthvexaEditorField"
                         app:withTypeSwitch="false" />
                 </TableRow>
 
@@ -165,13 +165,13 @@
 
                     <TextView
                         android:id="@+id/TransferAccountLabel"
-                        style="@style/FormLabel"
+                        style="@style/ArthvexaEditorLabel"
                         android:labelFor="@+id/TransferAccount"
                         android:text="@string/transfer_to_account" />
 
                     <Spinner
                         android:id="@+id/TransferAccount"
-                        style="@style/FormField" />
+                        style="@style/ArthvexaEditorField" />
                 </TableRow>
 
                 <TableRow
@@ -180,11 +180,11 @@
 
                     <TextView
                         android:id="@+id/SplitLabel"
-                        style="@style/FormLabel"
+                        style="@style/ArthvexaEditorLabel"
                         android:text="@string/split_parts_heading" />
 
                     <LinearLayout
-                        style="@style/FormField"
+                        style="@style/ArthvexaEditorField"
                         android:orientation="horizontal">
 
                         <LinearLayout
@@ -266,10 +266,10 @@
 
                     <TextView
                         android:id="@+id/DateTimeLabel"
-                        style="@style/FormLabel" />
+                        style="@style/ArthvexaEditorLabel" />
 
                     <LinearLayout
-                        style="@style/FormField"
+                        style="@style/ArthvexaEditorField"
                         android:orientation="horizontal">
 
                         <include layout="@layout/date_edit" />
@@ -280,13 +280,13 @@
 
                     <TextView
                         android:id="@+id/PayeeLabel"
-                        style="@style/FormLabel"
+                        style="@style/ArthvexaEditorLabel"
                         android:labelFor="@+id/auto_complete_textview"
                         android:text="@string/payee" />
 
                     <org.totschnig.myexpenses.ui.PartyInput
                         android:id="@+id/Payee"
-                        style="@style/FormField"
+                        style="@style/ArthvexaEditorField"
                         android:layout_height="wrap_content" />
                 </TableRow>
 
@@ -296,12 +296,12 @@
 
                     <TextView
                         android:id="@+id/DebtLabel"
-                        style="@style/FormLabel"
+                        style="@style/ArthvexaEditorLabel"
                         android:labelFor="@+id/Debt"
                         android:text="@string/debt" />
 
                     <LinearLayout
-                        style="@style/FormField"
+                        style="@style/ArthvexaEditorField"
                         android:orientation="horizontal">
 
                         <CheckBox
@@ -328,17 +328,18 @@
 
                     <TextView
                         android:id="@+id/CategoryLabel"
-                        style="@style/FormLabel"
+                        style="@style/ArthvexaEditorLabel"
                         android:labelFor="@+id/Category"
                         android:text="@string/category" />
 
                     <LinearLayout
-                        style="@style/FormField"
+                        style="@style/ArthvexaEditorField"
                         android:orientation="horizontal">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/Category"
                             style="@style/SmallButton"
+                            app:cornerRadius="16dp"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -368,12 +369,12 @@
 
                     <TextView
                         android:id="@+id/CommentLabel"
-                        style="@style/FormLabel"
+                        style="@style/ArthvexaEditorLabel"
                         android:labelFor="@+id/Comment"
                         android:text="@string/notes" />
 
                     <LinearLayout
-                        style="@style/FormField"
+                        style="@style/ArthvexaEditorField"
                         android:orientation="horizontal">
 
                         <EditText
@@ -400,13 +401,13 @@
                 <TableRow android:id="@+id/AttachmentsRow">
 
                     <TextView
-                        style="@style/FormLabel"
+                        style="@style/ArthvexaEditorLabel"
                         android:labelFor="@id/newAttachment"
                         android:text="@string/attachments" />
 
                     <com.google.android.flexbox.FlexboxLayout
                         android:id="@+id/AttachmentGroup"
-                        style="@style/FormField"
+                        style="@style/ArthvexaEditorField"
                         android:layout_height="wrap_content"
                         android:animateLayoutChanges="true"
                         app:dividerDrawable="@drawable/divider"
@@ -433,13 +434,13 @@
 
                     <TextView
                         android:id="@+id/DefaultActionLabel"
-                        style="@style/FormLabel"
+                        style="@style/ArthvexaEditorLabel"
                         android:labelFor="@+id/DefaultAction"
                         android:text="@string/default_action" />
 
                     <Spinner
                         android:id="@+id/DefaultAction"
-                        style="@style/FormLabel"
+                        style="@style/ArthvexaEditorLabel"
                         android:entries="@array/template_default_action_entries" />
 
                 </TableRow>
@@ -450,11 +451,11 @@
 
                     <TextView
                         android:id="@+id/PlanLabel"
-                        style="@style/FormLabel"
+                        style="@style/ArthvexaEditorLabel"
                         android:labelFor="@id/Recurrence"
                         android:text="@string/plan" />
 
-                    <androidx.constraintlayout.widget.ConstraintLayout style="@style/FormField">
+                    <androidx.constraintlayout.widget.ConstraintLayout style="@style/ArthvexaEditorField">
 
                         <Spinner
                             android:id="@+id/Recurrence"
@@ -525,11 +526,11 @@
 
                     <TextView
                         android:id="@+id/advanceExecutionLabel"
-                        style="@style/FormLabel"
+                        style="@style/ArthvexaEditorLabel"
                         android:labelFor="@id/advanceExecutionSeek"
                         android:text="@string/advance_exexcution_in_days" />
 
-                    <LinearLayout style="@style/FormField">
+                    <LinearLayout style="@style/ArthvexaEditorField">
 
                         <SeekBar
                             android:id="@+id/advanceExecutionSeek"

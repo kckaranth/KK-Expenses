@@ -55,6 +55,7 @@ import org.totschnig.myexpenses.ui.AmountInput
 import org.totschnig.myexpenses.ui.DateButton
 import org.totschnig.myexpenses.ui.MyTextWatcher
 import org.totschnig.myexpenses.ui.SpinnerHelper
+import org.totschnig.myexpenses.util.arthvexaCategoryAccentArgb
 import org.totschnig.myexpenses.util.ICurrencyFormatter
 import org.totschnig.myexpenses.util.PermissionHelper
 import org.totschnig.myexpenses.util.TextUtils.appendCurrencyDescription
@@ -374,6 +375,9 @@ abstract class TransactionDelegate(
         }
         val startDrawable = categoryIcon?.let {
             IIconInfo.resolveIcon(it)?.asDrawable(context, androidx.appcompat.R.attr.colorPrimary)
+                ?.mutate()?.apply {
+                    setTint(arthvexaCategoryAccentArgb(label))
+                }
         }
         viewBinding.Category.setCompoundDrawablesRelativeWithIntrinsicBounds(
             startDrawable,

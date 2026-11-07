@@ -29,11 +29,13 @@ import androidx.compose.material.icons.automirrored.filled.CallSplit
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +49,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -103,6 +106,25 @@ import org.totschnig.myexpenses.viewmodel.data.getIndicatorPrefixForLabel
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import kotlin.text.Typography.ellipsis
+
+// Presentation-only palette. Existing category icons and category assignments are unchanged.
+@Composable
+private fun transactionCategoryAccent(categoryPath: String?): Color {
+    val category = categoryPath.orEmpty().substringBefore(" > ").trim().lowercase()
+    val dark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+    val tone = when {
+        category.contains("hous") || category.contains("rent") -> 0xFF00A99A
+        category.contains("food") || category.contains("grocer") -> 0xFFE58A16
+        category.contains("transport") || category.contains("travel") -> 0xFF238BCB
+        category.contains("saving") || category.contains("invest") -> 0xFF8B65D6
+        category.contains("loan") || category.contains("mortgage") -> 0xFFD16A55
+        category.contains("income") || category.contains("salary") -> 0xFF148C65
+        category.contains("health") || category.contains("medical") -> 0xFFD05A8A
+        else -> 0xFF537C94
+    }
+    val base = Color(tone)
+    return if (dark) base.copy(alpha = 1f) else base
+}
 
 val inlineIconSize = 13.sp
 const val ANNOTATION_TAG = "TAG_BG"
@@ -604,18 +626,21 @@ class NewTransactionRenderer(
             transaction.buildSecondaryInfo(context, false, resolvedExtraInfo, tagStyle)
         // Keep the existing icon and reconciliation actions unchanged.
         // Use a subtle theme-aware icon container without replacing user icons.
+        val categoryAccent = transactionCategoryAccent(transaction.categoryPath)
         Box(
             modifier = Modifier
                 .padding(end = 8.dp)
                 .background(
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.65f),
-                    shape = RoundedCornerShape(10.dp)
+                    color = categoryAccent.copy(alpha = 0.16f),
+                    shape = RoundedCornerShape(12.dp)
                 )
                 .padding(7.dp),
             contentAlignment = Alignment.Center
         ) {
-            with(this@NewTransactionRenderer) {
-                transaction.CategoryIcon(resolvedExtraInfo)
+            CompositionLocalProvider(LocalContentColor provides categoryAccent) {
+                with(this@NewTransactionRenderer) {
+                    transaction.CategoryIcon(resolvedExtraInfo)
+                }
             }
         }
         transaction.StatusToggle()

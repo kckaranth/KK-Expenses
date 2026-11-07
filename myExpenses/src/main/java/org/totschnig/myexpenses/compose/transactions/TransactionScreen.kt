@@ -377,6 +377,7 @@ fun TransactionScreen(
                     if (isPortfolio) viewModel.lastActionPortfolio else viewModel.lastAction
                 FloatingActionButtonMenu(
                 arthvexaCompact = true,
+                    arthvexaMenuScrim = true,
                     modifier = Modifier.testTag(TEST_TAG_FAB_TRANSACTIONS),
                     primaryAction = staticAction
                         ?: lastAction.flow.collectAsState(Action.Expense).value,

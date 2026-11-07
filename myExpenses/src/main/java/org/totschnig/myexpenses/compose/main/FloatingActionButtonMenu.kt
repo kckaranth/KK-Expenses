@@ -2,10 +2,12 @@ package org.totschnig.myexpenses.compose.main
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
@@ -61,6 +63,7 @@ fun <T: FabMenuAction> FloatingActionButtonMenu(
     modifier: Modifier = Modifier,
     isStandard: Boolean = true,
     arthvexaCompact: Boolean = false,
+    arthvexaMenuScrim: Boolean = false,
     primaryAction: T,
     containerColor: Color = MaterialTheme.colorScheme.surface,
     actions: List<T>,
@@ -134,6 +137,21 @@ fun <T: FabMenuAction> FloatingActionButtonMenu(
         }
     }
     if (expanded) {
+        if (arthvexaMenuScrim) {
+            // Separate non-focusable popup stays behind the anchored action menu.
+            // The action popup retains focus and its existing outside-tap dismissal.
+            Popup(
+                alignment = Alignment.TopStart,
+                properties = PopupProperties(focusable = false)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.32f))
+                        .clickable { expanded = false }
+                )
+            }
+        }
         Popup(
             popupPositionProvider = object : PopupPositionProvider {
                 override fun calculatePosition(

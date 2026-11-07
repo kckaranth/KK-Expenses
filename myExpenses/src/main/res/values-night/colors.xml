@@ -24,4 +24,22 @@
     <color name="CLEARED">#82B1FF</color>
     <color name="VOID">#FF5252</color>
     <color name="RECONCILED">#69F0AE</color>
+
+    <!-- Arthvexa premium brand tokens -->
+    <color name="arthvexa_primary">#B5FFF0</color>
+    <color name="arthvexa_on_primary">#001B19</color>
+    <color name="arthvexa_primary_container">#003B35</color>
+    <color name="arthvexa_on_primary_container">#B5FFF0</color>
+    <color name="arthvexa_secondary">#00BFA5</color>
+    <color name="arthvexa_on_secondary">#001B19</color>
+    <color name="arthvexa_background">#001B19</color>
+    <color name="arthvexa_on_background">#E8F5F1</color>
+    <color name="arthvexa_surface">#003B35</color>
+    <color name="arthvexa_on_surface">#E8F5F1</color>
+    <color name="arthvexa_surface_variant">#174B44</color>
+    <color name="arthvexa_on_surface_variant">#B8D2CB</color>
+    <color name="arthvexa_outline">#668B82</color>
+    <color name="arthvexa_outline_variant">#315E57</color>
+    <color name="arthvexa_error">#FF8A75</color>
+    <color name="arthvexa_on_error">#3B0B05</color>
 </resources>

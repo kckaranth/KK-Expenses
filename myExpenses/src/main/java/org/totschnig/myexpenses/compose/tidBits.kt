@@ -68,6 +68,7 @@ import java.text.DecimalFormat
 import kotlin.experimental.and
 import kotlin.experimental.inv
 import kotlin.experimental.or
+import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun ExpansionHandle(
@@ -227,7 +228,8 @@ fun SumDetails(
         modifier = modifier
             .testTag(TEST_TAG_GROUP_SUMS)
             .fillMaxWidth(),
-        horizontalArrangement = if (alignStart) Arrangement.Start else Arrangement.Center
+        horizontalArrangement = if (alignStart) Arrangement.Start else Arrangement.Center,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         val incomeSumLabel = stringResource(R.string.sum_income)
         val incomeSumFormatted = amountFormatter.formatMoney(incomeSum)
@@ -238,6 +240,10 @@ fun SumDetails(
                     contentDescription = "$incomeSumLabel: $incomeSumFormatted"
                 },
             text = "⊕ $incomeSumFormatted",
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                fontFeatureSettings = "tnum"
+            ),
             color = LocalColors.current.income
         )
         val configureExpenseSum: (DecimalFormat) -> Unit = remember {
@@ -260,6 +266,10 @@ fun SumDetails(
                 }
                 .padding(horizontal = generalPadding),
             text = "⊖ $expenseSumFormatted",
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                fontFeatureSettings = "tnum"
+            ),
             color = LocalColors.current.expense
         )
         val transferSumLabel = stringResource(R.string.sum_transfer)
@@ -271,6 +281,10 @@ fun SumDetails(
                     contentDescription = "$transferSumLabel: $transferSumFormatted"
                 },
             text = "$BI_ARROW $transferSumFormatted",
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                fontFeatureSettings = "tnum"
+            ),
             color = LocalColors.current.transfer
         )
     }

@@ -9,6 +9,7 @@ import android.os.Looper
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
@@ -42,9 +43,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.key
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
@@ -181,6 +184,89 @@ private fun readActivity(context: Context): ActivitySnapshot {
         entries.filter { it.id !in splitParentIds } + categoryEntries
 
     return ActivitySnapshot(entries, categoryReportEntries, categories)
+}
+
+
+@Composable
+private fun arthvexaFinancialColor(kind: String, amount: Long = 0L): Color {
+    val configuration = androidx.compose.ui.platform.LocalConfiguration.current
+    val dark = (configuration.uiMode and
+        android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+        android.content.res.Configuration.UI_MODE_NIGHT_YES
+    val income = if (dark) Color(0xFF80E0C7) else Color(0xFF00796B)
+    val expense = if (dark) Color(0xFFFF9B86) else Color(0xFFB54745)
+    return when (kind) {
+        "income" -> income
+        "expense" -> expense
+        "net" -> when {
+            amount > 0L -> income
+            amount < 0L -> expense
+            else -> MaterialTheme.colorScheme.onSurfaceVariant
+        }
+        else -> MaterialTheme.colorScheme.onSurface
+    }
+}
+
+@Composable
+private fun ArthvexaMonthlyAccountCard(
+    content: @Composable () -> Unit
+) {
+    val configuration =
+        androidx.compose.ui.platform.LocalConfiguration.current
+
+    val isDark =
+        (configuration.uiMode and
+            android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+            android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+    if (isDark) {
+        content()
+    } else {
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            color = MaterialTheme.colorScheme.surfaceContainerLow
+        ) {
+            Column(
+                modifier = Modifier.padding(12.dp)
+            ) {
+                content()
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun ArthvexaMonthlyAnalyticsCard(
+    subtleDark: Boolean = false,
+    content: @Composable () -> Unit
+) {
+    val configuration =
+        androidx.compose.ui.platform.LocalConfiguration.current
+
+    val isDark =
+        (configuration.uiMode and
+            android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+            android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        color = if (isDark && subtleDark) {
+            Color(0xFF303138)
+        } else if (isDark) {
+            MaterialTheme.colorScheme.surfaceVariant
+        } else {
+            MaterialTheme.colorScheme.surfaceContainerLow
+        }
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp)
+        ) {
+            content()
+        }
+    }
 }
 
 @Composable
@@ -330,13 +416,15 @@ onClick = { onExpandedChange(!expanded) }) {
                                 )
                             }
 
+                            ArthvexaMonthlyAccountCard {
                             Column(
                                 verticalArrangement =
                                     Arrangement.spacedBy(6.dp)
                             ) {
                                 Text(
                                     account.label,
-                                    style = MaterialTheme.typography.titleSmall
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.SemiBold
                                 )
 
                                 if (summary.transactionCount == 0) {
@@ -362,7 +450,12 @@ onClick = { onExpandedChange(!expanded) }) {
                                                 formatter.convAmount(
                                                     summary.income,
                                                     account.currencyUnit
-                                                )
+                                                ),
+                                                style = MaterialTheme.typography.titleMedium.copy(
+                                                    fontFeatureSettings = "tnum"
+                                                ),
+                                                color = arthvexaFinancialColor("income"),
+                                                fontWeight = FontWeight.SemiBold
                                             )
                                         }
 
@@ -377,7 +470,12 @@ onClick = { onExpandedChange(!expanded) }) {
                                                 formatter.convAmount(
                                                     summary.expenses,
                                                     account.currencyUnit
-                                                )
+                                                ),
+                                                style = MaterialTheme.typography.titleMedium.copy(
+                                                    fontFeatureSettings = "tnum"
+                                                ),
+                                                color = arthvexaFinancialColor("expense"),
+                                                fontWeight = FontWeight.SemiBold
                                             )
                                         }
                                     }
@@ -393,10 +491,16 @@ onClick = { onExpandedChange(!expanded) }) {
                                                 summary.netCashFlow,
                                                 account.currencyUnit
                                             ),
+                                            style = MaterialTheme.typography.titleMedium.copy(
+                                                fontFeatureSettings = "tnum"
+                                            ),
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = arthvexaFinancialColor("net", summary.netCashFlow),
                                             textAlign = TextAlign.End
                                         )
                                     }
                                 }
+                            }
                             }
 
                             HorizontalDivider()
@@ -498,6 +602,7 @@ onClick = { onExpandedChange(!expanded) }) {
                     val expense = monthlySummary.expense
                     val previousIncome = monthlySummary.previousIncome
                     val previousExpense = monthlySummary.previousExpense
+                    ArthvexaMonthlyAccountCard {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -506,6 +611,7 @@ onClick = { onExpandedChange(!expanded) }) {
                         Text(
                             account.label,
                             style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.weight(1f),
                             maxLines = 2,
                             softWrap = true,
@@ -560,7 +666,11 @@ onClick = { onExpandedChange(!expanded) }) {
                                     formatter.convAmount(
                                         income, account.currencyUnit
                                     ),
-                                    style = MaterialTheme.typography.titleMedium,
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontFeatureSettings = "tnum"
+                                    ),
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = arthvexaFinancialColor("income"),
                                     softWrap = true
                                 )
                             }
@@ -578,7 +688,11 @@ onClick = { onExpandedChange(!expanded) }) {
                                     formatter.convAmount(
                                         -expense, account.currencyUnit
                                     ),
-                                    style = MaterialTheme.typography.titleMedium,
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontFeatureSettings = "tnum"
+                                    ),
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = arthvexaFinancialColor("expense"),
                                     softWrap = true
                                 )
                             }
@@ -599,11 +713,16 @@ onClick = { onExpandedChange(!expanded) }) {
                                     account.currencyUnit
                                 ),
                                 modifier = Modifier.weight(1f),
-                                style = MaterialTheme.typography.titleMedium,
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontFeatureSettings = "tnum"
+                                ),
+                                fontWeight = FontWeight.SemiBold,
+                                color = arthvexaFinancialColor("net", income + expense),
                                 textAlign = TextAlign.End,
                                 softWrap = true
                             )
                         }
+                    }
                     }
                     if (account.id in expandedAccounts) {
                     val trendPoints = remember(
@@ -662,7 +781,8 @@ onClick = { onExpandedChange(!expanded) }) {
                                         insights.currentNetExpenses,
                                         account.currencyUnit
                                     ),
-                                    style = MaterialTheme.typography.titleSmall
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = arthvexaFinancialColor("expense")
                                 )
                             }
 
@@ -765,6 +885,7 @@ onClick = { onExpandedChange(!expanded) }) {
                         }
                     }
 
+                    ArthvexaMonthlyAnalyticsCard {
                     MonthlyActivityTrendChart(
                         points = trendPoints,
                         currency = account.currencyUnit,
@@ -772,6 +893,7 @@ onClick = { onExpandedChange(!expanded) }) {
                             .fillMaxWidth()
                             .padding(vertical = 6.dp)
                     )
+                    }
 
                     if (month.isEmpty() && previousMonth.isEmpty()) {
                         Text(
@@ -780,6 +902,15 @@ onClick = { onExpandedChange(!expanded) }) {
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     } else {
+                    fun signedAmount(value: Long): String {
+                        val formatted = formatter.convAmount(
+                            value,
+                            account.currencyUnit
+                        )
+                        return if (value > 0L) "+$formatted" else formatted
+                    }
+
+                    ArthvexaMonthlyAnalyticsCard(subtleDark = true) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -825,8 +956,8 @@ onClick = { onExpandedChange(!expanded) }) {
                             )
                         }
                     }
-
                     if (account.id in expandedComparisons) {
+                    Spacer(modifier = Modifier.height(12.dp))
                     val incomeChange = income - previousIncome
                     val expenseChange = (-expense) - (-previousExpense)
                     val netChange = (income + expense) -
@@ -852,14 +983,6 @@ onClick = { onExpandedChange(!expanded) }) {
                         )
                     } else {
                         "N/A"
-                    }
-
-                    fun signedAmount(value: Long): String {
-                        val formatted = formatter.convAmount(
-                            value,
-                            account.currencyUnit
-                        )
-                        return if (value > 0L) "+$formatted" else formatted
                     }
 
                     fun performanceLabel(
@@ -940,6 +1063,7 @@ onClick = { onExpandedChange(!expanded) }) {
                                 Text(
                                     amount,
                                     style = MaterialTheme.typography.bodySmall,
+                                    color = performanceColor(change, higherIsBetter),
                                     textAlign = TextAlign.End,
                                     softWrap = true
                                 )
@@ -964,6 +1088,8 @@ onClick = { onExpandedChange(!expanded) }) {
                         percentage = incomePercent
                     )
 
+                    Spacer(modifier = Modifier.height(12.dp))
+
                     ChangeRow(
                         label = "Expense change",
                         change = expenseChange,
@@ -971,12 +1097,17 @@ onClick = { onExpandedChange(!expanded) }) {
                         percentage = expensePercent
                     )
 
+                    Spacer(modifier = Modifier.height(12.dp))
+
                     ChangeRow(
                         label = "Net cash flow change",
                         change = netChange,
                         higherIsBetter = true
                     )
+                    }
+                    }
 
+                    if (account.id in expandedComparisons) {
                     KKCategoryDistributionChart(
                         categoryTotals =
                             monthlySummary.currentCategorySpending,
@@ -1095,6 +1226,7 @@ onClick = { onExpandedChange(!expanded) }) {
                                     signedAmount(change),
                                     modifier = Modifier.weight(1f),
                                     style = MaterialTheme.typography.bodySmall,
+                                    color = spendingColor,
                                     textAlign = TextAlign.End,
                                     softWrap = true
                                 )
@@ -1231,7 +1363,15 @@ onClick = { onExpandedChange(!expanded) }) {
                             Text(entry.description.ifBlank { data.categories[entry.categoryId] ?: "Transaction" }, style = MaterialTheme.typography.bodyMedium)
                             Text(account.label + " · " + Instant.ofEpochSecond(entry.epoch).atZone(zone).toLocalDate(), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
-                        Text(formatter.convAmount(entry.amount, account.currencyUnit), style = MaterialTheme.typography.bodyMedium)
+                        Text(
+                            formatter.convAmount(entry.amount, account.currencyUnit),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = when {
+                                entry.amount > 0L -> arthvexaFinancialColor("income")
+                                entry.amount < 0L -> arthvexaFinancialColor("expense")
+                                else -> MaterialTheme.colorScheme.onSurfaceVariant
+                            }
+                        )
                     }
                 }
                 Text("Transfers excluded. Split expenses are grouped by their assigned categories. Amounts are not combined across currencies.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)

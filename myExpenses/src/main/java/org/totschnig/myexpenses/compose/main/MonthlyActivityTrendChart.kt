@@ -1,6 +1,7 @@
 package org.totschnig.myexpenses.compose.main
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -27,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
@@ -55,10 +57,15 @@ internal fun MonthlyActivityTrendChart(
     if (points.isEmpty()) return
 
     val formatter = LocalCurrencyFormatter.current
+    val isDarkTheme = isSystemInDarkTheme()
+    val lightAxisTextColor = MaterialTheme.colorScheme.onSurfaceVariant.toArgb()
+    val lightZeroTextColor = MaterialTheme.colorScheme.onSurface.toArgb()
 
     val incomeColor = Color(0xFF00BFA5)
     val expenseColor = Color(0xFFF59E0B)
     val netColor = Color(0xFF818CF8)
+    val semanticIncomeColor = if (isDarkTheme) Color(0xFF80E0C7) else Color(0xFF00796B)
+    val semanticExpenseColor = if (isDarkTheme) Color(0xFFFF9B86) else Color(0xFFB54745)
 
     var selectedIndex by remember(points) {
         mutableIntStateOf(points.lastIndex)
@@ -218,8 +225,12 @@ internal fun MonthlyActivityTrendChart(
             val axisPaint = android.graphics.Paint(
                 android.graphics.Paint.ANTI_ALIAS_FLAG
             ).apply {
-                color = android.graphics.Color.LTGRAY
-                alpha = 180
+                color = if (isDarkTheme) {
+                    android.graphics.Color.LTGRAY
+                } else {
+                    lightAxisTextColor
+                }
+                alpha = if (isDarkTheme) 180 else 255
                 textSize = 10.sp.toPx()
                 textAlign =
                     android.graphics.Paint.Align.RIGHT
@@ -267,8 +278,12 @@ internal fun MonthlyActivityTrendChart(
             val zeroPaint = android.graphics.Paint(
                 axisPaint
             ).apply {
-                color = android.graphics.Color.WHITE
-                alpha = 220
+                color = if (isDarkTheme) {
+                    android.graphics.Color.WHITE
+                } else {
+                    lightZeroTextColor
+                }
+                alpha = if (isDarkTheme) 220 else 255
                 isFakeBoldText = true
             }
 
@@ -432,12 +447,19 @@ internal fun MonthlyActivityTrendChart(
             style = MaterialTheme.typography.labelLarge
         )
 
+        val semanticNetColor = when {
+            selected.netCashFlow > 0L -> semanticIncomeColor
+            selected.netCashFlow < 0L -> semanticExpenseColor
+            else -> MaterialTheme.colorScheme.onSurfaceVariant
+        }
+
         TrendValue(
             label = "Income",
             value = formatter.convAmount(
                 selected.income, currency
             ),
-            color = incomeColor
+            color = incomeColor,
+            amountColor = semanticIncomeColor
         )
 
         TrendValue(
@@ -445,7 +467,8 @@ internal fun MonthlyActivityTrendChart(
             value = formatter.convAmount(
                 selected.expenses, currency
             ),
-            color = expenseColor
+            color = expenseColor,
+            amountColor = semanticExpenseColor
         )
 
         TrendValue(
@@ -453,7 +476,8 @@ internal fun MonthlyActivityTrendChart(
             value = formatter.convAmount(
                 selected.netCashFlow, currency
             ),
-            color = netColor
+            color = netColor,
+            amountColor = semanticNetColor
         )
     }
 }
@@ -483,7 +507,8 @@ private fun TrendLegend(
 private fun TrendValue(
     label: String,
     value: String,
-    color: Color
+    color: Color,
+    amountColor: Color
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -496,7 +521,8 @@ private fun TrendValue(
         )
         Text(
             text = value,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
+            color = amountColor
         )
     }
 }

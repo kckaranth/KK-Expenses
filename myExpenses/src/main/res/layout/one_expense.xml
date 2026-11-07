@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/padding_form"
-                android:paddingTop="8dp"
+                android:paddingTop="4dp"
                 android:shrinkColumns="1"
                 android:stretchColumns="1"
                 tools:ignore="UselessParent">
@@ -70,7 +70,8 @@
                         android:maxLines="1" />
                 </TableRow>
 
-                <TableRow android:id="@+id/AccountRow">
+                <TableRow android:id="@+id/AccountRow"
+                    android:paddingBottom="4dp">
 
                     <TextView
                         android:id="@+id/AccountLabel"
@@ -105,7 +106,9 @@
 
                 </TableRow>
 
-                <TableRow android:id="@+id/AmountRow">
+                <TableRow android:id="@+id/AmountRow"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="8dp">
 
                     <TextView
                         android:id="@+id/AmountLabel"
@@ -276,7 +279,9 @@
                     </LinearLayout>
                 </TableRow>
 
-                <TableRow android:id="@+id/PayeeRow">
+                <TableRow android:id="@+id/PayeeRow"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
 
                     <TextView
                         android:id="@+id/PayeeLabel"
@@ -326,7 +331,9 @@
                     </LinearLayout>
                 </TableRow>
 
-                <TableRow android:id="@+id/CategoryRow">
+                <TableRow android:id="@+id/CategoryRow"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
 
                     <TextView
                         android:id="@+id/CategoryLabel"
@@ -368,7 +375,9 @@
                     android:id="@+id/TagRow"
                     layout="@layout/tag_row" />
 
-                <TableRow android:id="@+id/CommentRow">
+                <TableRow android:id="@+id/CommentRow"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
 
                     <TextView
                         android:id="@+id/CommentLabel"
@@ -387,6 +396,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_weight="1"
                             android:background="@drawable/arthvexa_editor_field_surface"
+                            android:gravity="center_vertical|start"
                             android:paddingHorizontal="16dp"
                             android:paddingVertical="12dp"
                             android:importantForAutofill="no"

@@ -57,6 +57,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.collectionItemInfo
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -553,7 +554,9 @@ fun HeaderData(
     ) {
         Text(
             text = displayTitle,
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.SemiBold
+            ),
         )
         val delta = " " +
                 (if (headerRow.delta.amountMinor >= 0) "+" else "\u2212") + " " + amountFormatter.formatMoney(
@@ -565,13 +568,15 @@ fun HeaderData(
         FlowRow(
             modifier = Modifier
                 .testTag(TEST_TAG_GROUP_SUMMARY)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(top = 4.dp, bottom = 2.dp),
             horizontalArrangement = if (alignStart) Arrangement.Start else Arrangement.Center
         ) {
             if (!showOnlyDelta) {
                 Text(
                     modifier = Modifier.amountSemantics(headerRow.previousBalance),
-                    text = amountFormatter.formatMoney(headerRow.previousBalance)
+                    text = amountFormatter.formatMoney(headerRow.previousBalance),
+                    style = MaterialTheme.typography.bodyMedium.copy(fontFeatureSettings = "tnum")
                 )
             }
             Text(
@@ -584,12 +589,17 @@ fun HeaderData(
                     .clickable {
                         updateShowSumDetails(!showSumDetails)
                     },
-                text = delta
+                text = delta,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Medium,
+                    fontFeatureSettings = "tnum"
+                )
             )
             if (!showOnlyDelta) {
                 Text(
                     modifier = Modifier.amountSemantics(headerRow.interimBalance),
-                    text = " = " + amountFormatter.formatMoney(headerRow.interimBalance)
+                    text = " = " + amountFormatter.formatMoney(headerRow.interimBalance),
+                    style = MaterialTheme.typography.bodyMedium.copy(fontFeatureSettings = "tnum")
                 )
             }
         }

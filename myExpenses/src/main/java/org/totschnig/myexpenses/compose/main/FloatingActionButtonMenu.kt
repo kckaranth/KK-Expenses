@@ -2,10 +2,12 @@ package org.totschnig.myexpenses.compose.main
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropUp
@@ -59,6 +62,8 @@ interface FabMenuAction {
 fun <T: FabMenuAction> FloatingActionButtonMenu(
     modifier: Modifier = Modifier,
     isStandard: Boolean = true,
+    arthvexaCompact: Boolean = false,
+    arthvexaMenuScrim: Boolean = false,
     primaryAction: T,
     containerColor: Color = MaterialTheme.colorScheme.surface,
     actions: List<T>,
@@ -69,15 +74,18 @@ fun <T: FabMenuAction> FloatingActionButtonMenu(
 
     Surface(
         modifier = modifier,
-        shape = if (expanded) CircleShape else FloatingActionButtonDefaults.shape,
+        shape = if (expanded) CircleShape else if (arthvexaCompact) RoundedCornerShape(20.dp) else FloatingActionButtonDefaults.shape,
         color = containerColor,
         contentColor = containerColor.calculateOnColor(),
-        shadowElevation = 6.dp
+        shadowElevation = if (arthvexaCompact) 3.dp else 6.dp
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
                 modifier = Modifier
-                    .defaultMinSize(minWidth = 56.dp, minHeight = 56.dp)
+                    .defaultMinSize(
+                        minWidth = if (arthvexaCompact) 52.dp else 56.dp,
+                        minHeight = if (arthvexaCompact) 52.dp else 56.dp
+                    )
                     .combinedClickable(
                         onClick = {
                             if (expanded) expanded = false else onAction(primaryAction)
@@ -109,12 +117,15 @@ fun <T: FabMenuAction> FloatingActionButtonMenu(
 
                 Box(
                     modifier = Modifier
-                        .height(56.dp)
+                        .height(if (arthvexaCompact) 52.dp else 56.dp)
                         .clickable {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             expanded = !expanded
                         }
-                        .padding(start = 8.dp, end = 12.dp),
+                        .padding(
+                            start = if (arthvexaCompact) 4.dp else 8.dp,
+                            end = if (arthvexaCompact) 8.dp else 12.dp
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -126,6 +137,21 @@ fun <T: FabMenuAction> FloatingActionButtonMenu(
         }
     }
     if (expanded) {
+        if (arthvexaMenuScrim) {
+            // Separate non-focusable popup stays behind the anchored action menu.
+            // The action popup retains focus and its existing outside-tap dismissal.
+            Popup(
+                alignment = Alignment.TopStart,
+                properties = PopupProperties(focusable = false)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.32f))
+                        .clickable { expanded = false }
+                )
+            }
+        }
         Popup(
             popupPositionProvider = object : PopupPositionProvider {
                 override fun calculatePosition(

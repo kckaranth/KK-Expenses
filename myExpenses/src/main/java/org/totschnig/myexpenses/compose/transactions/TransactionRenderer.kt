@@ -602,12 +602,28 @@ class NewTransactionRenderer(
         val primaryInfo = transaction.buildPrimaryInfo(context, resolvedExtraInfo, false)
         val secondaryInfo =
             transaction.buildSecondaryInfo(context, false, resolvedExtraInfo, tagStyle)
-        transaction.CategoryIcon(resolvedExtraInfo)
+        // Keep the existing icon and reconciliation actions unchanged.
+        // Use a subtle theme-aware icon container without replacing user icons.
+        Box(
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.65f),
+                    shape = RoundedCornerShape(10.dp)
+                )
+                .padding(7.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            with(this@NewTransactionRenderer) {
+                transaction.CategoryIcon(resolvedExtraInfo)
+            }
+        }
         transaction.StatusToggle()
         Column(
             modifier = Modifier
-                .padding(horizontal = 5.dp)
-                .weight(1f)
+                .padding(end = 8.dp)
+                .weight(1f),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             if (!transaction.isTransfer && transaction.accountLabel != null && withAccountLabel) {
                 Row(modifier = Modifier.height(IntrinsicSize.Min)) {
@@ -620,7 +636,8 @@ class NewTransactionRenderer(
                     Text(
                         text = info,
                         style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Medium
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
             secondaryInfo.first.takeIf { it.isNotEmpty() }?.let { info ->
@@ -628,7 +645,9 @@ class NewTransactionRenderer(
                     text = info,
                     icons = secondaryInfo.second,
                     tagStyle = tagStyle,
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 )
             }
             if (transaction.tagList.isNotEmpty()) {
@@ -645,7 +664,10 @@ class NewTransactionRenderer(
                 }
             }
         }
-        Column(horizontalAlignment = Alignment.End) {
+        Column(
+            horizontalAlignment = Alignment.End,
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
             transaction.ColoredAmountText(
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.SemiBold,

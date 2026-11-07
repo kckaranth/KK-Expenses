@@ -749,7 +749,9 @@ private fun AccountLabel(
     Text(
         modifier = modifier.testTag(TEST_TAG_ACCOUNT_LABEL),
         text = account.labelV2(LocalContext.current),
-        style = MaterialTheme.typography.titleMedium,
+        style = MaterialTheme.typography.titleMedium.copy(
+            fontWeight = FontWeight.SemiBold
+        ),
         maxLines = 1,
         overflow = TextOverflow.Ellipsis
     )
@@ -790,8 +792,8 @@ private fun BalanceSection(
                 modifier = Modifier.testTag(TEST_TAG_BALANCE_AMOUNT),
                 amount = balance,
                 currency = account.currencyUnit,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
                 overflow = TextOverflow.Visible,
                 softWrap = false
             )

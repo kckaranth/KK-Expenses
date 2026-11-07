@@ -77,6 +77,11 @@ class PartyInput @JvmOverloads constructor(
         get() = binding.viewSwitcher
     private val autoCompleteTextView: AutoCompleteTextView
         get() = binding.autoCompleteTextview
+    /** Removes the legacy underline only when requested by the transaction editor. */
+    fun applyArthvexaEditorSurface() {
+        autoCompleteTextView.background = null
+    }
+
     private val buttonClear: ImageView
         get() = binding.buttonClear
     private val selectedItemChip: Chip

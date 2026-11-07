@@ -118,6 +118,10 @@
                     <org.totschnig.myexpenses.ui.AmountInput
                         android:id="@+id/Amount"
                         style="@style/ArthvexaEditorField"
+                        android:background="@drawable/arthvexa_editor_field_surface"
+                        android:minHeight="76dp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
                         android:visibility="gone"
                         tools:visibility="visible" />
                 </TableRow>
@@ -273,7 +277,8 @@
 
                     <LinearLayout
                         style="@style/ArthvexaEditorField"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:paddingVertical="4dp">
 
                         <include layout="@layout/date_edit" />
                     </LinearLayout>

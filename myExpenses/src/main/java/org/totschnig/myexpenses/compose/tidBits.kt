@@ -68,6 +68,7 @@ import java.text.DecimalFormat
 import kotlin.experimental.and
 import kotlin.experimental.inv
 import kotlin.experimental.or
+import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun ExpansionHandle(

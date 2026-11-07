@@ -376,11 +376,14 @@ fun TransactionScreen(
                 val lastAction =
                     if (isPortfolio) viewModel.lastActionPortfolio else viewModel.lastAction
                 FloatingActionButtonMenu(
+                arthvexaCompact = true,
                     modifier = Modifier.testTag(TEST_TAG_FAB_TRANSACTIONS),
                     primaryAction = staticAction
                         ?: lastAction.flow.collectAsState(Action.Expense).value,
                     isStandard = viewModel.fabStyle.collectAsState(FabStyle.Standard).value == FabStyle.Standard,
-                    containerColor = accountColor,
+                    // Use the Arthvexa theme surface instead of the account-specific green.
+                    // Keep the account color for the selected tab indicator.
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
                     actions = if (isPortfolio) Action.PORTFOLIO_ACTIONS else Action.STANDARD_ACTIONS
                 ) { action ->
 

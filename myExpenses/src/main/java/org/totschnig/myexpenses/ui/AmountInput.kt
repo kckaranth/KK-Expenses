@@ -7,6 +7,7 @@ import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
@@ -47,6 +48,14 @@ class AmountInput(context: Context, attrs: AttributeSet?) : ConstraintLayout(con
             is AmountInputCompactBinding -> viewBinding.AmountEditText
             else -> (viewBinding as AmountInputBinding).AmountEditText
         }.root
+
+    /** Presentation-only typography for the transaction editor primary amount. */
+    fun applyArthvexaEditorAmountTypography() {
+        amountEditText.apply {
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 28f)
+            fontFeatureSettings = "tnum"
+        }
+    }
 
     private val calculator
         get() = when (viewBinding) {

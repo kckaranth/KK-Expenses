@@ -287,6 +287,8 @@
                     <org.totschnig.myexpenses.ui.PartyInput
                         android:id="@+id/Payee"
                         style="@style/ArthvexaEditorField"
+                        android:background="@drawable/arthvexa_editor_field_surface"
+                        android:paddingHorizontal="8dp"
                         android:layout_height="wrap_content" />
                 </TableRow>
 
@@ -340,6 +342,7 @@
                             android:id="@+id/Category"
                             style="@style/SmallButton"
                             app:cornerRadius="16dp"
+                            android:minHeight="56dp"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -383,6 +386,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_weight="1"
+                            android:background="@drawable/arthvexa_editor_field_surface"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="12dp"
                             android:importantForAutofill="no"
                             android:inputType="textCapSentences|textMultiLine"
                             android:minHeight="@dimen/accessibility_clickable_minimum" />

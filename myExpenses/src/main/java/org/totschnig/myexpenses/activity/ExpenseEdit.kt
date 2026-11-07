@@ -389,6 +389,7 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
         super.onCreate(savedInstanceState)
         setHelpVariant(HELP_VARIANT_TRANSACTION, false)
         rootBinding = OneExpenseBinding.inflate(LayoutInflater.from(this))
+        amountInput.applyArthvexaEditorAmountTypography()
         rootBinding.TagRow.TagLabel.setText(R.string.tags)
         dateEditBinding = DateEditBinding.bind(rootBinding.root)
         methodRowBinding = MethodRowBinding.bind(rootBinding.root)

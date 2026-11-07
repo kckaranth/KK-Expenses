@@ -4,12 +4,12 @@
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
-  
+
   My Expenses is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with My Expenses.  If not, see <http://www.gnu.org/licenses/>.
  -->
@@ -72,16 +72,27 @@
 
                 <TableRow android:id="@+id/AccountRow"
                     android:paddingBottom="4dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_span="2"
+                        android:orientation="vertical"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="10dp">
 
                     <TextView
                         android:id="@+id/AccountLabel"
                         style="@style/ArthvexaEditorLabel"
+                        android:layout_width="match_parent"
                         android:labelFor="@+id/Account"
                         android:text="@string/account" />
 
                     <Spinner
                         android:id="@+id/Account"
-                        style="@style/ArthvexaEditorField" />
+                        style="@style/ArthvexaEditorField"
+                        android:layout_width="match_parent" />
+
+                    </LinearLayout>
                 </TableRow>
 
 
@@ -109,21 +120,32 @@
                 <TableRow android:id="@+id/AmountRow"
                     android:paddingTop="6dp"
                     android:paddingBottom="8dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_span="2"
+                        android:orientation="vertical"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="10dp">
 
                     <TextView
                         android:id="@+id/AmountLabel"
                         style="@style/ArthvexaEditorLabel"
+                        android:layout_width="match_parent"
                         tools:ignore="LabelFor" />
 
                     <org.totschnig.myexpenses.ui.AmountInput
                         android:id="@+id/Amount"
                         style="@style/ArthvexaEditorField"
+                        android:layout_width="match_parent"
                         android:background="@drawable/arthvexa_editor_field_surface"
                         android:minHeight="76dp"
                         android:paddingStart="12dp"
                         android:paddingEnd="12dp"
                         android:visibility="gone"
                         tools:visibility="visible" />
+
+                    </LinearLayout>
                 </TableRow>
 
                 <include
@@ -270,36 +292,58 @@
                 </TableRow>
 
                 <TableRow android:id="@+id/DateTimeRow">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_span="2"
+                        android:orientation="vertical"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="10dp">
 
                     <TextView
                         android:id="@+id/DateTimeLabel"
-                        style="@style/ArthvexaEditorLabel" />
+                        style="@style/ArthvexaEditorLabel"
+                        android:layout_width="match_parent" />
 
                     <LinearLayout
                         style="@style/ArthvexaEditorField"
+                        android:layout_width="match_parent"
                         android:orientation="horizontal"
                         android:paddingVertical="4dp">
 
                         <include layout="@layout/date_edit" />
+                    </LinearLayout>
+
                     </LinearLayout>
                 </TableRow>
 
                 <TableRow android:id="@+id/PayeeRow"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_span="2"
+                        android:orientation="vertical"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="10dp">
 
                     <TextView
                         android:id="@+id/PayeeLabel"
                         style="@style/ArthvexaEditorLabel"
+                        android:layout_width="match_parent"
                         android:labelFor="@+id/auto_complete_textview"
                         android:text="@string/payee" />
 
                     <org.totschnig.myexpenses.ui.PartyInput
                         android:id="@+id/Payee"
                         style="@style/ArthvexaEditorField"
+                        android:layout_width="match_parent"
                         android:background="@drawable/arthvexa_editor_field_surface"
                         android:paddingHorizontal="8dp"
                         android:layout_height="wrap_content" />
+
+                    </LinearLayout>
                 </TableRow>
 
                 <TableRow
@@ -339,15 +383,24 @@
                 <TableRow android:id="@+id/CategoryRow"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_span="2"
+                        android:orientation="vertical"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="10dp">
 
                     <TextView
                         android:id="@+id/CategoryLabel"
                         style="@style/ArthvexaEditorLabel"
+                        android:layout_width="match_parent"
                         android:labelFor="@+id/Category"
                         android:text="@string/category" />
 
                     <LinearLayout
                         style="@style/ArthvexaEditorField"
+                        android:layout_width="match_parent"
                         android:orientation="horizontal">
 
                         <com.google.android.material.button.MaterialButton
@@ -374,6 +427,8 @@
                             app:srcCompat="@drawable/ic_menu_close_clear_cancel"
                             tools:ignore="UnusedAttribute" />
                     </LinearLayout>
+
+                    </LinearLayout>
                 </TableRow>
 
                 <include
@@ -383,15 +438,24 @@
                 <TableRow android:id="@+id/CommentRow"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_span="2"
+                        android:orientation="vertical"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="10dp">
 
                     <TextView
                         android:id="@+id/CommentLabel"
                         style="@style/ArthvexaEditorLabel"
+                        android:layout_width="match_parent"
                         android:labelFor="@+id/Comment"
                         android:text="@string/notes" />
 
                     <LinearLayout
                         style="@style/ArthvexaEditorField"
+                        android:layout_width="match_parent"
                         android:orientation="horizontal">
 
                         <EditText
@@ -413,6 +477,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical" />
+
+                    </LinearLayout>
 
                     </LinearLayout>
                 </TableRow>

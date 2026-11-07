@@ -647,11 +647,18 @@ class NewTransactionRenderer(
         }
         Column(horizontalAlignment = Alignment.End) {
             transaction.ColoredAmountText(
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    fontFeatureSettings = "tnum"
+                ),
                 resolvedExtraInfo = resolvedExtraInfo
             )
             dateTimeFormatter?.let {
-                Text(text = it.format(transaction.date), style = MaterialTheme.typography.bodySmall)
+                Text(
+                    text = it.format(transaction.date),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }

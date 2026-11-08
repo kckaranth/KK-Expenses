@@ -399,6 +399,9 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
         // Mirror the FAB state without replacing its existing click/validation path.
         val saveLabel = rootBinding.root.findViewById<TextView>(R.id.arthvexaSaveLabel)
         saveLabel.setOnClickListener { floatingActionButton.performClick() }
+        // Keep the original FAB as the authoritative action, but show one visual button.
+        floatingActionButton.alpha = 0f
+        floatingActionButton.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
         floatingActionButton.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
             saveLabel.visibility = if (floatingActionButton.visibility == View.VISIBLE) {
                 View.VISIBLE

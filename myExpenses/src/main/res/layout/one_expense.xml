@@ -288,22 +288,12 @@
                 <TableRow android:id="@+id/DateTimeRow"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_span="2"
-                        android:orientation="vertical"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp">
 
                     <TextView
                         android:id="@+id/DateTimeLabel"
-                        android:layout_width="match_parent"
-                        android:paddingBottom="8dp"
                         style="@style/ArthvexaEditorLabel" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
                         style="@style/ArthvexaEditorField"
                         android:orientation="horizontal"
                         android:minHeight="56dp"
@@ -312,36 +302,24 @@
 
                         <include layout="@layout/date_edit" />
                     </LinearLayout>
-                    </LinearLayout>
                 </TableRow>
 
                 <TableRow android:id="@+id/PayeeRow"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_span="2"
-                        android:orientation="vertical"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp">
 
                     <TextView
                         android:id="@+id/PayeeLabel"
-                        android:layout_width="match_parent"
-                        android:paddingBottom="8dp"
                         style="@style/ArthvexaEditorLabel"
                         android:labelFor="@+id/auto_complete_textview"
                         android:text="@string/payee" />
 
                     <org.totschnig.myexpenses.ui.PartyInput
                         android:id="@+id/Payee"
-                        android:layout_width="match_parent"
                         style="@style/ArthvexaEditorField"
                         android:background="@drawable/arthvexa_editor_field_surface"
                         android:paddingHorizontal="8dp"
                         android:layout_height="wrap_content" />
-                    </LinearLayout>
                 </TableRow>
 
                 <TableRow
@@ -381,24 +359,14 @@
                 <TableRow android:id="@+id/CategoryRow"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_span="2"
-                        android:orientation="vertical"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp">
 
                     <TextView
                         android:id="@+id/CategoryLabel"
-                        android:layout_width="match_parent"
-                        android:paddingBottom="8dp"
                         style="@style/ArthvexaEditorLabel"
                         android:labelFor="@+id/Category"
                         android:text="@string/category" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
                         style="@style/ArthvexaEditorField"
                         android:orientation="horizontal">
 
@@ -426,7 +394,6 @@
                             app:srcCompat="@drawable/ic_menu_close_clear_cancel"
                             tools:ignore="UnusedAttribute" />
                     </LinearLayout>
-                    </LinearLayout>
                 </TableRow>
 
                 <include
@@ -436,24 +403,14 @@
                 <TableRow android:id="@+id/CommentRow"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_span="2"
-                        android:orientation="vertical"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp">
 
                     <TextView
                         android:id="@+id/CommentLabel"
-                        android:layout_width="match_parent"
-                        android:paddingBottom="8dp"
                         style="@style/ArthvexaEditorLabel"
                         android:labelFor="@+id/Comment"
                         android:text="@string/notes" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
                         style="@style/ArthvexaEditorField"
                         android:orientation="horizontal">
 
@@ -477,7 +434,6 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical" />
 
-                    </LinearLayout>
                     </LinearLayout>
                 </TableRow>
 

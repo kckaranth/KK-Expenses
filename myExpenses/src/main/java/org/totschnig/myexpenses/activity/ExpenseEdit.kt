@@ -396,6 +396,16 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
         methodRowBinding = MethodRowBinding.bind(rootBinding.root)
         setContentView(rootBinding.root)
         floatingActionButton = rootBinding.fab.CREATECOMMAND
+        // Mirror the FAB state without replacing its existing click/validation path.
+        val saveLabel = rootBinding.root.findViewById<TextView>(R.id.arthvexaSaveLabel)
+        saveLabel.setOnClickListener { floatingActionButton.performClick() }
+        floatingActionButton.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            saveLabel.visibility = if (floatingActionButton.visibility == View.VISIBLE) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+        }
         setupToolbarWithClose()
         mManager = LoaderManager.getInstance(this)
         val viewModelProvider = ViewModelProvider(this)

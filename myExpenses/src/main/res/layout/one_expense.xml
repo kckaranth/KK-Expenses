@@ -576,6 +576,25 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <!-- Editor-only Save label: the original FAB remains the authoritative action. -->
+    <TextView
+        android:id="@+id/arthvexaSaveLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/arthvexa_editor_save_label"
+        android:contentDescription="Save Transaction"
+        android:gravity="center"
+        android:paddingStart="22dp"
+        android:paddingEnd="22dp"
+        android:text="Save Transaction"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
     <include
         android:id="@+id/fab"
         layout="@layout/floating_action_button" />

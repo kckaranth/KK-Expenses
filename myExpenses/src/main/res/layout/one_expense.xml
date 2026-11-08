@@ -271,7 +271,9 @@
                     </LinearLayout>
                 </TableRow>
 
-                <TableRow android:id="@+id/DateTimeRow">
+                <TableRow android:id="@+id/DateTimeRow"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp">
 
                     <TextView
                         android:id="@+id/DateTimeLabel"
@@ -280,7 +282,9 @@
                     <LinearLayout
                         style="@style/ArthvexaEditorField"
                         android:orientation="horizontal"
-                        android:paddingVertical="4dp">
+                        android:minHeight="56dp"
+                        android:gravity="center_vertical"
+                        android:paddingVertical="6dp">
 
                         <include layout="@layout/date_edit" />
                     </LinearLayout>
@@ -421,7 +425,9 @@
 
                 <include layout="@layout/method_row" />
 
-                <TableRow android:id="@+id/AttachmentsRow">
+                <TableRow android:id="@+id/AttachmentsRow"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp">
 
                     <TextView
                         style="@style/ArthvexaEditorLabel"
@@ -440,14 +446,15 @@
 
                         <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/newAttachment"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
                             android:background="?android:attr/selectableItemBackground"
                             android:contentDescription="@string/menu_add"
-                            android:scaleType="center"
+                            android:padding="12dp"
+                            android:scaleType="centerInside"
                             app:srcCompat="@drawable/ic_menu_add"
-                            app:strokeColor="#FF888888"
-                            app:strokeWidth="4dp" />
+                            app:strokeColor="?attr/colorOutline"
+                            app:strokeWidth="1dp" />
                     </com.google.android.flexbox.FlexboxLayout>
                 </TableRow>
 

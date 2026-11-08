@@ -287,8 +287,6 @@
                 </TableRow>
 
                 <TableRow android:id="@+id/PayeeRow"
-                    android:background="@drawable/arthvexa_editor_card_surface"
-                    android:paddingHorizontal="10dp"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp">
 
@@ -341,8 +339,6 @@
                 </TableRow>
 
                 <TableRow android:id="@+id/CategoryRow"
-                    android:background="@drawable/arthvexa_editor_card_surface"
-                    android:paddingHorizontal="10dp"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp">
 
@@ -387,8 +383,6 @@
                     layout="@layout/tag_row" />
 
                 <TableRow android:id="@+id/CommentRow"
-                    android:background="@drawable/arthvexa_editor_card_surface"
-                    android:paddingHorizontal="10dp"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp">
 

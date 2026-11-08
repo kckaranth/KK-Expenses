@@ -52,7 +52,8 @@ class AmountInput(context: Context, attrs: AttributeSet?) : ConstraintLayout(con
     /** Presentation-only typography for the transaction editor primary amount. */
     fun applyArthvexaEditorAmountTypography() {
         amountEditText.apply {
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 28f)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 32f)
+            gravity = android.view.Gravity.CENTER
             fontFeatureSettings = "tnum"
         }
     }

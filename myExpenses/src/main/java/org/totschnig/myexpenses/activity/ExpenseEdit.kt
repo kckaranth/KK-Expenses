@@ -415,7 +415,7 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
             if (!::delegate.isInitialized) return@setOnClickListener
             if (operationType == TYPE_TRANSFER && newInstance) {
                 openFreshTransactionMode(false)
-            } else if (operationType == TYPE_TRANSACTION && amountInput.type) {
+            } else if ((operationType == TYPE_TRANSACTION || operationType == TYPE_SPLIT) && amountInput.type) {
                 amountInput.typeButton.performClick()
             }
         }
@@ -423,7 +423,7 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
             if (!::delegate.isInitialized) return@setOnClickListener
             if (operationType == TYPE_TRANSFER && newInstance) {
                 openFreshTransactionMode(true)
-            } else if (operationType == TYPE_TRANSACTION && !amountInput.type) {
+            } else if ((operationType == TYPE_TRANSACTION || operationType == TYPE_SPLIT) && !amountInput.type) {
                 amountInput.typeButton.performClick()
             }
         }
@@ -432,7 +432,7 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
 
         group.viewTreeObserver.addOnPreDrawListener {
             val show = ::delegate.isInitialized && newInstance && !isSplitPartOrTemplate &&
-                operationType == TYPE_TRANSACTION
+                (operationType == TYPE_TRANSACTION || operationType == TYPE_SPLIT)
             val targetVisibility = if (show) View.VISIBLE else View.GONE
             if (group.visibility != targetVisibility) group.visibility = targetVisibility
             if (show) {

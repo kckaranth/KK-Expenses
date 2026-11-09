@@ -31,11 +31,14 @@
         <LinearLayout
             android:id="@+id/arthvexaModeSegments"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="52dp"
             android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="4dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:padding="3dp"
+            android:background="@drawable/arthvexa_mode_segments_container"
             android:visibility="gone">
 
             <TextView
@@ -70,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/fab_related_bottom_padding">
+            android:paddingBottom="120dp">
 
             <TableLayout
                 android:id="@+id/Table"

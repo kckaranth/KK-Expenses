@@ -400,7 +400,9 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
             if (!::delegate.isInitialized) return@setOnClickListener
             if (operationType == TYPE_TRANSFER) {
                 intent.putExtra(KEY_INCOME, false)
-                spinner.setSelection(0)
+                // Delegate performs the same operation transition as the Spinner,
+                // without depending on a deferred Spinner selection callback.
+                delegate.restartWithType(TYPE_TRANSACTION)
             } else if (operationType == TYPE_TRANSACTION && amountInput.type) {
                 amountInput.typeButton.performClick()
             }
@@ -409,7 +411,7 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
             if (!::delegate.isInitialized) return@setOnClickListener
             if (operationType == TYPE_TRANSFER) {
                 intent.putExtra(KEY_INCOME, true)
-                spinner.setSelection(0)
+                delegate.restartWithType(TYPE_TRANSACTION)
             } else if (operationType == TYPE_TRANSACTION && !amountInput.type) {
                 amountInput.typeButton.performClick()
             }

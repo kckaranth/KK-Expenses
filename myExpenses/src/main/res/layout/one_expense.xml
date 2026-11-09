@@ -482,11 +482,11 @@
 
                         <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/newAttachment"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
                             android:background="?android:attr/selectableItemBackground"
                             android:contentDescription="@string/menu_add"
-                            android:padding="14dp"
+                            android:padding="12dp"
                             android:scaleType="centerInside"
                             app:srcCompat="@drawable/ic_menu_add"
                             app:shapeAppearanceOverlay="@style/ArthvexaAttachmentShape"

@@ -400,6 +400,7 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
             if (!::delegate.isInitialized) return@setOnClickListener
             if (operationType == TYPE_TRANSFER) {
                 intent.putExtra(KEY_INCOME, false)
+                intent.putExtra("arthvexa_pending_mode_income", false)
                 // Delegate performs the same operation transition as the Spinner,
                 // without depending on a deferred Spinner selection callback.
                 delegate.restartWithType(TYPE_TRANSACTION)
@@ -411,6 +412,7 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
             if (!::delegate.isInitialized) return@setOnClickListener
             if (operationType == TYPE_TRANSFER) {
                 intent.putExtra(KEY_INCOME, true)
+                intent.putExtra("arthvexa_pending_mode_income", true)
                 delegate.restartWithType(TYPE_TRANSACTION)
             } else if (operationType == TYPE_TRANSACTION && !amountInput.type) {
                 amountInput.typeButton.performClick()
@@ -1771,6 +1773,18 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
         super.onRestoreInstanceState(savedInstanceState)
         exchangeRateEdit.setBlockWatcher(false)
         delegate.isProcessingLinkedAmountInputs = false
+        // Android restores the old Transfer amount-sign view state after the
+        // newly created Transaction editor has been populated. Reapply the
+        // explicitly requested segment after that restoration, once only.
+        if (operationType == TYPE_TRANSACTION &&
+            intent.hasExtra("arthvexa_pending_mode_income") &&
+            ::delegate.isInitialized
+        ) {
+            val requestedIncome = intent.getBooleanExtra("arthvexa_pending_mode_income", false)
+            intent.removeExtra("arthvexa_pending_mode_income")
+            delegate.setType(requestedIncome)
+            configureType()
+        }
         if (delegate.rowId == 0L) {
             (delegate as? TransferDelegate)?.configureTransferDirection()
         }

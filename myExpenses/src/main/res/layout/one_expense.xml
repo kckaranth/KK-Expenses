@@ -468,6 +468,7 @@
                             android:padding="12dp"
                             android:scaleType="centerInside"
                             app:srcCompat="@drawable/ic_menu_add"
+                            app:shapeAppearanceOverlay="@style/ArthvexaAttachmentShape"
                             app:strokeColor="?attr/colorOutline"
                             app:strokeWidth="1dp" />
                     </com.google.android.flexbox.FlexboxLayout>

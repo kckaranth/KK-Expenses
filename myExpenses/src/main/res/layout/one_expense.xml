@@ -223,20 +223,28 @@
                         app:withTypeSwitch="false" />
                 </TableRow>
 
-                <TableRow
+                <org.totschnig.myexpenses.ui.ArthvexaStackedRow
                     android:id="@+id/TransferAccountRow"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
                     android:visibility="gone">
 
                     <TextView
                         android:id="@+id/TransferAccountLabel"
                         style="@style/ArthvexaEditorLabel"
+                        android:layout_height="24dp"
+                        android:minHeight="0dp"
+                        android:paddingTop="0dp"
+                        android:paddingBottom="0dp"
                         android:labelFor="@+id/TransferAccount"
                         android:text="@string/transfer_to_account" />
 
                     <Spinner
                         android:id="@+id/TransferAccount"
-                        style="@style/ArthvexaEditorField" />
-                </TableRow>
+                        style="@style/ArthvexaEditorField"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp" />
+                </org.totschnig.myexpenses.ui.ArthvexaStackedRow>
 
                 <TableRow
                     android:id="@+id/SplitRow"

@@ -373,7 +373,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/Category"
-                            style="@style/SmallButton"
+                            style="@style/ArthvexaEditorAccentButton"
                             app:cornerRadius="16dp"
                             android:minHeight="56dp"
                             android:layout_width="0dp"

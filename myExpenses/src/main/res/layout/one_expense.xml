@@ -285,7 +285,7 @@
                     </LinearLayout>
                 </TableRow>
 
-                <TableRow android:id="@+id/DateTimeRow"
+                <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/DateTimeRow"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp">
 
@@ -302,9 +302,9 @@
 
                         <include layout="@layout/date_edit" />
                     </LinearLayout>
-                </TableRow>
+                </org.totschnig.myexpenses.ui.ArthvexaStackedRow>
 
-                <TableRow android:id="@+id/PayeeRow"
+                <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/PayeeRow"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp">
 
@@ -321,7 +321,7 @@
                         android:minHeight="64dp"
                         android:paddingHorizontal="16dp"
                         android:layout_height="wrap_content" />
-                </TableRow>
+                </org.totschnig.myexpenses.ui.ArthvexaStackedRow>
 
                 <TableRow
                     android:id="@+id/DebtRow"
@@ -357,7 +357,7 @@
                     </LinearLayout>
                 </TableRow>
 
-                <TableRow android:id="@+id/CategoryRow"
+                <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/CategoryRow"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp">
 
@@ -395,13 +395,13 @@
                             app:srcCompat="@drawable/ic_menu_close_clear_cancel"
                             tools:ignore="UnusedAttribute" />
                     </LinearLayout>
-                </TableRow>
+                </org.totschnig.myexpenses.ui.ArthvexaStackedRow>
 
                 <include
                     android:id="@+id/TagRow"
                     layout="@layout/tag_row" />
 
-                <TableRow android:id="@+id/CommentRow"
+                <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/CommentRow"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp">
 
@@ -436,7 +436,7 @@
                             android:layout_gravity="center_vertical" />
 
                     </LinearLayout>
-                </TableRow>
+                </org.totschnig.myexpenses.ui.ArthvexaStackedRow>
 
                 <include layout="@layout/method_row" />
 

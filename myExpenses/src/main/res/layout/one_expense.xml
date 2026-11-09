@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/padding_form"
-                android:paddingTop="4dp"
+                android:paddingTop="2dp"
                 android:shrinkColumns="1"
                 android:stretchColumns="1"
                 tools:ignore="UselessParent">
@@ -101,8 +101,8 @@
 
                 <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/AccountRow"
                     android:paddingHorizontal="0dp"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp">
+                    android:paddingTop="0dp"
+                    android:paddingBottom="0dp">
 
                     <TextView
                         android:id="@+id/AccountLabel"
@@ -147,8 +147,8 @@
 
                 <!-- Keep AmountRow as a direct TableLayout child: TransferDelegate moves it. -->
                 <TableRow android:id="@+id/AmountRow"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp">
+                    android:paddingTop="0dp"
+                    android:paddingBottom="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -162,7 +162,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="start|center_vertical"
-                            android:paddingBottom="4dp"
+                            android:paddingBottom="2dp"
                             tools:ignore="LabelFor" />
 
                         <org.totschnig.myexpenses.ui.AmountInput
@@ -171,9 +171,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/arthvexa_editor_field_surface"
-                            android:minHeight="56dp"
-                            android:paddingStart="16dp"
-                            android:paddingEnd="16dp"
+                            android:minHeight="64dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
                             android:visibility="gone"
                             tools:visibility="visible" />
                     </LinearLayout>
@@ -221,8 +223,8 @@
 
                 <org.totschnig.myexpenses.ui.ArthvexaStackedRow
                     android:id="@+id/TransferAccountRow"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp"
+                    android:paddingTop="0dp"
+                    android:paddingBottom="0dp"
                     android:visibility="gone">
 
                     <TextView
@@ -334,15 +336,15 @@
                 </TableRow>
 
                 <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/DateTimeRow"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp">
+                    android:paddingTop="1dp"
+                    android:paddingBottom="1dp">
 
                     <TextView
                         android:id="@+id/DateTimeLabel"
                         style="@style/ArthvexaEditorLabel"
                         android:minHeight="0dp"
                         android:paddingTop="0dp"
-                        android:paddingBottom="8dp" />
+                        android:paddingBottom="4dp" />
 
                     <LinearLayout
                         style="@style/ArthvexaEditorField"
@@ -356,8 +358,8 @@
                 </org.totschnig.myexpenses.ui.ArthvexaStackedRow>
 
                 <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/PayeeRow"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp">
+                    android:paddingTop="0dp"
+                    android:paddingBottom="0dp">
 
                     <TextView
                         android:id="@+id/PayeeLabel"
@@ -373,8 +375,10 @@
                         android:id="@+id/Payee"
                         style="@style/ArthvexaEditorField"
                         android:background="@drawable/arthvexa_editor_field_surface"
-                        android:minHeight="48dp"
-                        android:paddingHorizontal="16dp"
+                        android:minHeight="52dp"
+                        android:paddingTop="0dp"
+                        android:paddingBottom="0dp"
+                        android:paddingHorizontal="12dp"
                         android:layout_height="wrap_content" />
                 </org.totschnig.myexpenses.ui.ArthvexaStackedRow>
 
@@ -413,8 +417,8 @@
                 </TableRow>
 
                 <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/CategoryRow"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp">
+                    android:paddingTop="0dp"
+                    android:paddingBottom="0dp">
 
                     <TextView
                         android:id="@+id/CategoryLabel"
@@ -461,8 +465,8 @@
                     layout="@layout/tag_row" />
 
                 <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/CommentRow"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp">
+                    android:paddingTop="0dp"
+                    android:paddingBottom="0dp">
 
                     <TextView
                         android:id="@+id/CommentLabel"
@@ -504,8 +508,8 @@
                 <include layout="@layout/method_row" />
 
                 <TableRow android:id="@+id/AttachmentsRow"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp">
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp">
 
                     <TextView
                         style="@style/ArthvexaEditorLabel"

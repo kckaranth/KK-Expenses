@@ -151,8 +151,8 @@
 
                 <!-- Keep AmountRow as a direct TableLayout child: TransferDelegate moves it. -->
                 <TableRow android:id="@+id/AmountRow"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp">
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -165,7 +165,7 @@
                             style="@style/ArthvexaEditorLabel"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
+                            android:gravity="start|center_vertical"
                             android:paddingBottom="4dp"
                             tools:ignore="LabelFor" />
 
@@ -243,7 +243,9 @@
                         android:id="@+id/TransferAccount"
                         style="@style/ArthvexaEditorField"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp" />
+                        android:layout_height="48dp"
+                        android:background="@drawable/arthvexa_editor_card_surface"
+                        android:paddingHorizontal="14dp" />
                 </org.totschnig.myexpenses.ui.ArthvexaStackedRow>
 
                 <TableRow
@@ -357,8 +359,8 @@
                 </org.totschnig.myexpenses.ui.ArthvexaStackedRow>
 
                 <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/PayeeRow"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp">
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp">
 
                     <TextView
                         android:id="@+id/PayeeLabel"
@@ -413,8 +415,8 @@
                 </TableRow>
 
                 <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/CategoryRow"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp">
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp">
 
                     <TextView
                         android:id="@+id/CategoryLabel"
@@ -460,8 +462,8 @@
                     layout="@layout/tag_row" />
 
                 <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/CommentRow"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp">
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp">
 
                     <TextView
                         android:id="@+id/CommentLabel"

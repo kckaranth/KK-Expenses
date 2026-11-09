@@ -392,9 +392,8 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
         val group = rootBinding.root.findViewById<View>(R.id.arthvexaModeSegments)
         val expense = rootBinding.root.findViewById<TextView>(R.id.arthvexaModeExpense)
         val income = rootBinding.root.findViewById<TextView>(R.id.arthvexaModeIncome)
-        val transfer = rootBinding.root.findViewById<TextView>(R.id.arthvexaModeTransfer)
         val spinner = rootBinding.toolbar.OperationType
-        val buttons = listOf(expense, income, transfer)
+        val buttons = listOf(expense, income)
 
         // A fresh editor avoids restoring the previous Transfer amount-sign view state.
         // This is intentionally limited to new transactions. Unsaved Transfer form
@@ -428,23 +427,16 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
                 amountInput.typeButton.performClick()
             }
         }
-        transfer.setOnClickListener {
-            if (!::delegate.isInitialized || operationType == TYPE_TRANSFER) return@setOnClickListener
-            // Delegate's Spinner listener enforces transfer-account availability.
-            spinner.setSelection(1)
-        }
         expense.setOnLongClickListener { spinner.performClick(); true }
         income.setOnLongClickListener { spinner.performClick(); true }
-        transfer.setOnLongClickListener { spinner.performClick(); true }
 
         group.viewTreeObserver.addOnPreDrawListener {
             val show = ::delegate.isInitialized && newInstance && !isSplitPartOrTemplate &&
-                (operationType == TYPE_TRANSACTION || operationType == TYPE_TRANSFER)
+                operationType == TYPE_TRANSACTION
             val targetVisibility = if (show) View.VISIBLE else View.GONE
             if (group.visibility != targetVisibility) group.visibility = targetVisibility
             if (show) {
                 val active = when {
-                    operationType == TYPE_TRANSFER -> 2
                     amountInput.type -> 1
                     else -> 0
                 }

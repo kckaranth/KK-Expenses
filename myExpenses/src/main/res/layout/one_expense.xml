@@ -27,7 +27,7 @@
             android:id="@+id/toolbar"
             layout="@layout/toolbar_expense_edit" />
 
-        <!-- New-transaction shortcuts; the original operation Spinner remains authoritative. -->
+        <!-- Expense and Income shortcuts for normal transactions only. Transfer and Split use the toolbar operation Spinner. -->
         <LinearLayout
             android:id="@+id/arthvexaModeSegments"
             android:layout_width="match_parent"
@@ -51,10 +51,6 @@
                 style="@style/ArthvexaModeSegment"
                 android:text="Income" />
 
-            <TextView
-                android:id="@+id/arthvexaModeTransfer"
-                style="@style/ArthvexaModeSegment"
-                android:text="Transfer" />
         </LinearLayout>
 
     </com.google.android.material.appbar.AppBarLayout>

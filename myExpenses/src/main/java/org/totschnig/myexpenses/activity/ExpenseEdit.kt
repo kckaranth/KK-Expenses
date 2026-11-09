@@ -387,6 +387,62 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
         }
     }
 
+    /** Visual shortcuts only. Existing operation Spinner and amount-type toggle own behavior. */
+    private fun setupArthvexaModeSegments() {
+        val group = rootBinding.root.findViewById<View>(R.id.arthvexaModeSegments)
+        val expense = rootBinding.root.findViewById<TextView>(R.id.arthvexaModeExpense)
+        val income = rootBinding.root.findViewById<TextView>(R.id.arthvexaModeIncome)
+        val transfer = rootBinding.root.findViewById<TextView>(R.id.arthvexaModeTransfer)
+        val spinner = rootBinding.toolbar.OperationType
+        val buttons = listOf(expense, income, transfer)
+
+        expense.setOnClickListener {
+            if (!::delegate.isInitialized) return@setOnClickListener
+            if (operationType == TYPE_TRANSFER) {
+                intent.putExtra(KEY_INCOME, false)
+                spinner.setSelection(0)
+            } else if (operationType == TYPE_TRANSACTION && amountInput.type) {
+                amountInput.typeButton.performClick()
+            }
+        }
+        income.setOnClickListener {
+            if (!::delegate.isInitialized) return@setOnClickListener
+            if (operationType == TYPE_TRANSFER) {
+                intent.putExtra(KEY_INCOME, true)
+                spinner.setSelection(0)
+            } else if (operationType == TYPE_TRANSACTION && !amountInput.type) {
+                amountInput.typeButton.performClick()
+            }
+        }
+        transfer.setOnClickListener {
+            if (!::delegate.isInitialized || operationType == TYPE_TRANSFER) return@setOnClickListener
+            // Delegate's Spinner listener enforces transfer-account availability.
+            spinner.setSelection(1)
+        }
+        expense.setOnLongClickListener { spinner.performClick(); true }
+        income.setOnLongClickListener { spinner.performClick(); true }
+        transfer.setOnLongClickListener { spinner.performClick(); true }
+
+        group.viewTreeObserver.addOnPreDrawListener {
+            val show = ::delegate.isInitialized && newInstance && !isSplitPartOrTemplate &&
+                (operationType == TYPE_TRANSACTION || operationType == TYPE_TRANSFER)
+            val targetVisibility = if (show) View.VISIBLE else View.GONE
+            if (group.visibility != targetVisibility) group.visibility = targetVisibility
+            if (show) {
+                val active = when {
+                    operationType == TYPE_TRANSFER -> 2
+                    amountInput.type -> 1
+                    else -> 0
+                }
+                buttons.forEachIndexed { index, button ->
+                    val selected = index == active
+                    if (button.isSelected != selected) button.isSelected = selected
+                }
+            }
+            true
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHelpVariant(HELP_VARIANT_TRANSACTION, false)
@@ -437,6 +493,7 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
             if (saveActionContainer.visibility != desired) saveActionContainer.visibility = desired
             true
         }
+        setupArthvexaModeSegments()
         setupToolbarWithClose()
         mManager = LoaderManager.getInstance(this)
         val viewModelProvider = ViewModelProvider(this)

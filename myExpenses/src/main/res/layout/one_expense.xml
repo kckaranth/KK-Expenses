@@ -27,6 +27,33 @@
             android:id="@+id/toolbar"
             layout="@layout/toolbar_expense_edit" />
 
+        <!-- New-transaction shortcuts; the original operation Spinner remains authoritative. -->
+        <LinearLayout
+            android:id="@+id/arthvexaModeSegments"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="4dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/arthvexaModeExpense"
+                style="@style/ArthvexaModeSegment"
+                android:text="Expense" />
+
+            <TextView
+                android:id="@+id/arthvexaModeIncome"
+                style="@style/ArthvexaModeSegment"
+                android:text="Income" />
+
+            <TextView
+                android:id="@+id/arthvexaModeTransfer"
+                style="@style/ArthvexaModeSegment"
+                android:text="Transfer" />
+        </LinearLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView

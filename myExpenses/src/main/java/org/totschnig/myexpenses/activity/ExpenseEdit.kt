@@ -433,6 +433,21 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
             val targetVisibility = if (show) View.VISIBLE else View.GONE
             if (group.visibility != targetVisibility) group.visibility = targetVisibility
             if (show) {
+                // Resolve a requested Transfer -> Transaction sign before the
+                // first visible segment frame, rather than showing the restored
+                // sign and correcting the highlight on a subsequent frame.
+                if (operationType == TYPE_TRANSACTION &&
+                    intent.hasExtra("arthvexa_pending_mode_income")
+                ) {
+                    val requestedIncome = intent.getBooleanExtra("arthvexa_pending_mode_income", false)
+                    if (amountInput.type != requestedIncome) {
+                        delegate.setType(requestedIncome)
+                        configureType()
+                    }
+                    if (amountInput.type == requestedIncome) {
+                        intent.removeExtra("arthvexa_pending_mode_income")
+                    }
+                }
                 val active = when {
                     operationType == TYPE_TRANSFER -> 2
                     amountInput.type -> 1
@@ -1781,7 +1796,8 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
             ::delegate.isInitialized
         ) {
             val requestedIncome = intent.getBooleanExtra("arthvexa_pending_mode_income", false)
-            intent.removeExtra("arthvexa_pending_mode_income")
+            // Keep the request until the pre-draw synchronization has confirmed
+            // the correct sign and selected segment on the visible frame.
             delegate.setType(requestedIncome)
             configureType()
         }

@@ -431,12 +431,11 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
         // Keep the original FAB as the authoritative action, but show one visual button.
         floatingActionButton.alpha = 0f
         floatingActionButton.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-        floatingActionButton.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-            saveActionContainer.visibility = if (floatingActionButton.visibility == View.VISIBLE) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
+        // FAB visibility can change without a layout pass; synchronize before drawing.
+        saveActionContainer.viewTreeObserver.addOnPreDrawListener {
+            val desired = if (floatingActionButton.visibility == View.VISIBLE) View.VISIBLE else View.GONE
+            if (saveActionContainer.visibility != desired) saveActionContainer.visibility = desired
+            true
         }
         setupToolbarWithClose()
         mManager = LoaderManager.getInstance(this)

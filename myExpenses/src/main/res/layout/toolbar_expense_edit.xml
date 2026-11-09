@@ -10,9 +10,9 @@
         android:id="@+id/OperationType"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:minWidth="112dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        android:minWidth="0dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="40dp"
         android:background="@drawable/arthvexa_editor_operation_selector_surface"
         android:visibility="gone" />
 </com.google.android.material.appbar.MaterialToolbar>

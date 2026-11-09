@@ -69,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="120dp">
+            android:paddingBottom="160dp">
 
             <TableLayout
                 android:id="@+id/Table"
@@ -101,8 +101,8 @@
 
                 <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/AccountRow"
                     android:paddingHorizontal="0dp"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp">
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp">
 
                     <TextView
                         android:id="@+id/AccountLabel"
@@ -119,8 +119,8 @@
                         style="@style/ArthvexaEditorField"
                         android:background="@drawable/arthvexa_editor_card_surface"
                         android:paddingHorizontal="14dp"
-                        android:layout_height="48dp"
-                        android:minHeight="48dp" />
+                        android:layout_height="52dp"
+                        android:minHeight="52dp" />
                 </org.totschnig.myexpenses.ui.ArthvexaStackedRow>
 
 
@@ -221,8 +221,8 @@
 
                 <org.totschnig.myexpenses.ui.ArthvexaStackedRow
                     android:id="@+id/TransferAccountRow"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:visibility="gone">
 
                     <TextView
@@ -239,8 +239,8 @@
                         android:id="@+id/TransferAccount"
                         style="@style/ArthvexaEditorField"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:minHeight="48dp"
+                        android:layout_height="52dp"
+                        android:minHeight="52dp"
                         android:background="@drawable/arthvexa_editor_card_surface"
                         android:paddingHorizontal="14dp" />
                 </org.totschnig.myexpenses.ui.ArthvexaStackedRow>
@@ -356,8 +356,8 @@
                 </org.totschnig.myexpenses.ui.ArthvexaStackedRow>
 
                 <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/PayeeRow"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp">
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp">
 
                     <TextView
                         android:id="@+id/PayeeLabel"
@@ -413,8 +413,8 @@
                 </TableRow>
 
                 <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/CategoryRow"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp">
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp">
 
                     <TextView
                         android:id="@+id/CategoryLabel"
@@ -434,7 +434,7 @@
                             android:id="@+id/Category"
                             style="@style/ArthvexaEditorAccentButton"
                             app:cornerRadius="14dp"
-                            android:minHeight="48dp"
+                            android:minHeight="52dp"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -461,8 +461,8 @@
                     layout="@layout/tag_row" />
 
                 <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/CommentRow"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp">
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp">
 
                     <TextView
                         android:id="@+id/CommentLabel"
@@ -490,7 +490,7 @@
                             android:paddingVertical="8dp"
                             android:importantForAutofill="no"
                             android:inputType="textCapSentences|textMultiLine"
-                            android:minHeight="@dimen/accessibility_clickable_minimum" />
+                            android:minHeight="52dp" />
 
                         <Spinner
                             android:id="@+id/Status"

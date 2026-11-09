@@ -45,6 +45,8 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.app.ActivityCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.content.IntentCompat
 import androidx.core.os.BundleCompat
 import androidx.lifecycle.Lifecycle
@@ -399,11 +401,38 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
         // Mirror the FAB state without replacing its existing click/validation path.
         val saveLabel = rootBinding.root.findViewById<TextView>(R.id.arthvexaSaveLabel)
         saveLabel.setOnClickListener { floatingActionButton.performClick() }
+        val saveActionContainer = rootBinding.root.findViewById<View>(R.id.arthvexaSaveActionContainer)
+        val editorScroll = rootBinding.editContainer
+        val baselineBottomPadding = editorScroll.paddingBottom
+        // Reserve the measured bottom action height, including its system-bar clearance.
+        saveActionContainer.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            val bottom = baselineBottomPadding + saveActionContainer.height
+            if (editorScroll.paddingBottom != bottom) {
+                editorScroll.setPadding(
+                    editorScroll.paddingLeft, editorScroll.paddingTop,
+                    editorScroll.paddingRight, bottom
+                )
+            }
+        }
+        val baseActionBottomPadding = saveActionContainer.paddingBottom
+        ViewCompat.setOnApplyWindowInsetsListener(saveActionContainer) { view, insets ->
+            // With adjustResize, the IME reduces the available window height. Do not
+            // add IME height as padding, which would displace the entire action bar.
+            val navigationInset = if (insets.isVisible(WindowInsetsCompat.Type.ime())) 0
+                else insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+            val bottom = baseActionBottomPadding + navigationInset
+            if (view.paddingBottom != bottom) {
+                view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, bottom)
+            }
+            insets
+        }
+        ViewCompat.requestApplyInsets(saveActionContainer)
+
         // Keep the original FAB as the authoritative action, but show one visual button.
         floatingActionButton.alpha = 0f
         floatingActionButton.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
         floatingActionButton.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-            saveLabel.visibility = if (floatingActionButton.visibility == View.VISIBLE) {
+            saveActionContainer.visibility = if (floatingActionButton.visibility == View.VISIBLE) {
                 View.VISIBLE
             } else {
                 View.GONE

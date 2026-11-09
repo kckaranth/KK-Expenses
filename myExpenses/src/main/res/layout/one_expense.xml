@@ -75,16 +75,17 @@
 
                 <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/AccountRow"
                     android:background="@drawable/arthvexa_editor_card_surface"
-                    android:paddingHorizontal="10dp"
-                    android:paddingTop="2dp"
+                    android:paddingHorizontal="12dp"
+                    android:paddingTop="4dp"
                     android:paddingBottom="4dp">
 
                     <TextView
                         android:id="@+id/AccountLabel"
                         style="@style/ArthvexaEditorLabel"
+                        android:layout_height="24dp"
                         android:minHeight="0dp"
                         android:paddingTop="0dp"
-                        android:paddingBottom="4dp"
+                        android:paddingBottom="0dp"
                         android:labelFor="@+id/Account"
                         android:text="@string/account" />
 

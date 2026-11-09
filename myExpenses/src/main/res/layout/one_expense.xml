@@ -286,12 +286,15 @@
                 </TableRow>
 
                 <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/DateTimeRow"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp">
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
 
                     <TextView
                         android:id="@+id/DateTimeLabel"
-                        style="@style/ArthvexaEditorLabel" />
+                        style="@style/ArthvexaEditorLabel"
+                        android:minHeight="0dp"
+                        android:paddingTop="0dp"
+                        android:paddingBottom="8dp" />
 
                     <LinearLayout
                         style="@style/ArthvexaEditorField"
@@ -305,12 +308,15 @@
                 </org.totschnig.myexpenses.ui.ArthvexaStackedRow>
 
                 <org.totschnig.myexpenses.ui.ArthvexaStackedRow android:id="@+id/PayeeRow"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp">
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
 
                     <TextView
                         android:id="@+id/PayeeLabel"
                         style="@style/ArthvexaEditorLabel"
+                        android:minHeight="0dp"
+                        android:paddingTop="0dp"
+                        android:paddingBottom="8dp"
                         android:labelFor="@+id/auto_complete_textview"
                         android:text="@string/payee" />
 
@@ -364,6 +370,9 @@
                     <TextView
                         android:id="@+id/CategoryLabel"
                         style="@style/ArthvexaEditorLabel"
+                        android:minHeight="0dp"
+                        android:paddingTop="0dp"
+                        android:paddingBottom="8dp"
                         android:labelFor="@+id/Category"
                         android:text="@string/category" />
 
@@ -408,6 +417,9 @@
                     <TextView
                         android:id="@+id/CommentLabel"
                         style="@style/ArthvexaEditorLabel"
+                        android:minHeight="0dp"
+                        android:paddingTop="0dp"
+                        android:paddingBottom="8dp"
                         android:labelFor="@+id/Comment"
                         android:text="@string/notes" />
 

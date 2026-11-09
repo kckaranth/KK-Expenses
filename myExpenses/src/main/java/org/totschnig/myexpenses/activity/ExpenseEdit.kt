@@ -396,24 +396,34 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
         val spinner = rootBinding.toolbar.OperationType
         val buttons = listOf(expense, income, transfer)
 
+        // A fresh editor avoids restoring the previous Transfer amount-sign view state.
+        // This is intentionally limited to new transactions. Unsaved Transfer form
+        // fields are reset when switching modes; existing records are never modified.
+        fun openFreshTransactionMode(incomeMode: Boolean) {
+            val next = Intent(intent).apply {
+                setClass(this@ExpenseEdit, this@ExpenseEdit.javaClass)
+                putExtra(Transactions.OPERATION_TYPE, TYPE_TRANSACTION)
+                putExtra(KEY_INCOME, incomeMode)
+                removeExtra("arthvexa_pending_mode_income")
+                // Do not carry a Transfer-specific amount into a new transaction.
+                removeExtra(KEY_AMOUNT)
+            }
+            startActivity(next)
+            finish()
+            overridePendingTransition(0, 0)
+        }
         expense.setOnClickListener {
             if (!::delegate.isInitialized) return@setOnClickListener
-            if (operationType == TYPE_TRANSFER) {
-                intent.putExtra(KEY_INCOME, false)
-                intent.putExtra("arthvexa_pending_mode_income", false)
-                // Delegate performs the same operation transition as the Spinner,
-                // without depending on a deferred Spinner selection callback.
-                delegate.restartWithType(TYPE_TRANSACTION)
+            if (operationType == TYPE_TRANSFER && newInstance) {
+                openFreshTransactionMode(false)
             } else if (operationType == TYPE_TRANSACTION && amountInput.type) {
                 amountInput.typeButton.performClick()
             }
         }
         income.setOnClickListener {
             if (!::delegate.isInitialized) return@setOnClickListener
-            if (operationType == TYPE_TRANSFER) {
-                intent.putExtra(KEY_INCOME, true)
-                intent.putExtra("arthvexa_pending_mode_income", true)
-                delegate.restartWithType(TYPE_TRANSACTION)
+            if (operationType == TYPE_TRANSFER && newInstance) {
+                openFreshTransactionMode(true)
             } else if (operationType == TYPE_TRANSACTION && !amountInput.type) {
                 amountInput.typeButton.performClick()
             }
@@ -433,21 +443,6 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
             val targetVisibility = if (show) View.VISIBLE else View.GONE
             if (group.visibility != targetVisibility) group.visibility = targetVisibility
             if (show) {
-                // Resolve a requested Transfer -> Transaction sign before the
-                // first visible segment frame, rather than showing the restored
-                // sign and correcting the highlight on a subsequent frame.
-                if (operationType == TYPE_TRANSACTION &&
-                    intent.hasExtra("arthvexa_pending_mode_income")
-                ) {
-                    val requestedIncome = intent.getBooleanExtra("arthvexa_pending_mode_income", false)
-                    if (amountInput.type != requestedIncome) {
-                        delegate.setType(requestedIncome)
-                        configureType()
-                    }
-                    if (amountInput.type == requestedIncome) {
-                        intent.removeExtra("arthvexa_pending_mode_income")
-                    }
-                }
                 val active = when {
                     operationType == TYPE_TRANSFER -> 2
                     amountInput.type -> 1
@@ -1788,19 +1783,6 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
         super.onRestoreInstanceState(savedInstanceState)
         exchangeRateEdit.setBlockWatcher(false)
         delegate.isProcessingLinkedAmountInputs = false
-        // Android restores the old Transfer amount-sign view state after the
-        // newly created Transaction editor has been populated. Reapply the
-        // explicitly requested segment after that restoration, once only.
-        if (operationType == TYPE_TRANSACTION &&
-            intent.hasExtra("arthvexa_pending_mode_income") &&
-            ::delegate.isInitialized
-        ) {
-            val requestedIncome = intent.getBooleanExtra("arthvexa_pending_mode_income", false)
-            // Keep the request until the pre-draw synchronization has confirmed
-            // the correct sign and selected segment on the visible frame.
-            delegate.setType(requestedIncome)
-            configureType()
-        }
         if (delegate.rowId == 0L) {
             (delegate as? TransferDelegate)?.configureTransferDirection()
         }

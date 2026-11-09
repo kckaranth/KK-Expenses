@@ -490,6 +490,7 @@
                             android:layout_weight="1"
                             android:background="@drawable/arthvexa_editor_field_surface"
                             android:gravity="center_vertical|start"
+                            android:hint="@string/notes"
                             android:paddingHorizontal="16dp"
                             android:paddingVertical="8dp"
                             android:importantForAutofill="no"

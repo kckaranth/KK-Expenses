@@ -1,5 +1,7 @@
 package org.totschnig.myexpenses.ui
 
+import org.totschnig.myexpenses.R
+
 import android.content.Context
 import android.util.AttributeSet
 import com.evernote.android.state.State

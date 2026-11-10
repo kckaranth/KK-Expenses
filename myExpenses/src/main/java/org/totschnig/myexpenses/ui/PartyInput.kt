@@ -80,7 +80,8 @@ class PartyInput @JvmOverloads constructor(
     /** Removes the legacy underline only when requested by the transaction editor. */
     fun applyArthvexaEditorSurface() {
         autoCompleteTextView.background = null
-        autoCompleteTextView.hint = context.getString(R.string.payee)
+        // ExpenseEdit.configureType() supplies the current Payee/Payer label.
+        // Do not hard-code Payee here: Split Income also uses this view.
     }
 
     private val buttonClear: ImageView

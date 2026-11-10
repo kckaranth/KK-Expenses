@@ -1492,6 +1492,9 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
      */
     override fun configureType() {
         delegate.configureType()
+        // Keep the empty-state hint synchronized with the label chosen by the
+        // existing transaction/split type controller; do not alter party data.
+        rootBinding.Payee.hint = rootBinding.PayeeLabel.text
     }
 
     private inner class PlanObserver : ContentObserver(Handler()) {

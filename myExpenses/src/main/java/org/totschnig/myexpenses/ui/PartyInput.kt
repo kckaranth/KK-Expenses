@@ -80,6 +80,12 @@ class PartyInput @JvmOverloads constructor(
     /** Removes the legacy underline only when requested by the transaction editor. */
     fun applyArthvexaEditorSurface() {
         autoCompleteTextView.background = null
+        // Keep the existing autocomplete and chip-switching behavior intact.
+        autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(
+            R.drawable.arthvexa_field_person, 0, 0, 0
+        )
+        autoCompleteTextView.compoundDrawablePadding =
+            (12 * resources.displayMetrics.density + 0.5f).toInt()
         // ExpenseEdit.configureType() supplies the current Payee/Payer label.
         // Do not hard-code Payee here: Split Income also uses this view.
     }

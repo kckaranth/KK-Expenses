@@ -21,6 +21,11 @@ class TimeButton @JvmOverloads constructor(
 
     init {
         time = LocalTime.now()
+        setCompoundDrawablesRelativeWithIntrinsicBounds(
+            R.drawable.arthvexa_field_clock, 0, 0, 0
+        )
+        compoundDrawablePadding =
+            (8 * resources.displayMetrics.density + 0.5f).toInt()
     }
 
     private val timeFormatter: DateTimeFormatter by lazy { context.timeFormatter }

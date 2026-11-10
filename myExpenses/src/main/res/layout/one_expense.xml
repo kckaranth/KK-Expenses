@@ -375,8 +375,7 @@
                         android:paddingTop="0dp"
                         android:paddingBottom="0dp"
                         android:labelFor="@+id/auto_complete_textview"
-                        android:text="@string/payee" android:drawableStart="@drawable/arthvexa_field_person"
-                        android:drawablePadding="8dp"
+                        android:text="@string/payee"
                         />
 
                     <org.totschnig.myexpenses.ui.PartyInput
@@ -436,8 +435,7 @@
                         android:paddingTop="0dp"
                         android:paddingBottom="0dp"
                         android:labelFor="@+id/Category"
-                        android:text="@string/category" android:drawableStart="@drawable/arthvexa_field_tag"
-                        android:drawablePadding="8dp"
+                        android:text="@string/category"
                         />
 
                     <LinearLayout

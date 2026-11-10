@@ -55,6 +55,11 @@ class AmountInput(context: Context, attrs: AttributeSet?) : ConstraintLayout(con
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
             gravity = android.view.Gravity.START or android.view.Gravity.CENTER_VERTICAL
             hint = "0.00"
+            setHintTextColor(
+                org.totschnig.myexpenses.util.ui.resolveThemeColor(
+                    context, android.R.attr.textColorSecondary
+                )
+            )
             fontFeatureSettings = "tnum"
         }
     }

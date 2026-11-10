@@ -7,6 +7,8 @@
     <TextView
         android:id="@+id/TagLabel"
         style="@style/FormLabel"
+        android:drawableStart="@drawable/arthvexa_field_tag"
+        android:drawablePadding="8dp"
         android:text="@string/tags" />
 
     <LinearLayout

@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="0dp"
                 android:text="rthvexa"
-                android:textSize="21sp"
+                android:textSize="22sp"
                 android:fontFamily="sans-serif-medium"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary" />

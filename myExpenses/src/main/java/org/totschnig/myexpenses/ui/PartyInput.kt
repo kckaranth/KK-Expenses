@@ -18,6 +18,7 @@ import android.widget.ListPopupWindow
 import android.widget.SimpleCursorAdapter
 import android.widget.ViewSwitcher
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import com.evernote.android.state.State
 import com.evernote.android.state.StateSaver
 import com.google.android.material.chip.Chip
@@ -80,6 +81,9 @@ class PartyInput @JvmOverloads constructor(
     /** Removes the legacy underline only when requested by the transaction editor. */
     fun applyArthvexaEditorSurface() {
         autoCompleteTextView.background = null
+        autoCompleteTextView.setHintTextColor(
+            ContextCompat.getColor(context, R.color.arthvexa_editor_hint)
+        )
         // Keep the existing autocomplete and chip-switching behavior intact.
         autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(
             R.drawable.arthvexa_field_person, 0, 0, 0

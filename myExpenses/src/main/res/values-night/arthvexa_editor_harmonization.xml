@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Preserve deep green-black editor surfaces in dark mode. -->
+    <color name="arthvexa_editor_header_surface">#003B35</color>
+    <color name="arthvexa_editor_field_fill">#003B35</color>
+    <color name="arthvexa_editor_outline">#668B82</color>
+    <color name="arthvexa_editor_hint">#B8D2CB</color>
+    <color name="arthvexa_editor_save_text">#001B19</color>
+</resources>

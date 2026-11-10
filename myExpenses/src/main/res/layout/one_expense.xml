@@ -21,7 +21,8 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/arthvexa_editor_header_surface">
 
         <include
             android:id="@+id/toolbar"
@@ -442,7 +443,7 @@
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/Category"
                             style="@style/ArthvexaEditorAccentButton"
-                            app:cornerRadius="14dp"
+                            app:cornerRadius="16dp"
                             android:minHeight="52dp"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -503,6 +504,8 @@
                             android:background="@drawable/arthvexa_editor_field_surface"
                             android:gravity="center_vertical|start"
                             android:hint="Add a note"
+                            android:textSize="16sp"
+                            android:textColorHint="@color/arthvexa_editor_hint"
                             android:paddingHorizontal="16dp"
                             android:paddingVertical="8dp"
                             android:importantForAutofill="no"
@@ -708,7 +711,7 @@
         android:paddingEnd="16dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:background="?attr/colorSurface">
+        android:background="@color/arthvexa_editor_header_surface">
             <TextView
                 android:id="@+id/arthvexaSaveLabel"
                 android:layout_width="match_parent"
@@ -719,7 +722,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:text="Save Transaction"
-                android:textColor="?attr/colorOnPrimary"
+                android:textColor="@color/arthvexa_editor_save_text"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:visibility="visible" />

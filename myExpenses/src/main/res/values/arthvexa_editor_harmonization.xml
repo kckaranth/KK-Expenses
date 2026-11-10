@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Editor-only visual tokens; do not change global financial screen themes. -->
+    <color name="arthvexa_editor_header_surface">#F8FCF9</color>
+    <color name="arthvexa_editor_field_fill">#F8FCF9</color>
+    <color name="arthvexa_editor_outline">#AAC8BC</color>
+    <color name="arthvexa_editor_hint">#63786E</color>
+    <color name="arthvexa_editor_save_text">#083B32</color>
+</resources>

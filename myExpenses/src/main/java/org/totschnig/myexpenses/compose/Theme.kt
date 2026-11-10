@@ -5,6 +5,9 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.Typography
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -33,8 +36,19 @@ fun AppTheme(
         ArthvexaThemeColors.Light
     }
 
+    val baseTypography = Typography()
+    val arthvexaTypography = baseTypography.copy(
+        headlineMedium = baseTypography.headlineMedium.copy(fontSize = 24.sp, fontWeight = FontWeight.SemiBold),
+        titleLarge = baseTypography.titleLarge.copy(fontSize = 22.sp, fontWeight = FontWeight.SemiBold),
+        titleMedium = baseTypography.titleMedium.copy(fontSize = 18.sp, fontWeight = FontWeight.SemiBold),
+        titleSmall = baseTypography.titleSmall.copy(fontSize = 16.sp, fontWeight = FontWeight.SemiBold),
+        bodyLarge = baseTypography.bodyLarge.copy(fontSize = 16.sp),
+        bodyMedium = baseTypography.bodyMedium.copy(fontSize = 14.sp),
+        labelMedium = baseTypography.labelMedium.copy(fontSize = 12.sp)
+    )
     MaterialTheme(
-        colorScheme = colorScheme
+        colorScheme = colorScheme,
+        typography = arthvexaTypography
     ) {
         val injector = context.injector
         CompositionLocalProvider(

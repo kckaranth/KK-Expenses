@@ -26,13 +26,13 @@
     <color name="RECONCILED">#69F0AE</color>
 
     <!-- Arthvexa premium brand tokens -->
-    <color name="arthvexa_primary">#B5FFF0</color>
-    <color name="arthvexa_on_primary">#001B19</color>
+    <color name="arthvexa_primary">#75DFC0</color>
+    <color name="arthvexa_on_primary">#102521</color>
     <color name="arthvexa_primary_container">#003B35</color>
-    <color name="arthvexa_on_primary_container">#B5FFF0</color>
-    <color name="arthvexa_secondary">#00BFA5</color>
-    <color name="arthvexa_on_secondary">#001B19</color>
-    <color name="arthvexa_background">#001B19</color>
+    <color name="arthvexa_on_primary_container">#75DFC0</color>
+    <color name="arthvexa_secondary">#8CBFFF</color>
+    <color name="arthvexa_on_secondary">#102521</color>
+    <color name="arthvexa_background">#102521</color>
     <color name="arthvexa_on_background">#E8F5F1</color>
     <color name="arthvexa_surface">#003B35</color>
     <color name="arthvexa_on_surface">#E8F5F1</color>
@@ -42,4 +42,13 @@
     <color name="arthvexa_outline_variant">#315E57</color>
     <color name="arthvexa_error">#FF8A75</color>
     <color name="arthvexa_on_error">#3B0B05</color>
+    <!-- A2 vibrant semantic accents; financial meaning colors are unchanged. -->
+    <color name="arthvexa_a2_emerald">#75DFC0</color>
+    <color name="arthvexa_a2_mint">#75DFC0</color>
+    <color name="arthvexa_a2_ocean_blue">#8CBFFF</color>
+    <color name="arthvexa_a2_royal_purple">#B7A0FF</color>
+    <color name="arthvexa_a2_coral">#FF9C8E</color>
+    <color name="arthvexa_a2_amber">#FFC76B</color>
+    <color name="arthvexa_a2_rose">#FF94CA</color>
+    <color name="arthvexa_a2_sky_blue">#7DDCFF</color>
 </resources>

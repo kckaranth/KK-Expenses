@@ -62,13 +62,13 @@
     <color name="inBudget">#026e00</color>
 
     <!-- Arthvexa premium brand tokens -->
-    <color name="arthvexa_primary">#006B5A</color>
+    <color name="arthvexa_primary">#007C67</color>
     <color name="arthvexa_on_primary">#FFFFFF</color>
     <color name="arthvexa_primary_container">#D1F5E9</color>
     <color name="arthvexa_on_primary_container">#003B35</color>
-    <color name="arthvexa_secondary">#008F7A</color>
+    <color name="arthvexa_secondary">#246DAD</color>
     <color name="arthvexa_on_secondary">#FFFFFF</color>
-    <color name="arthvexa_background">#E8F1ED</color>
+    <color name="arthvexa_background">#F4F8F6</color>
     <color name="arthvexa_on_background">#17332D</color>
     <color name="arthvexa_surface">#FFFFFF</color>
     <color name="arthvexa_on_surface">#17332D</color>
@@ -82,7 +82,16 @@
     <!-- Arthvexa light surface hierarchy -->
     <color name="arthvexa_surface_container_lowest">#FFFFFF</color>
     <color name="arthvexa_surface_container_low">#F4FAF7</color>
-    <color name="arthvexa_surface_container">#D5E8E0</color>
+    <color name="arthvexa_surface_container">#EAF3EF</color>
     <color name="arthvexa_surface_container_high">#E2F0EA</color>
-    <color name="arthvexa_surface_container_highest">#C8DED4</color>
+    <color name="arthvexa_surface_container_highest">#DCECE5</color>
+    <!-- A2 vibrant semantic accents; financial meaning colors are unchanged. -->
+    <color name="arthvexa_a2_emerald">#008B73</color>
+    <color name="arthvexa_a2_mint">#75DFC0</color>
+    <color name="arthvexa_a2_ocean_blue">#3B82F6</color>
+    <color name="arthvexa_a2_royal_purple">#8B5CF6</color>
+    <color name="arthvexa_a2_coral">#F97360</color>
+    <color name="arthvexa_a2_amber">#F5A524</color>
+    <color name="arthvexa_a2_rose">#EC4899</color>
+    <color name="arthvexa_a2_sky_blue">#38BDF8</color>
 </resources>

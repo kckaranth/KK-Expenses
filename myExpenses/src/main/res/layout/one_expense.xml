@@ -346,8 +346,7 @@
                         style="@style/ArthvexaEditorLabel"
                         android:minHeight="0dp"
                         android:paddingTop="0dp"
-                        android:paddingBottom="4dp" android:drawableStart="@drawable/arthvexa_field_calendar"
-                        android:drawablePadding="8dp"
+                        android:paddingBottom="4dp"
                         />
 
                     <LinearLayout

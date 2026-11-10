@@ -585,7 +585,7 @@ abstract class TransactionDelegate(
             }
         }
         operationTypeAdapter =
-            ArrayAdapter<OperationType>(context, android.R.layout.simple_spinner_item, objects)
+            ArrayAdapter<OperationType>(context, R.layout.arthvexa_operation_spinner_item, objects)
         operationTypeAdapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item)
         operationTypeSpinner.adapter = operationTypeAdapter
         resetOperationType()

@@ -112,7 +112,9 @@
                         android:paddingTop="0dp"
                         android:paddingBottom="0dp"
                         android:labelFor="@+id/Account"
-                        android:text="@string/account" />
+                        android:text="@string/account" android:drawableStart="@drawable/arthvexa_field_bank"
+                        android:drawablePadding="8dp"
+                        />
 
                     <Spinner
                         android:id="@+id/Account"
@@ -235,7 +237,9 @@
                         android:paddingTop="0dp"
                         android:paddingBottom="0dp"
                         android:labelFor="@+id/TransferAccount"
-                        android:text="@string/transfer_to_account" />
+                        android:text="@string/transfer_to_account" android:drawableStart="@drawable/arthvexa_field_bank"
+                        android:drawablePadding="8dp"
+                        />
 
                     <Spinner
                         android:id="@+id/TransferAccount"
@@ -344,7 +348,9 @@
                         style="@style/ArthvexaEditorLabel"
                         android:minHeight="0dp"
                         android:paddingTop="0dp"
-                        android:paddingBottom="4dp" />
+                        android:paddingBottom="4dp" android:drawableStart="@drawable/arthvexa_field_calendar"
+                        android:drawablePadding="8dp"
+                        />
 
                     <LinearLayout
                         style="@style/ArthvexaEditorField"
@@ -369,7 +375,9 @@
                         android:paddingTop="0dp"
                         android:paddingBottom="0dp"
                         android:labelFor="@+id/auto_complete_textview"
-                        android:text="@string/payee" />
+                        android:text="@string/payee" android:drawableStart="@drawable/arthvexa_field_person"
+                        android:drawablePadding="8dp"
+                        />
 
                     <org.totschnig.myexpenses.ui.PartyInput
                         android:id="@+id/Payee"
@@ -428,7 +436,9 @@
                         android:paddingTop="0dp"
                         android:paddingBottom="0dp"
                         android:labelFor="@+id/Category"
-                        android:text="@string/category" />
+                        android:text="@string/category" android:drawableStart="@drawable/arthvexa_field_tag"
+                        android:drawablePadding="8dp"
+                        />
 
                     <LinearLayout
                         style="@style/ArthvexaEditorField"
@@ -443,7 +453,12 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_weight="1"
-                            android:text="@string/select"  android:gravity="start|center_vertical" android:paddingStart="20dp" android:paddingEnd="20dp"/>
+                            android:text="@string/select"  android:gravity="start|center_vertical" android:paddingStart="20dp" android:paddingEnd="20dp"
+                            app:icon="@drawable/arthvexa_field_tag"
+                            app:iconGravity="textStart"
+                            app:iconPadding="10dp"
+                            app:iconTint="@color/arthvexa_phase6_editor_accent"
+                            />
 
                         <ImageView
                             android:id="@+id/ClearCategory"
@@ -476,7 +491,9 @@
                         android:paddingTop="0dp"
                         android:paddingBottom="0dp"
                         android:labelFor="@+id/Comment"
-                        android:text="@string/notes" />
+                        android:text="@string/notes" android:drawableStart="@drawable/arthvexa_field_note"
+                        android:drawablePadding="8dp"
+                        />
 
                     <LinearLayout
                         style="@style/ArthvexaEditorField"

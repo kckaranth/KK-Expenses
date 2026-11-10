@@ -1105,10 +1105,16 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
         get() = if (isSplitPart) PrefKey.EXPENSE_EDIT_SAVE_AND_NEW_SPLIT_PART else PrefKey.EXPENSE_EDIT_SAVE_AND_NEW
 
     private fun setTitle() {
+        val editHeading = rootBinding.root.findViewById<TextView>(R.id.arthvexaEditHeading)
         if (withTypeSpinner) {
+            editHeading.visibility = View.GONE
             supportActionBar!!.setDisplayShowTitleEnabled(false)
         } else {
-            title = delegate.title(newInstance)
+            // The native toolbar title competes with the Arthvexa brand and action icons.
+            // Render the edit title on its own row; leave the toolbar actions intact.
+            editHeading.text = delegate.title(newInstance)
+            editHeading.visibility = View.VISIBLE
+            supportActionBar!!.setDisplayShowTitleEnabled(false)
         }
     }
 

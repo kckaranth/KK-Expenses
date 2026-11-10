@@ -530,7 +530,13 @@
                         android:labelFor="@id/newAttachment"
                         android:drawableStart="@drawable/arthvexa_field_attachment"
                         android:drawablePadding="8dp"
-                        android:text="@string/attachments" />
+                        android:text="@string/attachments"     android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="140dp"
+                        android:singleLine="true"
+                        android:maxLines="1"
+                        android:ellipsize="none"
+                    />
 
                     <com.google.android.flexbox.FlexboxLayout
                         android:id="@+id/AttachmentGroup"

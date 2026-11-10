@@ -112,8 +112,7 @@
                         android:paddingTop="0dp"
                         android:paddingBottom="0dp"
                         android:labelFor="@+id/Account"
-                        android:text="@string/account" android:drawableStart="@drawable/arthvexa_field_bank"
-                        android:drawablePadding="8dp"
+                        android:text="@string/account"
                         />
 
                     <Spinner
@@ -237,8 +236,7 @@
                         android:paddingTop="0dp"
                         android:paddingBottom="0dp"
                         android:labelFor="@+id/TransferAccount"
-                        android:text="@string/transfer_to_account" android:drawableStart="@drawable/arthvexa_field_bank"
-                        android:drawablePadding="8dp"
+                        android:text="@string/transfer_to_account"
                         />
 
                     <Spinner

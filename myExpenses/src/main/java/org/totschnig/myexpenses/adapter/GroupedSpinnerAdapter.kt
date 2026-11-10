@@ -130,4 +130,28 @@ class AccountAdapter(context: Context): GroupedSpinnerAdapter<AccountFlag, Accou
     headerToString = { if (it.id == 0L) "" else it.title(context) }
 ) {
     override fun showHeader(header: AccountFlag) = header.id != 0L
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val selected = super.getView(position, convertView, parent)
+        // Restrict the premium selected-item presentation to transaction editor spinners.
+        // The dropdown rows, account IDs and selection callbacks remain unchanged.
+        if (parent?.id == R.id.Account || parent?.id == R.id.TransferAccount) {
+            (selected as TextView).apply {
+                gravity = android.view.Gravity.START or android.view.Gravity.CENTER_VERTICAL
+                textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+                setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    R.drawable.arthvexa_field_bank, 0,
+                    R.drawable.arthvexa_editor_operation_chevron, 0
+                )
+                compoundDrawablePadding = (12 * resources.displayMetrics.density + 0.5f).toInt()
+                setPadding(
+                    (8 * resources.displayMetrics.density + 0.5f).toInt(),
+                    paddingTop,
+                    (8 * resources.displayMetrics.density + 0.5f).toInt(),
+                    paddingBottom
+                )
+            }
+        }
+        return selected
+    }
 }

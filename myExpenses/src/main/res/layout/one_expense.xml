@@ -528,6 +528,8 @@
                     <TextView
                         style="@style/ArthvexaEditorLabel"
                         android:labelFor="@id/newAttachment"
+                        android:drawableStart="@drawable/arthvexa_field_attachment"
+                        android:drawablePadding="8dp"
                         android:text="@string/attachments" />
 
                     <com.google.android.flexbox.FlexboxLayout

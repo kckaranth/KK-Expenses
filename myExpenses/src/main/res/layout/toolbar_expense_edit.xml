@@ -36,6 +36,7 @@
                 android:text="rthvexa"
                 android:textSize="21sp"
                 android:fontFamily="sans-serif-medium"
+                android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary" />
         </LinearLayout>
 

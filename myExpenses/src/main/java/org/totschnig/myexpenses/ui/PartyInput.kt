@@ -80,6 +80,7 @@ class PartyInput @JvmOverloads constructor(
     /** Removes the legacy underline only when requested by the transaction editor. */
     fun applyArthvexaEditorSurface() {
         autoCompleteTextView.background = null
+        autoCompleteTextView.hint = context.getString(R.string.payee)
     }
 
     private val buttonClear: ImageView

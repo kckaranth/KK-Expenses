@@ -120,7 +120,7 @@
                         android:background="@drawable/arthvexa_editor_card_surface"
                         android:paddingHorizontal="14dp"
                         android:layout_height="52dp"
-                        android:minHeight="52dp" />
+                        android:minHeight="52dp"  android:gravity="start|center_vertical" android:paddingStart="20dp" android:paddingEnd="20dp"/>
                 </org.totschnig.myexpenses.ui.ArthvexaStackedRow>
 
 
@@ -244,7 +244,7 @@
                         android:layout_height="52dp"
                         android:minHeight="52dp"
                         android:background="@drawable/arthvexa_editor_card_surface"
-                        android:paddingHorizontal="14dp" />
+                        android:paddingHorizontal="14dp"  android:gravity="start|center_vertical" android:paddingStart="20dp" android:paddingEnd="20dp"/>
                 </org.totschnig.myexpenses.ui.ArthvexaStackedRow>
 
                 <TableRow
@@ -443,7 +443,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_weight="1"
-                            android:text="@string/select" />
+                            android:text="@string/select"  android:gravity="start|center_vertical" android:paddingStart="20dp" android:paddingEnd="20dp"/>
 
                         <ImageView
                             android:id="@+id/ClearCategory"

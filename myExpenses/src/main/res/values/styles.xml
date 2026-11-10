@@ -37,6 +37,7 @@
 
     <!-- Scoped to the New Transaction editor; shared form styles remain unchanged. -->
     <style name="ArthvexaEditorLabel" parent="FormLabel">
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textSize">14sp</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>

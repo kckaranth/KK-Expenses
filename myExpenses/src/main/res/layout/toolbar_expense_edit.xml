@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="88dp"
     android:elevation="@dimen/design_appbar_elevation"
-    android:background="?attr/colorSurface">
+    android:background="?attr/colorSurface"
+    app:titleTextAppearance="@style/ArthvexaEditorTitle"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="wrap_content"

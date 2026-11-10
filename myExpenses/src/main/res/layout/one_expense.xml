@@ -524,6 +524,11 @@
                 <TableRow android:id="@+id/AttachmentsRow"
                     android:paddingTop="2dp"
                     android:paddingBottom="2dp">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
                     <TextView
                         style="@style/ArthvexaEditorLabel"
@@ -533,7 +538,8 @@
                         android:text="@string/attachments"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:minWidth="140dp"
+                        android:minWidth="0dp"
+                        android:layout_weight="0"
                         android:singleLine="true"
                         android:maxLines="1"
                         android:ellipsize="none"
@@ -542,6 +548,8 @@
                     <com.google.android.flexbox.FlexboxLayout
                         android:id="@+id/AttachmentGroup"
                         style="@style/ArthvexaEditorField"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="0"
                         android:layout_height="wrap_content"
                         android:animateLayoutChanges="true"
                         app:dividerDrawable="@drawable/divider"
@@ -562,6 +570,8 @@
                             app:strokeColor="?attr/colorOutline"
                             app:strokeWidth="1dp" />
                     </com.google.android.flexbox.FlexboxLayout>
+
+                    </LinearLayout>
                 </TableRow>
 
                 <TableRow

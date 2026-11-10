@@ -1,5 +1,7 @@
 package org.totschnig.myexpenses.ui
 
+import android.graphics.Canvas
+import androidx.appcompat.content.res.AppCompatResources
 import android.content.Context
 import android.content.res.ColorStateList
 import android.util.AttributeSet
@@ -67,6 +69,20 @@ class DateButton @JvmOverloads constructor(
         }
     }
 
+
+    // Calendar is drawn between the previous-day hit target and the centered date.
+    // This does not replace either navigation drawable or intercept touch events.
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        if (width < UiUtils.dp2Px(155F, resources).toInt()) return
+        val icon = AppCompatResources.getDrawable(context, R.drawable.arthvexa_field_calendar)
+            ?.mutate() ?: return
+        val size = UiUtils.dp2Px(16F, resources).toInt()
+        val left = UiUtils.dp2Px(39F, resources).toInt()
+        val top = (height - size) / 2
+        icon.setBounds(left, top, left + size, top + size)
+        icon.draw(canvas)
+    }
 
     override fun onClick() {
         lastTouchDownX?.let {

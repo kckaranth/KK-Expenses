@@ -11,9 +11,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.FilterChip
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,7 +29,6 @@ import org.totschnig.myexpenses.viewmodel.data.FullAccount
 @Composable
 internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
     val formatter = LocalCurrencyFormatter.current
-    var selectedView by remember { mutableStateOf(1) }
     var monthlyExpanded by remember { mutableStateOf(true) }
     // A null selection means all accounts; never combine their currencies into a total.
     var selectedAccountId by remember { mutableStateOf<Long?>(null) }
@@ -47,19 +43,9 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
         ArthvexaBrandMark()
         Text("Insights", style = MaterialTheme.typography.headlineSmall)
         Text(
-            if (selectedView == 0) "Lifetime account overview" else "Trends, categories and monthly comparisons",
+            if (selectedAccountId == null) "Account overview · Select an account for trends" else "Monthly trends and spending analysis",
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-            listOf("Overview", "Monthly analytics").forEachIndexed { index, label ->
-                SegmentedButton(
-                    selected = selectedView == index,
-                    onClick = { selectedView = index },
-                    shape = SegmentedButtonDefaults.itemShape(index = index, count = 2),
-                    label = { Text(label) }
-                )
-            }
-        }
         Text("Accounts", style = MaterialTheme.typography.titleSmall)
         Row(
             modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
@@ -78,7 +64,9 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
                 )
             }
         }
-        if (selectedView == 1) {
+        if (selectedAccountId != null) {
+            // A single account is the only input to detailed analytics. This avoids
+            // stacking full charts for every account and never combines currencies.
             KKMonthlyActivity(
                 accounts = visibleAccounts,
                 expanded = monthlyExpanded,
@@ -86,6 +74,7 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
                 insightsMode = true
             )
         } else {
+            Text("Account balances", style = MaterialTheme.typography.titleMedium)
         if (visibleAccounts.isEmpty()) {
             Text("Add an account to view financial insights.")
         }
@@ -104,7 +93,7 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
             }
         }
         Text(
-            "Lifetime figures are shown per account and currency. Transfers and split transactions follow existing account calculations.",
+            "Select an account above for monthly trends, spending categories and comparisons. Amounts remain separate by currency.",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )

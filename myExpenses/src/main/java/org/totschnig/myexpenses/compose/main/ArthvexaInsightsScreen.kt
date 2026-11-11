@@ -47,7 +47,7 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
         ArthvexaBrandMark()
         Text("Insights", style = MaterialTheme.typography.headlineSmall)
         Text(
-            if (selectedView == 0) "Lifetime account overview" else "Monthly account analysis",
+            if (selectedView == 0) "Lifetime account overview" else "Trends, categories and monthly comparisons",
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
@@ -82,7 +82,8 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
             KKMonthlyActivity(
                 accounts = visibleAccounts,
                 expanded = monthlyExpanded,
-                onExpandedChange = { monthlyExpanded = it }
+                onExpandedChange = { monthlyExpanded = it },
+                insightsMode = true
             )
         } else {
         if (visibleAccounts.isEmpty()) {

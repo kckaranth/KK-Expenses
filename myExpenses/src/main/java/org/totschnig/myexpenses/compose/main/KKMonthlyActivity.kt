@@ -273,7 +273,8 @@ private fun ArthvexaMonthlyAnalyticsCard(
 internal fun KKMonthlyActivity(
     accounts: List<FullAccount>,
     expanded: Boolean,
-    onExpandedChange: (Boolean) -> Unit
+    onExpandedChange: (Boolean) -> Unit,
+    insightsMode: Boolean = false
 ) {
     val context = LocalContext.current
     val formatter = LocalCurrencyFormatter.current
@@ -286,8 +287,8 @@ internal fun KKMonthlyActivity(
     var expandedComparisons by remember {
         mutableStateOf(setOf<Long>())
     }
-    var expandedAccounts by remember {
-        mutableStateOf(setOf<Long>())
+    var expandedAccounts by remember(insightsMode, accounts.map { it.id }) {
+        mutableStateOf(if (insightsMode) accounts.filter { it.id > 0 }.map { it.id }.toSet() else emptySet())
     }
     var selectedMonth by remember {
         mutableStateOf(LocalDate.now().withDayOfMonth(1))
@@ -1314,6 +1315,7 @@ onClick = { onExpandedChange(!expanded) }) {
                     )
                 }
                 }
+                if (!insightsMode) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -1376,6 +1378,7 @@ onClick = { onExpandedChange(!expanded) }) {
                 }
                 Text("Transfers excluded. Split expenses are grouped by their assigned categories. Amounts are not combined across currencies.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
+                } // Home-only recent transactions
             }
         }
     }

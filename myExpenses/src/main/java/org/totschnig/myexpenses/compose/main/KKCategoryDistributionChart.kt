@@ -12,9 +12,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,7 +43,8 @@ internal fun KKCategoryDistributionChart(
     categoryTotals: Map<Long, Long>,
     categoryNames: Map<Long, String>,
     currency: CurrencyUnit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    compact: Boolean = false
 ) {
     val formatter = LocalCurrencyFormatter.current
 
@@ -82,17 +85,23 @@ internal fun KKCategoryDistributionChart(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         } else {
-            var selectedIndex by remember(categories) {
+            var showAllCategories by remember(categories, compact) { mutableStateOf(!compact) }
+            val chartCategories = remember(categories, compact) {
+                if (!compact || categories.size <= 5) categories.map { Triple(it.first, it.second, false) }
+                else categories.take(5).map { Triple(it.first, it.second, false) } +
+                    Triple(Long.MIN_VALUE, categories.drop(5).sumOf { it.second }, true)
+            }
+            var selectedIndex by remember(chartCategories) {
                 mutableIntStateOf(0)
             }
 
-            val selected = categories[
-                selectedIndex.coerceIn(categories.indices)
+            val selected = chartCategories[
+                selectedIndex.coerceIn(chartCategories.indices)
             ]
 
             val total = categories.sumOf { it.second }
             val maximumAmount =
-                categories.maxOf { it.second }.toDouble()
+                chartCategories.maxOf { it.second }.toDouble()
 
             fun percentage(amount: Long): String {
                 val value = if (total > 0L) {
@@ -128,19 +137,19 @@ internal fun KKCategoryDistributionChart(
                     holeRadius = 72f,
                     showEntryLabels = false,
                     showSelectionCenterText = false,
-                    data = categories.map { (id, amount) ->
+                    data = chartCategories.map { (id, amount, other) ->
                         PieEntry(
                             (amount.toDouble() /
                                 maximumAmount).toFloat(),
-                            categoryNames[id] ?: "Uncategorized"
+                            if (other) "Others" else categoryNames[id] ?: "Uncategorized"
                         )
                     },
-                    colors = categories.indices.map {
+                    colors = chartCategories.indices.map {
                         palette[it % palette.size]
                     },
                     onValueSelected = { index ->
                         if (index != null &&
-                            index in categories.indices
+                            index in chartCategories.indices
                         ) {
                             selectedIndex = index
                         }
@@ -150,7 +159,7 @@ internal fun KKCategoryDistributionChart(
 
             Text(
                 text = (
-                    categoryNames[selected.first]
+                    if (selected.third) "Others" else categoryNames[selected.first]
                         ?: "Uncategorized"
                 ) + "  •  " + percentage(selected.second),
                 style = MaterialTheme.typography.titleSmall,
@@ -174,14 +183,15 @@ internal fun KKCategoryDistributionChart(
                 style = MaterialTheme.typography.labelLarge
             )
 
-            categories.forEachIndexed { index, category ->
+            val displayedCategories = if (showAllCategories) categories else categories.take(5)
+            displayedCategories.forEachIndexed { index, category ->
                 val (id, amount) = category
 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            selectedIndex = index
+                            selectedIndex = index.coerceAtMost(chartCategories.lastIndex)
                         },
                     horizontalArrangement =
                         Arrangement.spacedBy(10.dp),
@@ -221,6 +231,18 @@ internal fun KKCategoryDistributionChart(
                                 .onSurfaceVariant
                         )
                     }
+                }
+            }
+            if (compact && categories.size > 5) {
+                TextButton(onClick = { showAllCategories = !showAllCategories }) {
+                    Text(if (showAllCategories) "Show fewer categories" else "Show all ${categories.size} categories")
+                }
+                if (!showAllCategories) {
+                    Text(
+                        "Others: " + formatter.convAmount(categories.drop(5).sumOf { it.second }, currency),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
         }

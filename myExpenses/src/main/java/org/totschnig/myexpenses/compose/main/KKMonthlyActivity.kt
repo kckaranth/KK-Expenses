@@ -1114,6 +1114,7 @@ onClick = { onExpandedChange(!expanded) }) {
                             monthlySummary.currentCategorySpending,
                         categoryNames = data.categories,
                         currency = account.currencyUnit,
+                        compact = insightsMode,
                         modifier = Modifier.fillMaxWidth()
                     )
 

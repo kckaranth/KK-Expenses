@@ -34,13 +34,13 @@ object ArthvexaThemeColors {
         surfaceContainerLowest = Color(0xFF102521),
         surfaceContainerLow = Color(0xFF1C2827),
         surfaceContainer = Color(0xFF242729),
-        surfaceContainerHigh = Color(0xFF2B3333),
+        surfaceContainerHigh = Color(0xFF303A38),
         surfaceContainerHighest = Color(0xFF34403E),
         onSurface = Color(0xFFE8F5F1),
         surfaceVariant = Color(0xFF174B44),
         onSurfaceVariant = Color(0xFFB8D2CB),
         outline = Color(0xFF668B82),
-        outlineVariant = Color(0xFF315E57),
+        outlineVariant = Color(0xFF42655E),
         error = Color(0xFFFF8A75),
         onError = Color(0xFF3B0B05)
     )

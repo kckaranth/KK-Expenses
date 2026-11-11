@@ -29,6 +29,7 @@ import org.totschnig.myexpenses.R
 import org.totschnig.myexpenses.contract.TransactionsContract.Transactions.TYPE_SPLIT
 import org.totschnig.myexpenses.contract.TransactionsContract.Transactions.TYPE_TRANSFER
 import org.totschnig.myexpenses.db2.RepositoryTemplate
+import org.totschnig.myexpenses.db2.loadCategory
 import org.totschnig.myexpenses.db2.addAttachments
 import org.totschnig.myexpenses.db2.createPlan
 import org.totschnig.myexpenses.db2.createTemplate
@@ -598,7 +599,12 @@ class TransactionEditViewModel(application: Application, savedStateHandle: Saved
                 dataToLoad.toTypedArray(), null, null, null
             )?.use {
                 if (it.moveToFirst()) {
-                    _autoFillData.tryEmit(AutoFillData.fromCursor(it, currencyContext))
+                    val autoFill = AutoFillData.fromCursor(it, currencyContext)
+                    _autoFillData.tryEmit(autoFill.copy(
+                        categoryType = autoFill.catId?.let { categoryId ->
+                            repository.loadCategory(categoryId)?.type
+                        }
+                    ))
                 }
             }
         }
@@ -640,6 +646,7 @@ class TransactionEditViewModel(application: Application, savedStateHandle: Saved
         val methodId: Long?,
         val accountId: Long?,
         val debtId: Long?,
+        val categoryType: Byte? = null,
     ) {
         companion object {
             fun fromCursor(cursor: Cursor, currencyContext: CurrencyContext) = AutoFillData(

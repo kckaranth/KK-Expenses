@@ -3,6 +3,8 @@ package org.totschnig.myexpenses.delegate
 import android.os.Bundle
 import android.text.TextUtils
 import org.totschnig.myexpenses.R
+import org.totschnig.myexpenses.db2.FLAG_EXPENSE
+import org.totschnig.myexpenses.db2.FLAG_INCOME
 import org.totschnig.myexpenses.contract.TransactionsContract.Transactions.TYPE_TRANSACTION
 import org.totschnig.myexpenses.databinding.DateEditBinding
 import org.totschnig.myexpenses.databinding.MethodRowBinding
@@ -68,7 +70,11 @@ class CategoryDelegate(
 
     fun autoFill(data: TransactionEditViewModel.AutoFillData) {
         var typeHasChanged = false
-        if (catId == null && data.catId != null && data.label != null) {
+        val requiredCategoryFlag = if (isIncome) FLAG_INCOME else FLAG_EXPENSE
+        val categoryMatchesMode = data.categoryType?.let {
+            (it.toInt() and requiredCategoryFlag.toInt()) != 0
+        } == true
+        if (catId == null && data.catId != null && data.label != null && categoryMatchesMode) {
             catId = data.catId
             label = data.label
             categoryIcon = data.icon
@@ -80,7 +86,8 @@ class CategoryDelegate(
 
         if (viewBinding.Amount.getAmount(
                 showToUser = false
-            ) == null && data.amount != null
+            ) == null && data.amount != null &&
+            (data.amount.amountMajor.signum() >= 0) == isIncome
         ) {
             val beforeType = isIncome
             fillAmount(data.amount.amountMajor)

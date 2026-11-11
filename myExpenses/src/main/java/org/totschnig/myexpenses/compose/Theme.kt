@@ -41,10 +41,13 @@ fun AppTheme(
     // fallback as Android Views (sans-serif) without bundling new font assets.
     val baseTypography = Typography()
     val arthvexaTypography = baseTypography.copy(
+        headlineLarge = baseTypography.headlineLarge.copy(fontFamily = FontFamily.SansSerif, fontSize = 28.sp, lineHeight = 34.sp, fontWeight = FontWeight.SemiBold),
+        headlineSmall = baseTypography.headlineSmall.copy(fontFamily = FontFamily.SansSerif, fontSize = 22.sp, lineHeight = 28.sp, fontWeight = FontWeight.SemiBold),
         headlineMedium = baseTypography.headlineMedium.copy(fontFamily = FontFamily.SansSerif, fontSize = 24.sp, lineHeight = 30.sp, fontWeight = FontWeight.SemiBold),
         titleLarge = baseTypography.titleLarge.copy(fontFamily = FontFamily.SansSerif, fontSize = 22.sp, lineHeight = 28.sp, fontWeight = FontWeight.SemiBold),
         titleMedium = baseTypography.titleMedium.copy(fontFamily = FontFamily.SansSerif, fontSize = 18.sp, lineHeight = 24.sp, fontWeight = FontWeight.SemiBold),
         titleSmall = baseTypography.titleSmall.copy(fontFamily = FontFamily.SansSerif, fontSize = 16.sp, lineHeight = 22.sp, fontWeight = FontWeight.SemiBold),
+        displaySmall = baseTypography.displaySmall.copy(fontFamily = FontFamily.SansSerif, fontSize = 28.sp, lineHeight = 34.sp, fontWeight = FontWeight.SemiBold),
         bodyLarge = baseTypography.bodyLarge.copy(fontFamily = FontFamily.SansSerif, fontSize = 16.sp, lineHeight = 24.sp),
         bodyMedium = baseTypography.bodyMedium.copy(fontFamily = FontFamily.SansSerif, fontSize = 14.sp, lineHeight = 20.sp),
         bodySmall = baseTypography.bodySmall.copy(fontFamily = FontFamily.SansSerif, fontSize = 12.sp, lineHeight = 16.sp),

@@ -1,5 +1,7 @@
 package org.totschnig.myexpenses.compose.accounts
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
@@ -55,9 +57,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.Alignment
 import org.totschnig.myexpenses.R
 import org.totschnig.myexpenses.activity.BalanceSheetOptions
 import org.totschnig.myexpenses.activity.BalanceSheetViewInner
+import org.totschnig.myexpenses.compose.ArthvexaBrandMark
 import org.totschnig.myexpenses.compose.TEST_TAG_FAB_ACCOUNTS
 import org.totschnig.myexpenses.compose.main.AppEvent
 import org.totschnig.myexpenses.compose.main.AppEventHandler
@@ -156,8 +160,11 @@ val hideAccountFab =
                 navigationIcon = navigationIcon,
                 scrollBehavior = scrollBehavior,
                 title = {
-                    Title(selectedTab.value) {
-                        viewModel.setAccountsTab(it)
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        ArthvexaBrandMark(showName = false)
+                        Title(selectedTab.value) {
+                            viewModel.setAccountsTab(it)
+                        }
                     }
                 },
                 actions = {

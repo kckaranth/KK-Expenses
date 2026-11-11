@@ -98,6 +98,7 @@ import org.totschnig.myexpenses.activity.HELP_VARIANT_BALANCE_SHEET
 import org.totschnig.myexpenses.activity.HELP_VARIANT_PORTFOLIO
 import org.totschnig.myexpenses.activity.HELP_VARIANT_TRANSACTIONS
 import org.totschnig.myexpenses.activity.StartScreen
+import org.totschnig.myexpenses.compose.ArthvexaBrandMark
 import org.totschnig.myexpenses.compose.TEST_TAG_NAV_ACCOUNTS
 import org.totschnig.myexpenses.compose.LocalCurrencyFormatter
 import org.totschnig.myexpenses.util.convAmount
@@ -675,7 +676,7 @@ private fun KKHomeDashboard(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text("Arthvexa", style = MaterialTheme.typography.headlineMedium)
+        ArthvexaBrandMark()
         Text("Your Finances. In Focus.", color = MaterialTheme.colorScheme.onSurfaceVariant)
 
         Text("Quick entry", style = MaterialTheme.typography.titleMedium)

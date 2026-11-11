@@ -15,7 +15,7 @@ import org.totschnig.myexpenses.R
 
 /** Shared brand mark for the A2 UI. Uses existing day/night Arthvexa artwork. */
 @Composable
-fun ArthvexaBrandMark(showName: Boolean = true) {
+fun ArthvexaBrandMark(showName: Boolean = true, logoSize: androidx.compose.ui.unit.Dp = 32.dp) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -23,7 +23,7 @@ fun ArthvexaBrandMark(showName: Boolean = true) {
         Image(
             painter = painterResource(R.drawable.arthvexa_header_symbol),
             contentDescription = null,
-            modifier = Modifier.size(32.dp)
+            modifier = Modifier.size(logoSize)
         )
         if (showName) {
             Text("Arthvexa", style = MaterialTheme.typography.titleLarge)

@@ -38,7 +38,7 @@
     <!-- Scoped to the New Transaction editor; shared form styles remain unchanged. -->
     <style name="ArthvexaEditorTitle" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>

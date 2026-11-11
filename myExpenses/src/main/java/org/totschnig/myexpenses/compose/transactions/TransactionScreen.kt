@@ -95,6 +95,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import org.totschnig.myexpenses.R
 import org.totschnig.myexpenses.activity.StartScreen
+import org.totschnig.myexpenses.compose.ArthvexaBrandMark
 import org.totschnig.myexpenses.compose.ColoredAmountText
 import org.totschnig.myexpenses.compose.LocalCurrencyFormatter
 import org.totschnig.myexpenses.compose.OverFlowMenu
@@ -280,23 +281,34 @@ fun TransactionScreen(
                         navigationIcon = navigationIcon,
                         title = {
                             val isPortfolio = (currentAccount as? FullAccount)?.isPortfolio == true
-                            BalanceHeader(
-                                modifier = Modifier.conditional(isFramed) {
-                                    padding(start = 4.dp, top = 4.dp)
-                                },
-                                currentAccount = currentAccount,
-                                onDisplayBalanceTypeChange = if (isPortfolio) null else { newType ->
-                                    viewModel.persistBalanceType(newType)
-                                },
-                                onCopyBalance = {
-                                    onEvent(AppEvent.CopyToClipBoard(it))
-                                },
-                                onSetNewBalance = if (isPortfolio) null else {
-                                    { onEvent(AppEvent.MenuItemClicked(R.id.NEW_BALANCE_COMMAND)) }
-                                },
-                                bankIcon = bankIcon,
-                                onAccountEvent = onAccountEvent
-                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                // Keep the account balance selector and actions fully functional.
+                                // A compact mark avoids introducing another toolbar row.
+                                ArthvexaBrandMark(showName = false, logoSize = 24.dp)
+                                Box(modifier = Modifier.weight(1f)) {
+                                    BalanceHeader(
+                                        modifier = Modifier.conditional(isFramed) {
+                                            padding(start = 4.dp, top = 4.dp)
+                                        },
+                                        currentAccount = currentAccount,
+                                        onDisplayBalanceTypeChange = if (isPortfolio) null else { newType ->
+                                            viewModel.persistBalanceType(newType)
+                                        },
+                                        onCopyBalance = {
+                                            onEvent(AppEvent.CopyToClipBoard(it))
+                                        },
+                                        onSetNewBalance = if (isPortfolio) null else {
+                                            { onEvent(AppEvent.MenuItemClicked(R.id.NEW_BALANCE_COMMAND)) }
+                                        },
+                                        bankIcon = bankIcon,
+                                        onAccountEvent = onAccountEvent
+                                    )
+                                }
+                            }
                         },
                         actions = {
                             val menuConfig = viewModel.transactionMenuAccessor.statefulFlow

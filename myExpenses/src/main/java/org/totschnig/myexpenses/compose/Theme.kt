@@ -6,6 +6,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Typography
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
@@ -36,15 +37,20 @@ fun AppTheme(
         ArthvexaThemeColors.Light
     }
 
+    // A2 shared type scale. Keep font scaling in sp and use the same Roboto-family
+    // fallback as Android Views (sans-serif) without bundling new font assets.
     val baseTypography = Typography()
     val arthvexaTypography = baseTypography.copy(
-        headlineMedium = baseTypography.headlineMedium.copy(fontSize = 24.sp, fontWeight = FontWeight.SemiBold),
-        titleLarge = baseTypography.titleLarge.copy(fontSize = 22.sp, fontWeight = FontWeight.SemiBold),
-        titleMedium = baseTypography.titleMedium.copy(fontSize = 18.sp, fontWeight = FontWeight.SemiBold),
-        titleSmall = baseTypography.titleSmall.copy(fontSize = 16.sp, fontWeight = FontWeight.SemiBold),
-        bodyLarge = baseTypography.bodyLarge.copy(fontSize = 16.sp),
-        bodyMedium = baseTypography.bodyMedium.copy(fontSize = 14.sp),
-        labelMedium = baseTypography.labelMedium.copy(fontSize = 12.sp)
+        headlineMedium = baseTypography.headlineMedium.copy(fontFamily = FontFamily.SansSerif, fontSize = 24.sp, lineHeight = 30.sp, fontWeight = FontWeight.SemiBold),
+        titleLarge = baseTypography.titleLarge.copy(fontFamily = FontFamily.SansSerif, fontSize = 22.sp, lineHeight = 28.sp, fontWeight = FontWeight.SemiBold),
+        titleMedium = baseTypography.titleMedium.copy(fontFamily = FontFamily.SansSerif, fontSize = 18.sp, lineHeight = 24.sp, fontWeight = FontWeight.SemiBold),
+        titleSmall = baseTypography.titleSmall.copy(fontFamily = FontFamily.SansSerif, fontSize = 16.sp, lineHeight = 22.sp, fontWeight = FontWeight.SemiBold),
+        bodyLarge = baseTypography.bodyLarge.copy(fontFamily = FontFamily.SansSerif, fontSize = 16.sp, lineHeight = 24.sp),
+        bodyMedium = baseTypography.bodyMedium.copy(fontFamily = FontFamily.SansSerif, fontSize = 14.sp, lineHeight = 20.sp),
+        bodySmall = baseTypography.bodySmall.copy(fontFamily = FontFamily.SansSerif, fontSize = 12.sp, lineHeight = 16.sp),
+        labelLarge = baseTypography.labelLarge.copy(fontFamily = FontFamily.SansSerif, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Medium),
+        labelMedium = baseTypography.labelMedium.copy(fontFamily = FontFamily.SansSerif, fontSize = 12.sp, lineHeight = 16.sp),
+        labelSmall = baseTypography.labelSmall.copy(fontFamily = FontFamily.SansSerif, fontSize = 11.sp, lineHeight = 16.sp)
     )
     MaterialTheme(
         colorScheme = colorScheme,

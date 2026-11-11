@@ -34,6 +34,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.outlined.CropLandscape
@@ -275,6 +276,7 @@ fun MainScreenAdaptive(
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     var showHome by remember { mutableStateOf(!is2Pane && viewModel.startScreen == StartScreen.Home) }
+    var showInsights by rememberSaveable { mutableStateOf(false) }
     var accountOverviewExpanded by rememberSaveable {
         mutableStateOf(false)
     }
@@ -404,7 +406,7 @@ fun MainScreenAdaptive(
                 if (!is2Pane) {
                     item(
                         selected = showHome,
-                        onClick = { showHome = true },
+                        onClick = { showHome = true; showInsights = false },
                         icon = { Icon(Icons.Default.Home, contentDescription = null) },
                         label = { NavigationItem("Home") },
                     )
@@ -413,9 +415,10 @@ fun MainScreenAdaptive(
                         Screen.Transactions.takeIf { accounts.isNotEmpty() }
                     ).forEach { screen ->
                         item(
-                            selected = !showHome && navigator.currentDestination?.pane == screen.paneRole,
+                            selected = !showHome && !showInsights && navigator.currentDestination?.pane == screen.paneRole,
                             onClick = {
                                 showHome = false
+                                showInsights = false
                                 scope.launch {
                                     navigator.navigateToRoot(screen.paneRole)
                                 }
@@ -429,7 +432,18 @@ fun MainScreenAdaptive(
                     }
                 }
 
-                (if (splitMenu) quickItems else menuConfig).forEach {
+                if (!is2Pane) {
+                    item(
+                        selected = showInsights,
+                        onClick = { showInsights = true; showHome = false },
+                        icon = { Icon(Icons.Default.Insights, contentDescription = null) },
+                        label = { NavigationItem("Insights") },
+                    )
+                }
+
+                // Keep all configured actions, including Templates, in More on phones.
+                // Wider layouts retain their existing configurable menu entries.
+                (if (splitMenu) emptyList<MenuItem>() else menuConfig).forEach {
                     item(
                         selected = if (it == MenuItem.WebUI) isWebUiActive else false,
                         onClick = {
@@ -444,7 +458,7 @@ fun MainScreenAdaptive(
                 }
                 if (splitMenu) {
 
-                    if (overflowItems.isNotEmpty()) {
+                    if (menuConfig.isNotEmpty()) {
                         item(
                             selected = showBottomSheet,
                             onClick = { showBottomSheet = true },
@@ -485,7 +499,9 @@ fun MainScreenAdaptive(
                     {}
                 }
 
-            if (showHome && !is2Pane) {
+            if (showInsights && !is2Pane) {
+                ArthvexaInsightsScreen(accounts = accounts)
+            } else if (showHome && !is2Pane) {
                 KKHomeDashboard(
                     accounts = accounts,
                     accountOverviewExpanded = accountOverviewExpanded,
@@ -498,10 +514,12 @@ fun MainScreenAdaptive(
                     },
                     onAccounts = {
                         showHome = false
+                        showInsights = false
                         scope.launch { navigator.navigateToRoot(ListDetailPaneScaffoldRole.List) }
                     },
                     onTransactions = {
                         showHome = false
+                        showInsights = false
                         scope.launch { navigator.navigateToRoot(ListDetailPaneScaffoldRole.Detail) }
                     },
                     onQuickTransaction = { action ->
@@ -597,7 +615,7 @@ fun MainScreenAdaptive(
             contentWindowInsets = { WindowInsets.navigationBars }
         ) {
 
-            overflowItems
+            menuConfig
                 .forEach {
                     ListItem(
                         modifier = Modifier

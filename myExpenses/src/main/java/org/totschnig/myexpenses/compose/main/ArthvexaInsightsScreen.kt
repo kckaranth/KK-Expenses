@@ -1,0 +1,54 @@
+package org.totschnig.myexpenses.compose.main
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import org.totschnig.myexpenses.compose.ArthvexaBrandMark
+import org.totschnig.myexpenses.compose.LocalCurrencyFormatter
+import org.totschnig.myexpenses.util.convAmount
+import org.totschnig.myexpenses.viewmodel.data.FullAccount
+
+/** Read-only account insights. Values use existing account calculations and currencies. */
+@Composable
+internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
+    val formatter = LocalCurrencyFormatter.current
+    Column(
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        ArthvexaBrandMark()
+        Text("Insights", style = MaterialTheme.typography.headlineSmall)
+        Text("Account financial overview", color = MaterialTheme.colorScheme.onSurfaceVariant)
+        if (accounts.isEmpty()) {
+            Text("Add an account to view financial insights.")
+        }
+        accounts.forEach { account ->
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(account.label, style = MaterialTheme.typography.titleMedium)
+                    Text("Balance: " + formatter.convAmount(account.currentBalance, account.currencyUnit))
+                    Text("Income: " + formatter.convAmount(account.sumIncome, account.currencyUnit), color = MaterialTheme.colorScheme.primary)
+                    Text("Expenses: " + formatter.convAmount(account.sumExpense, account.currencyUnit), color = MaterialTheme.colorScheme.error)
+                }
+            }
+        }
+        Text(
+            "Figures are shown per account and currency. Transfers and split transactions follow existing account calculations.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}

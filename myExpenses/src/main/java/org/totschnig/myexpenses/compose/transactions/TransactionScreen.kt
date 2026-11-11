@@ -295,6 +295,7 @@ fun TransactionScreen(
                                             padding(start = 4.dp, top = 4.dp)
                                         },
                                         currentAccount = currentAccount,
+                                        showAccountIndicator = false,
                                         onDisplayBalanceTypeChange = if (isPortfolio) null else { newType ->
                                             viewModel.persistBalanceType(newType)
                                         },
@@ -606,6 +607,7 @@ private fun TransactionListPage(
 private fun BalanceHeader(
     currentAccount: BaseAccount,
     modifier: Modifier = Modifier,
+    showAccountIndicator: Boolean = true,
     bankIcon: (@Composable (Modifier, Long) -> Unit)? = null,
     onDisplayBalanceTypeChange: ((BalanceType) -> Unit)? = null,
     onCopyBalance: (String) -> Unit = {},
@@ -636,8 +638,10 @@ private fun BalanceHeader(
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        (currentAccount as? FullAccount)?.let {
-            AccountIndicator(currentAccount, bankIcon, true)
+        if (showAccountIndicator) {
+            (currentAccount as? FullAccount)?.let {
+                AccountIndicator(currentAccount, bankIcon, true)
+            }
         }
         BoxWithConstraints(
             Modifier

@@ -341,6 +341,7 @@ fun MainScreenAdaptive(
                 widthIn(max = 72.dp)
             },
             textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.labelMedium,
             maxLines = if (railOnPhonePortrait) 2 else 1
         )
     }

@@ -8,6 +8,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,13 +29,35 @@ import org.totschnig.myexpenses.viewmodel.data.FullAccount
 @Composable
 internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
     val formatter = LocalCurrencyFormatter.current
+    var selectedView by remember { mutableStateOf(0) }
+    var monthlyExpanded by remember { mutableStateOf(true) }
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         ArthvexaBrandMark()
         Text("Insights", style = MaterialTheme.typography.headlineSmall)
-        Text("Account financial overview", color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(
+            if (selectedView == 0) "Lifetime account overview" else "Monthly account analysis",
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+            listOf("Overview", "Monthly analytics").forEachIndexed { index, label ->
+                SegmentedButton(
+                    selected = selectedView == index,
+                    onClick = { selectedView = index },
+                    shape = SegmentedButtonDefaults.itemShape(index = index, count = 2),
+                    label = { Text(label) }
+                )
+            }
+        }
+        if (selectedView == 1) {
+            KKMonthlyActivity(
+                accounts = accounts,
+                expanded = monthlyExpanded,
+                onExpandedChange = { monthlyExpanded = it }
+            )
+        } else {
         if (accounts.isEmpty()) {
             Text("Add an account to view financial insights.")
         }
@@ -46,9 +75,10 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
             }
         }
         Text(
-            "Figures are shown per account and currency. Transfers and split transactions follow existing account calculations.",
+            "Lifetime figures are shown per account and currency. Transfers and split transactions follow existing account calculations.",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+        }
     }
 }

@@ -287,6 +287,10 @@ internal fun KKMonthlyActivity(
     var expandedComparisons by remember(insightsMode, accounts.map { it.id }) {
         mutableStateOf(if (insightsMode) accounts.filter { it.id > 0 }.map { it.id }.toSet() else emptySet())
     }
+    // Insights-only detail state; Home retains its original expanded presentation.
+    var expandedCategoryChanges by remember(insightsMode, accounts.map { it.id }) {
+        mutableStateOf(emptySet<Long>())
+    }
     var expandedAccounts by remember(insightsMode, accounts.map { it.id }) {
         mutableStateOf(if (insightsMode) accounts.filter { it.id > 0 }.map { it.id }.toSet() else emptySet())
     }
@@ -1183,12 +1187,31 @@ onClick = { onExpandedChange(!expanded) }) {
                         .take(4)
 
                     if (categoryChanges.isNotEmpty()) {
-                        Text(
-                            "Category spending changes",
-                            style = MaterialTheme.typography.labelLarge
-                        )
+                        if (insightsMode) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text("Category spending changes", style = MaterialTheme.typography.labelLarge)
+                                TextButton(onClick = {
+                                    expandedCategoryChanges = if (account.id in expandedCategoryChanges)
+                                        expandedCategoryChanges - account.id
+                                    else expandedCategoryChanges + account.id
+                                }) {
+                                    Text(if (account.id in expandedCategoryChanges) "Hide" else "Show")
+                                    Icon(
+                                        if (account.id in expandedCategoryChanges) Icons.Filled.ExpandLess
+                                        else Icons.Filled.ExpandMore,
+                                        contentDescription = null
+                                    )
+                                }
+                            }
+                        } else {
+                            Text("Category spending changes", style = MaterialTheme.typography.labelLarge)
+                        }
 
-                        categoryChanges.forEach { (categoryId, change) ->
+                        if (!insightsMode || account.id in expandedCategoryChanges) categoryChanges.forEach { (categoryId, change) ->
                             val spendingLabel = when {
                                 change > 0L -> "Spending up"
                                 change < 0L -> "Spending down"
@@ -1243,7 +1266,8 @@ onClick = { onExpandedChange(!expanded) }) {
                             .toList()
                             .sortedByDescending { it.second }
                             .take(4)
-                    if (byCategory.isNotEmpty()) {
+                    // The compact Insights donut already lists the top categories.
+                    if (byCategory.isNotEmpty() && !insightsMode) {
                         Text("Top spending categories", style = MaterialTheme.typography.labelLarge)
                         val maximum = byCategory.first().second.coerceAtLeast(1L)
                         Column(

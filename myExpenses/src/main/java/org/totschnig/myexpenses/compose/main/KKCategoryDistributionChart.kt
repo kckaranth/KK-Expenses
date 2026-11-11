@@ -120,12 +120,12 @@ internal fun KKCategoryDistributionChart(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(230.dp),
+                    .height(if (compact) 182.dp else 230.dp),
                 contentAlignment = Alignment.Center
             ) {
                 PieChartCompose(
                     modifier = Modifier
-                        .size(220.dp),
+                        .size(if (compact) 174.dp else 220.dp),
                     factory = { context ->
                         PieChart(context).apply {
                             setDrawEntryLabels(false)

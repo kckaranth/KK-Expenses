@@ -32,7 +32,7 @@ import org.totschnig.myexpenses.viewmodel.data.FullAccount
 @Composable
 internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
     val formatter = LocalCurrencyFormatter.current
-    var selectedView by remember { mutableStateOf(0) }
+    var selectedView by remember { mutableStateOf(1) }
     var monthlyExpanded by remember { mutableStateOf(true) }
     // A null selection means all accounts; never combine their currencies into a total.
     var selectedAccountId by remember { mutableStateOf<Long?>(null) }
@@ -42,7 +42,7 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
     }
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         ArthvexaBrandMark()
         Text("Insights", style = MaterialTheme.typography.headlineSmall)
@@ -60,7 +60,7 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
                 )
             }
         }
-        Text("Filter by account", style = MaterialTheme.typography.titleSmall)
+        Text("Accounts", style = MaterialTheme.typography.titleSmall)
         Row(
             modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(8.dp),

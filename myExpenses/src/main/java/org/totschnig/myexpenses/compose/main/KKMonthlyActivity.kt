@@ -284,8 +284,8 @@ internal fun KKMonthlyActivity(
     var recentExpanded by remember {
         mutableStateOf(false)
     }
-    var expandedComparisons by remember {
-        mutableStateOf(setOf<Long>())
+    var expandedComparisons by remember(insightsMode, accounts.map { it.id }) {
+        mutableStateOf(if (insightsMode) accounts.filter { it.id > 0 }.map { it.id }.toSet() else emptySet())
     }
     var expandedAccounts by remember(insightsMode, accounts.map { it.id }) {
         mutableStateOf(if (insightsMode) accounts.filter { it.id > 0 }.map { it.id }.toSet() else emptySet())
@@ -315,7 +315,7 @@ internal fun KKMonthlyActivity(
     }
     val data = snapshot
     Card(Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(Modifier.padding(if (insightsMode) 14.dp else 18.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             val currentMonth = LocalDate.now().withDayOfMonth(1)
             val monthStart = selectedMonth
             Row(
@@ -324,7 +324,7 @@ internal fun KKMonthlyActivity(
             ) {
                 Column {
                     Text(
-                        "Monthly activity",
+                        if (insightsMode) "Financial analysis" else "Monthly activity",
                         style = MaterialTheme.typography.titleLarge
                     )
                     Text(

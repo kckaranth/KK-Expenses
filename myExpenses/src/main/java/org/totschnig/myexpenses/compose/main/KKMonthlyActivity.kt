@@ -269,6 +269,75 @@ private fun ArthvexaMonthlyAnalyticsCard(
     }
 }
 
+// Extracted without changing month navigation or expansion ownership.
+// The parent retains selectedMonth and expanded state for both Home and Insights.
+@Composable
+private fun ArthvexaMonthlyPeriodHeader(
+    insightsMode: Boolean,
+    monthStart: LocalDate,
+    currentMonth: LocalDate,
+    expanded: Boolean,
+    onPreviousMonth: () -> Unit,
+    onNextMonth: () -> Unit,
+    onExpandedChange: (Boolean) -> Unit
+) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Column {
+                    Text(
+                        if (insightsMode) "Financial analysis" else "Monthly activity",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Text(
+                        monthStart.format(
+                            DateTimeFormatter.ofPattern("MMMM yyyy")
+                        ),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Row {
+                    TextButton(
+                        onClick = {
+                            onPreviousMonth()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ChevronLeft,
+                            contentDescription = "Previous month"
+                        )
+                    }
+                    TextButton(
+                        onClick = {
+                            onNextMonth()
+                        },
+                        enabled = monthStart.isBefore(currentMonth)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ChevronRight,
+                            contentDescription = "Next month"
+                        )
+                    }
+                }
+                TextButton(
+                            modifier = Modifier.semantics {
+                                stateDescription = if (expanded) "Expanded" else "Collapsed"
+                                contentDescription = "Monthly activity"
+                            },
+onClick = { onExpandedChange(!expanded) }) {
+                    Icon(
+                        imageVector = if (expanded) {
+                            Icons.Filled.ExpandLess
+                        } else {
+                            Icons.Filled.ExpandMore
+                        },
+                        contentDescription = null
+                    )
+                }
+            }
+}
+
 @Composable
 internal fun KKMonthlyActivity(
     accounts: List<FullAccount>,
@@ -322,61 +391,15 @@ internal fun KKMonthlyActivity(
         Column(Modifier.padding(if (insightsMode) 14.dp else 18.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             val currentMonth = LocalDate.now().withDayOfMonth(1)
             val monthStart = selectedMonth
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Column {
-                    Text(
-                        if (insightsMode) "Financial analysis" else "Monthly activity",
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                    Text(
-                        monthStart.format(
-                            DateTimeFormatter.ofPattern("MMMM yyyy")
-                        ),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                Row {
-                    TextButton(
-                        onClick = {
-                            selectedMonth = selectedMonth.minusMonths(1)
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.ChevronLeft,
-                            contentDescription = "Previous month"
-                        )
-                    }
-                    TextButton(
-                        onClick = {
-                            selectedMonth = selectedMonth.plusMonths(1)
-                        },
-                        enabled = monthStart.isBefore(currentMonth)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.ChevronRight,
-                            contentDescription = "Next month"
-                        )
-                    }
-                }
-                TextButton(
-                            modifier = Modifier.semantics {
-                                stateDescription = if (expanded) "Expanded" else "Collapsed"
-                                contentDescription = "Monthly activity"
-                            },
-onClick = { onExpandedChange(!expanded) }) {
-                    Icon(
-                        imageVector = if (expanded) {
-                            Icons.Filled.ExpandLess
-                        } else {
-                            Icons.Filled.ExpandMore
-                        },
-                        contentDescription = null
-                    )
-                }
-            }
+            ArthvexaMonthlyPeriodHeader(
+                insightsMode = insightsMode,
+                monthStart = monthStart,
+                currentMonth = currentMonth,
+                expanded = expanded,
+                onPreviousMonth = { selectedMonth = selectedMonth.minusMonths(1) },
+                onNextMonth = { selectedMonth = selectedMonth.plusMonths(1) },
+                onExpandedChange = onExpandedChange
+            )
             if (!expanded) {
                 if (error) {
                     Text(

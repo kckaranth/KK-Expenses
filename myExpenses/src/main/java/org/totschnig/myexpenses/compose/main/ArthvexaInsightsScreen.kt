@@ -1,5 +1,6 @@
 package org.totschnig.myexpenses.compose.main
 
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -89,10 +90,46 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
         if (visibleAccounts.isEmpty()) {
             Text("Add an account to view financial insights.")
         }
-        visibleAccounts.forEach { account ->
-            // Compact balance card: avoid repeating a full-sized lifetime summary
-            // while keeping every figure scoped to its own account/currency.
-            Card(modifier = Modifier.fillMaxWidth()) {
+        BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+            // Use two columns only when each card has sufficient room for currency values.
+            if (maxWidth >= 700.dp) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    visibleAccounts.chunked(2).forEach { pair ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            pair.forEach { account ->
+                                InsightAccountCard(account, Modifier.weight(1f))
+                            }
+                            if (pair.size == 1) {
+                                androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
+                            }
+                        }
+                    }
+                }
+            } else {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    visibleAccounts.forEach { account ->
+                        InsightAccountCard(account, Modifier.fillMaxWidth())
+                    }
+                }
+            }
+        }
+        Text(
+            "Select an account for monthly analysis. Amounts remain separate by currency.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        }
+    }
+}
+
+/** Read-only balance card; all amounts remain scoped to the account currency. */
+@Composable
+private fun InsightAccountCard(account: FullAccount, modifier: Modifier = Modifier) {
+    val formatter = LocalCurrencyFormatter.current
+            Card(modifier = modifier) {
                 Column(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -122,12 +159,5 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
                     }
                 }
             }
-        }
-        Text(
-            "Select an account for monthly analysis. Amounts remain separate by currency.",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        }
-    }
+
 }

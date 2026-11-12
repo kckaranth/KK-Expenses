@@ -146,7 +146,7 @@ internal fun MonthlyActivityTrendChart(
 
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Text(
             text = "Six-month trends",
@@ -368,7 +368,7 @@ internal fun MonthlyActivityTrendChart(
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp)
+                .height(40.dp)
         ) {
             val plotLeft = 48.dp
             val plotRight = maxWidth - 12.dp
@@ -397,7 +397,7 @@ internal fun MonthlyActivityTrendChart(
                     modifier = Modifier
                         .offset(x = labelLeft)
                         .width(labelWidth)
-                        .height(48.dp)
+                        .height(40.dp)
                         .background(
                             color = if (isSelected) {
                                 MaterialTheme.colorScheme

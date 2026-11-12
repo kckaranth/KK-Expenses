@@ -791,7 +791,11 @@ onClick = { onExpandedChange(!expanded) }) {
                                 )
                             }
 
+                            val hasExpenseBaseline =
+                                insights.expenseChangePercent != null
                             val changeLabel = when {
+                                !hasExpenseBaseline && insights.expenseChange != 0L ->
+                                    "Spending this month"
                                 insights.expenseChange > 0L ->
                                     "Spending increased"
                                 insights.expenseChange < 0L ->
@@ -800,6 +804,8 @@ onClick = { onExpandedChange(!expanded) }) {
                             }
 
                             val changeColor = when {
+                                !hasExpenseBaseline ->
+                                    MaterialTheme.colorScheme.onSurfaceVariant
                                 insights.expenseChange > 0L ->
                                     MaterialTheme.colorScheme.error
                                 insights.expenseChange < 0L ->
@@ -836,7 +842,9 @@ onClick = { onExpandedChange(!expanded) }) {
                                 Text(
                                     changePercent,
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = changeColor
+                                    color = changeColor,
+                                    maxLines = 2,
+                                    textAlign = TextAlign.End
                                 )
                             }
 

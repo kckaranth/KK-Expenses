@@ -13,12 +13,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.totschnig.myexpenses.compose.ArthvexaBrandMark
 import org.totschnig.myexpenses.compose.LocalCurrencyFormatter
@@ -29,10 +30,11 @@ import org.totschnig.myexpenses.viewmodel.data.FullAccount
 @Composable
 internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
     val formatter = LocalCurrencyFormatter.current
-    var monthlyExpanded by remember { mutableStateOf(true) }
+    var monthlyExpanded by rememberSaveable { mutableStateOf(true) }
     // A null selection means all accounts; never combine their currencies into a total.
-    var selectedAccountId by remember { mutableStateOf<Long?>(null) }
+    var selectedAccountId by rememberSaveable { mutableStateOf<Long?>(null) }
     val activeAccounts = accounts.filter { it.id > 0 }
+
     val visibleAccounts = activeAccounts.filter {
         selectedAccountId == null || it.id == selectedAccountId
     }
@@ -46,7 +48,7 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
             if (selectedAccountId == null) "Account overview · Select an account for trends" else "Monthly trends and spending analysis",
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        Text("Accounts", style = MaterialTheme.typography.titleSmall)
+        Text("Accounts · Select one for monthly analysis", style = MaterialTheme.typography.titleSmall)
         Row(
             modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -79,16 +81,36 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
             Text("Add an account to view financial insights.")
         }
         visibleAccounts.forEach { account ->
+            // Compact balance card: avoid repeating a full-sized lifetime summary
+            // while keeping every figure scoped to its own account/currency.
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
-                    Text(account.label, style = MaterialTheme.typography.titleMedium)
-                    Text("Current balance", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Text(formatter.convAmount(account.currentBalance, account.currencyUnit), style = MaterialTheme.typography.titleLarge)
-                    Text("Lifetime income: " + formatter.convAmount(account.sumIncome, account.currencyUnit), color = MaterialTheme.colorScheme.primary)
-                    Text("Lifetime expenses: " + formatter.convAmount(account.sumExpense, account.currencyUnit), color = MaterialTheme.colorScheme.error)
+                    Text(
+                        account.label,
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    Text(
+                        formatter.convAmount(account.currentBalance, account.currencyUnit),
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("Lifetime income", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(formatter.convAmount(account.sumIncome, account.currencyUnit), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodyMedium)
+                        }
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("Lifetime expenses", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(formatter.convAmount(account.sumExpense, account.currencyUnit), color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium)
+                        }
+                    }
                 }
             }
         }

@@ -5,12 +5,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.FilterChip
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -34,6 +37,11 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
     // A null selection means all accounts; never combine their currencies into a total.
     var selectedAccountId by rememberSaveable { mutableStateOf<Long?>(null) }
     val activeAccounts = accounts.filter { it.id > 0 }
+    val accountChipListState = rememberLazyListState()
+    val selectedChipIndex = activeAccounts.indexOfFirst { it.id == selectedAccountId } + 1
+    LaunchedEffect(selectedChipIndex) {
+        accountChipListState.animateScrollToItem(selectedChipIndex.coerceAtLeast(0))
+    }
 
     val visibleAccounts = activeAccounts.filter {
         selectedAccountId == null || it.id == selectedAccountId
@@ -45,20 +53,21 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
         ArthvexaBrandMark()
         Text("Insights", style = MaterialTheme.typography.headlineSmall)
         Text(
-            if (selectedAccountId == null) "Account overview · Select an account for trends" else "Monthly trends and spending analysis",
+            if (selectedAccountId == null) "Account balances" else "Monthly trends and spending analysis",
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        Text("Accounts · Select one for monthly analysis", style = MaterialTheme.typography.titleSmall)
-        Row(
-            modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+        Text("Accounts", style = MaterialTheme.typography.titleSmall)
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            state = accountChipListState,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            FilterChip(
+            item { FilterChip(
                 selected = selectedAccountId == null,
                 onClick = { selectedAccountId = null },
                 label = { Text("All accounts") },
-            )
-            activeAccounts.forEach { account ->
+            ) }
+            itemsIndexed(activeAccounts, key = { _, account -> account.id }) { _, account ->
                 FilterChip(
                     selected = selectedAccountId == account.id,
                     onClick = { selectedAccountId = account.id },
@@ -115,7 +124,7 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
             }
         }
         Text(
-            "Select an account above for monthly trends, spending categories and comparisons. Amounts remain separate by currency.",
+            "Select an account for monthly analysis. Amounts remain separate by currency.",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )

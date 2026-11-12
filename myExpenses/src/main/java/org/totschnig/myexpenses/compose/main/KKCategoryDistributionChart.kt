@@ -71,7 +71,7 @@ internal fun KKCategoryDistributionChart(
 
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(if (compact) 8.dp else 12.dp)
     ) {
         Text(
             text = "Spending by category",
@@ -120,12 +120,12 @@ internal fun KKCategoryDistributionChart(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(if (compact) 182.dp else 230.dp),
+                    .height(if (compact) 158.dp else 230.dp),
                 contentAlignment = Alignment.Center
             ) {
                 PieChartCompose(
                     modifier = Modifier
-                        .size(if (compact) 174.dp else 220.dp),
+                        .size(if (compact) 154.dp else 220.dp),
                     factory = { context ->
                         PieChart(context).apply {
                             setDrawEntryLabels(false)
@@ -163,6 +163,7 @@ internal fun KKCategoryDistributionChart(
                         ?: "Uncategorized"
                 ) + "  •  " + percentage(selected.second),
                 style = MaterialTheme.typography.titleSmall,
+                maxLines = 2,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )

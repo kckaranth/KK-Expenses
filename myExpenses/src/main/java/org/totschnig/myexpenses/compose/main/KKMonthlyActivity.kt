@@ -815,7 +815,11 @@ onClick = { onExpandedChange(!expanded) }) {
                                         "%.1f%%",
                                         kotlin.math.abs(it)
                                     )
-                                } ?: "N/A"
+                                } ?: if (insights.expenseChange == 0L) {
+                                    "No change"
+                                } else {
+                                    "No prior baseline"
+                                }
 
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -976,7 +980,7 @@ onClick = { onExpandedChange(!expanded) }) {
                                 kotlin.math.abs(previousExpense.toDouble()) * 100.0
                         )
                     } else {
-                        "N/A"
+                        "No prior baseline"
                     }
 
                     val incomePercent = if (previousIncome != 0L) {
@@ -987,7 +991,7 @@ onClick = { onExpandedChange(!expanded) }) {
                                 kotlin.math.abs(previousIncome.toDouble()) * 100.0
                         )
                     } else {
-                        "N/A"
+                        "No prior baseline"
                     }
 
                     fun performanceLabel(

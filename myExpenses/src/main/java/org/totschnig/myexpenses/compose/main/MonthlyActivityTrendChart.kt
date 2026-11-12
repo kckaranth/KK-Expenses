@@ -172,7 +172,7 @@ internal fun MonthlyActivityTrendChart(
         Canvas(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(190.dp)
+                .height(168.dp)
                 .semantics {
                     contentDescription = chartAccessibilitySummary
                 }

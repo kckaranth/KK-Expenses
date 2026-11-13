@@ -779,6 +779,11 @@ internal fun KKMonthlyActivity(
                         )
                     }
 
+                    // Keep all account data and expansion state in this parent.
+                    // On wide Insights panes, put spending and trends side by side.
+                    // Home always retains the original vertical presentation.
+                    @Composable
+                    fun SpendingInsightsPanel() {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
@@ -924,7 +929,10 @@ internal fun KKMonthlyActivity(
                             }
                         }
                     }
+                    }
 
+                    @Composable
+                    fun MonthlyTrendPanel() {
                     ArthvexaMonthlyAnalyticsCard {
                     MonthlyActivityTrendChart(
                         points = trendPoints,
@@ -934,6 +942,30 @@ internal fun KKMonthlyActivity(
                             .padding(vertical = 6.dp)
                     )
                     }
+                    }
+
+                    androidx.compose.foundation.layout.BoxWithConstraints(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        val fontScale = androidx.compose.ui.platform.LocalDensity.current.fontScale
+                        val useColumns = insightsMode && maxWidth >= 700.dp && fontScale <= 1.15f
+                        if (useColumns) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                verticalAlignment = Alignment.Top
+                            ) {
+                                Box(Modifier.weight(1f)) { SpendingInsightsPanel() }
+                                Box(Modifier.weight(1f)) { MonthlyTrendPanel() }
+                            }
+                        } else {
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                SpendingInsightsPanel()
+                                MonthlyTrendPanel()
+                            }
+                        }
+                    }
+
 
                     if (month.isEmpty() && previousMonth.isEmpty()) {
                         Text(

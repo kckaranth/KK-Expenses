@@ -1338,21 +1338,21 @@ internal fun KKMonthlyActivity(
                                     MonthlyTrendPanel()
                                 }
                             }
-                            // Let the category breakdown use the full landscape width.
-                            // This avoids a long right column beside unused left space.
-                            androidx.compose.foundation.layout.Spacer(
-                                modifier = Modifier.height(12.dp)
-                            )
-                            CategoryDistributionPanel()
                         } else {
                             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                 SpendingInsightsPanel()
                                 MonthlyTrendPanel()
                                 MonthlyComparisonPanel()
-                                CategoryDistributionPanel()
                             }
                         }
                     }
+
+                    // Category analysis is a separate full-width section in both
+                    // orientations. Never compose it inside the landscape Row.
+                    androidx.compose.foundation.layout.Spacer(
+                        modifier = Modifier.height(if (insightsMode) 12.dp else 8.dp)
+                    )
+                    CategoryDistributionPanel()
 
                     val byCategory =
                         monthlySummary.currentCategorySpending

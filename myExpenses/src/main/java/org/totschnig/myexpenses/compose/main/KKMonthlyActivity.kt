@@ -944,36 +944,7 @@ internal fun KKMonthlyActivity(
                     }
                     }
 
-                    androidx.compose.foundation.layout.BoxWithConstraints(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        val fontScale = androidx.compose.ui.platform.LocalDensity.current.fontScale
-                        val useColumns = insightsMode && maxWidth >= 700.dp && fontScale <= 1.15f
-                        if (useColumns) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                                verticalAlignment = Alignment.Top
-                            ) {
-                                Box(Modifier.weight(1f)) { SpendingInsightsPanel() }
-                                Box(Modifier.weight(1f)) { MonthlyTrendPanel() }
-                            }
-                        } else {
-                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                SpendingInsightsPanel()
-                                MonthlyTrendPanel()
-                            }
-                        }
-                    }
-
-
-                    if (month.isEmpty() && previousMonth.isEmpty()) {
-                        Text(
-                            "No activity in the previous month either.",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    } else {
+                    // C3: Preserve the same state and data while arranging presentation.
                     fun signedAmount(value: Long): String {
                         val formatted = formatter.convAmount(
                             value,
@@ -982,6 +953,15 @@ internal fun KKMonthlyActivity(
                         return if (value > 0L) "+$formatted" else formatted
                     }
 
+                    @Composable
+                    fun MonthlyComparisonPanel() {
+                    if (month.isEmpty() && previousMonth.isEmpty()) {
+                        Text(
+                            "No activity in the previous month either.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    } else {
                     ArthvexaMonthlyAnalyticsCard(subtleDark = true) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -1179,6 +1159,10 @@ internal fun KKMonthlyActivity(
                     }
                     }
 
+                    }
+
+                    @Composable
+                    fun CategoryDistributionPanel() {
                     if (account.id in expandedComparisons) {
                     KKCategoryDistributionChart(
                         categoryTotals =
@@ -1326,6 +1310,44 @@ internal fun KKMonthlyActivity(
                         }
                     }
                     }
+                    }
+
+                    }
+
+                    androidx.compose.foundation.layout.BoxWithConstraints(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        val fontScale = androidx.compose.ui.platform.LocalDensity.current.fontScale
+                        val useColumns = insightsMode && maxWidth >= 700.dp && fontScale <= 1.15f
+                        if (useColumns) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                verticalAlignment = Alignment.Top
+                            ) {
+                                Column(
+                                    modifier = Modifier.weight(1f),
+                                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                                ) {
+                                    SpendingInsightsPanel()
+                                    MonthlyComparisonPanel()
+                                }
+                                Column(
+                                    modifier = Modifier.weight(1f),
+                                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                                ) {
+                                    MonthlyTrendPanel()
+                                    CategoryDistributionPanel()
+                                }
+                            }
+                        } else {
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                SpendingInsightsPanel()
+                                MonthlyTrendPanel()
+                                MonthlyComparisonPanel()
+                                CategoryDistributionPanel()
+                            }
+                        }
                     }
 
                     val byCategory =

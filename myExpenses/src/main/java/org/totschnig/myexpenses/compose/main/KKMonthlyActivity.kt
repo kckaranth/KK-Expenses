@@ -1160,6 +1160,7 @@ internal fun KKMonthlyActivity(
                     }
 
                     }
+                    }
 
                     @Composable
                     fun CategoryDistributionPanel() {

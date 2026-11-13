@@ -1336,9 +1336,14 @@ internal fun KKMonthlyActivity(
                                     verticalArrangement = Arrangement.spacedBy(12.dp)
                                 ) {
                                     MonthlyTrendPanel()
-                                    CategoryDistributionPanel()
                                 }
                             }
+                            // Let the category breakdown use the full landscape width.
+                            // This avoids a long right column beside unused left space.
+                            androidx.compose.foundation.layout.Spacer(
+                                modifier = Modifier.height(12.dp)
+                            )
+                            CategoryDistributionPanel()
                         } else {
                             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                 SpendingInsightsPanel()

@@ -1312,8 +1312,6 @@ internal fun KKMonthlyActivity(
                     }
                     }
 
-                    }
-
                     androidx.compose.foundation.layout.BoxWithConstraints(
                         modifier = Modifier.fillMaxWidth()
                     ) {

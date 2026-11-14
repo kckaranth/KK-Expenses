@@ -1164,6 +1164,15 @@ internal fun KKMonthlyActivity(
 
                     @Composable
                     fun CategoryDistributionPanel() {
+                    // Center the complete category section, including reconciliation
+                    // and spending changes, without narrowing its parent surface.
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.TopCenter
+                    ) {
+                    Column(
+                        modifier = Modifier.widthIn(max = 760.dp).fillMaxWidth()
+                    ) {
                     if (account.id in expandedComparisons) {
                     KKCategoryDistributionChart(
                         categoryTotals =
@@ -1312,6 +1321,8 @@ internal fun KKMonthlyActivity(
                     }
                     }
                     }
+                    } // Category content column
+                    } // Centering box
 
                     androidx.compose.foundation.layout.BoxWithConstraints(
                         modifier = Modifier.fillMaxWidth()

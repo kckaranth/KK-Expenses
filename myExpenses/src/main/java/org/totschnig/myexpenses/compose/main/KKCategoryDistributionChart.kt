@@ -75,7 +75,7 @@ internal fun KKCategoryDistributionChart(
         contentAlignment = Alignment.TopCenter
     ) {
     Column(
-        modifier = Modifier.fillMaxWidth().widthIn(max = 760.dp),
+        modifier = Modifier.widthIn(max = 760.dp).fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(if (compact) 8.dp else 12.dp)
     ) {
         Text(

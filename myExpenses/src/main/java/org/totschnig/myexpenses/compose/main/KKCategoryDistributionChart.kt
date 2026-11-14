@@ -3,6 +3,7 @@ package org.totschnig.myexpenses.compose.main
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalDensity
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieEntry
 import org.totschnig.myexpenses.compose.LocalCurrencyFormatter
@@ -122,135 +124,168 @@ internal fun KKCategoryDistributionChart(
                 )
             }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(if (compact) 158.dp else 230.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                PieChartCompose(
-                    modifier = Modifier
-                        .size(if (compact) 154.dp else 220.dp),
-                    factory = { context ->
-                        PieChart(context).apply {
-                            setDrawEntryLabels(false)
-                            setDrawMarkers(false)
-                            setExtraOffsets(0f, 0f, 0f, 0f)
-                            minOffset = 0f
-                        }
-                    },
-                    holeRadius = 72f,
-                    showEntryLabels = false,
-                    showSelectionCenterText = false,
-                    data = chartCategories.map { (id, amount, other) ->
-                        PieEntry(
-                            (amount.toDouble() /
-                                maximumAmount).toFloat(),
-                            if (other) "Others" else categoryNames[id] ?: "Uncategorized"
-                        )
-                    },
-                    colors = chartCategories.indices.map {
-                        palette[it % palette.size]
-                    },
-                    onValueSelected = { index ->
-                        if (index != null &&
-                            index in chartCategories.indices
-                        ) {
-                            selectedIndex = index
-                        }
-                    }
-                )
-            }
-
-            Text(
-                text = (
-                    if (selected.third) "Others" else categoryNames[selected.first]
-                        ?: "Uncategorized"
-                ) + "  •  " + percentage(selected.second),
-                style = MaterialTheme.typography.titleSmall,
-                maxLines = 2,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Text(
-                text = formatter.convAmount(
-                    selected.second,
-                    currency
-                ),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Text(
-                text = "Category breakdown",
-                style = MaterialTheme.typography.labelLarge
-            )
-
-            val displayedCategories = if (showAllCategories) categories else categories.take(5)
-            displayedCategories.forEachIndexed { index, category ->
-                val (id, amount) = category
-
-                Row(
+            // C7: Keep one selection state while adapting only presentation.
+            @Composable
+            fun DonutAndSelection() {
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable {
-                            selectedIndex = index.coerceAtMost(chartCategories.lastIndex)
-                        },
-                    horizontalArrangement =
-                        Arrangement.spacedBy(10.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .height(if (compact) 158.dp else 230.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Surface(
-                        modifier = Modifier.size(12.dp),
-                        shape = CircleShape,
-                        color = Color(
-                            palette[index % palette.size]
-                        )
-                    ) {}
-
-                    Text(
-                        text = categoryNames[id]
-                            ?: "Uncategorized",
-                        modifier = Modifier.weight(1f),
-                        style = MaterialTheme.typography.bodySmall,
-                        softWrap = true
+                    PieChartCompose(
+                        modifier = Modifier
+                            .size(if (compact) 154.dp else 220.dp),
+                        factory = { context ->
+                            PieChart(context).apply {
+                                setDrawEntryLabels(false)
+                                setDrawMarkers(false)
+                                setExtraOffsets(0f, 0f, 0f, 0f)
+                                minOffset = 0f
+                            }
+                        },
+                        holeRadius = 72f,
+                        showEntryLabels = false,
+                        showSelectionCenterText = false,
+                        data = chartCategories.map { (id, amount, other) ->
+                            PieEntry(
+                                (amount.toDouble() /
+                                    maximumAmount).toFloat(),
+                                if (other) "Others" else categoryNames[id] ?: "Uncategorized"
+                            )
+                        },
+                        colors = chartCategories.indices.map {
+                            palette[it % palette.size]
+                        },
+                        onValueSelected = { index ->
+                            if (index != null &&
+                                index in chartCategories.indices
+                            ) {
+                                selectedIndex = index
+                            }
+                        }
                     )
+                }
 
-                    Column(
-                        horizontalAlignment = Alignment.End
+                Text(
+                    text = (
+                        if (selected.third) "Others" else categoryNames[selected.first]
+                            ?: "Uncategorized"
+                    ) + "  •  " + percentage(selected.second),
+                    style = MaterialTheme.typography.titleSmall,
+                    maxLines = 2,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Text(
+                    text = formatter.convAmount(
+                        selected.second,
+                        currency
+                    ),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+            }
+
+            @Composable
+            fun BreakdownRows() {
+                Text(
+                    text = "Category breakdown",
+                    style = MaterialTheme.typography.labelLarge
+                )
+
+                val displayedCategories = if (showAllCategories) categories else categories.take(5)
+                displayedCategories.forEachIndexed { index, category ->
+                    val (id, amount) = category
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                selectedIndex = index.coerceAtMost(chartCategories.lastIndex)
+                            },
+                        horizontalArrangement =
+                            Arrangement.spacedBy(10.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
+                        Surface(
+                            modifier = Modifier.size(12.dp),
+                            shape = CircleShape,
+                            color = Color(
+                                palette[index % palette.size]
+                            )
+                        ) {}
+
                         Text(
-                            text = formatter.convAmount(
-                                amount,
-                                currency
-                            ),
-                            style = MaterialTheme.typography.bodySmall
+                            text = categoryNames[id]
+                                ?: "Uncategorized",
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typography.bodySmall,
+                            softWrap = true
                         )
 
+                        Column(
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Text(
+                                text = formatter.convAmount(
+                                    amount,
+                                    currency
+                                ),
+                                style = MaterialTheme.typography.bodySmall
+                            )
+
+                            Text(
+                                text = percentage(amount),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme
+                                    .onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+                if (compact && categories.size > 5) {
+                    TextButton(onClick = { showAllCategories = !showAllCategories }) {
+                        Text(if (showAllCategories) "Show fewer categories" else "Show all ${categories.size} categories")
+                    }
+                    if (!showAllCategories) {
                         Text(
-                            text = percentage(amount),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme
-                                .onSurfaceVariant
+                            "Others: " + formatter.convAmount(categories.drop(5).sumOf { it.second }, currency),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
             }
-            if (compact && categories.size > 5) {
-                TextButton(onClick = { showAllCategories = !showAllCategories }) {
-                    Text(if (showAllCategories) "Show fewer categories" else "Show all ${categories.size} categories")
-                }
-                if (!showAllCategories) {
-                    Text(
-                        "Others: " + formatter.convAmount(categories.drop(5).sumOf { it.second }, currency),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+
+            BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+                val fontScale = LocalDensity.current.fontScale
+                val sideBySide = compact && maxWidth >= 620.dp && fontScale <= 1.15f
+                if (sideBySide) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(24.dp),
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Box(modifier = Modifier.weight(1f)) {
+                            DonutAndSelection()
+                        }
+                        Column(modifier = Modifier.weight(1.25f)) {
+                            BreakdownRows()
+                        }
+                    }
+                } else {
+                    Column(verticalArrangement = Arrangement.spacedBy(if (compact) 8.dp else 12.dp)) {
+                        DonutAndSelection()
+                        BreakdownRows()
+                    }
                 }
             }
+
         }
     }
     }

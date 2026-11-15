@@ -47,7 +47,8 @@ internal fun KKCategoryDistributionChart(
     categoryNames: Map<Long, String>,
     currency: CurrencyUnit,
     modifier: Modifier = Modifier,
-    compact: Boolean = false
+    compact: Boolean = false,
+    landscapeLeftFooter: @Composable () -> Unit = {}
 ) {
     val formatter = LocalCurrencyFormatter.current
 
@@ -281,6 +282,8 @@ internal fun KKCategoryDistributionChart(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             DonutAndSelection()
+                            // Keep spending changes with the donut, never inside the breakdown list.
+                            landscapeLeftFooter()
                         }
                         Column(modifier = Modifier.weight(1.25f)) {
                             BreakdownRows()
@@ -290,6 +293,7 @@ internal fun KKCategoryDistributionChart(
                     Column(verticalArrangement = Arrangement.spacedBy(if (compact) 8.dp else 12.dp)) {
                         DonutAndSelection()
                         BreakdownRows()
+                        landscapeLeftFooter()
                     }
                 }
             }

@@ -1164,74 +1164,7 @@ internal fun KKMonthlyActivity(
                     }
 
                     @Composable
-                    fun CategoryDistributionPanel() {
-                    // Center the complete category section, including reconciliation
-                    // and spending changes, without narrowing its parent surface.
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.TopCenter
-                    ) {
-                    Column(
-                        modifier = Modifier.widthIn(max = 760.dp).fillMaxWidth()
-                    ) {
-                    if (account.id in expandedComparisons) {
-                    KKCategoryDistributionChart(
-                        categoryTotals =
-                            monthlySummary.currentCategorySpending,
-                        categoryNames = data.categories,
-                        currency = account.currencyUnit,
-                        compact = insightsMode,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    val reconciliation = monthlySummary.reconciliation
-
-                    if (reconciliation.reconciliationDifference != 0L) {
-                        Text(
-                            "Category spending reconciliation",
-                            style = MaterialTheme.typography.labelLarge
-                        )
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Gross category expenses")
-                            Text(
-                                formatter.convAmount(
-                                    reconciliation.grossCategoryExpenses,
-                                    account.currencyUnit
-                                )
-                            )
-                        }
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Reconciliation difference")
-                            Text(
-                                formatter.convAmount(
-                                    reconciliation.reconciliationDifference,
-                                    account.currencyUnit
-                                )
-                            )
-                        }
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Net transaction expenses")
-                            Text(
-                                formatter.convAmount(
-                                    reconciliation.netTransactionExpenses,
-                                    account.currencyUnit
-                                )
-                            )
-                        }
-                    }
-
+                    fun CategoryChangesPanel() {
                     val currentCategories =
                         monthlySummary.currentCategorySpending
 
@@ -1325,7 +1258,78 @@ internal fun KKMonthlyActivity(
                         }
                     }
                     }
+
+                    @Composable
+                    fun CategoryDistributionPanel() {
+                    // Center the complete category section, including reconciliation
+                    // and spending changes, without narrowing its parent surface.
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.TopCenter
+                    ) {
+                    Column(
+                        modifier = Modifier.widthIn(max = 760.dp).fillMaxWidth()
+                    ) {
+                    if (account.id in expandedComparisons) {
+                    KKCategoryDistributionChart(
+                        categoryTotals =
+                            monthlySummary.currentCategorySpending,
+                        categoryNames = data.categories,
+                        currency = account.currencyUnit,
+                        compact = insightsMode,
+                        modifier = Modifier.fillMaxWidth(),
+                        landscapeLeftFooter = { CategoryChangesPanel() }
+                    )
+
+                    val reconciliation = monthlySummary.reconciliation
+
+                    if (reconciliation.reconciliationDifference != 0L) {
+                        Text(
+                            "Category spending reconciliation",
+                            style = MaterialTheme.typography.labelLarge
+                        )
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Gross category expenses")
+                            Text(
+                                formatter.convAmount(
+                                    reconciliation.grossCategoryExpenses,
+                                    account.currencyUnit
+                                )
+                            )
+                        }
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Reconciliation difference")
+                            Text(
+                                formatter.convAmount(
+                                    reconciliation.reconciliationDifference,
+                                    account.currencyUnit
+                                )
+                            )
+                        }
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Net transaction expenses")
+                            Text(
+                                formatter.convAmount(
+                                    reconciliation.netTransactionExpenses,
+                                    account.currencyUnit
+                                )
+                            )
+                        }
                     }
+
+                    } // Expanded comparison content
                     } // Category content column
                     } // Centering box
 

@@ -117,6 +117,8 @@ internal fun KKCategoryDistributionChart(
                     0.0
                 }
 
+                // A positive category should never be presented as zero spending.
+                if (amount > 0L && value < 0.05) return "<0.1%"
                 return String.format(
                     Locale.getDefault(),
                     "%.1f%%",
@@ -199,6 +201,7 @@ internal fun KKCategoryDistributionChart(
                 )
 
                 val displayedCategories = if (showAllCategories) categories else categories.take(5)
+                Column(verticalArrangement = Arrangement.spacedBy(if (compact) 8.dp else 12.dp)) {
                 displayedCategories.forEachIndexed { index, category ->
                     val (id, amount) = category
 
@@ -248,6 +251,7 @@ internal fun KKCategoryDistributionChart(
                         }
                     }
                 }
+                } // Category rows with consistent spacing
                 if (compact && categories.size > 5) {
                     TextButton(onClick = { showAllCategories = !showAllCategories }) {
                         Text(if (showAllCategories) "Show fewer categories" else "Show all ${categories.size} categories")

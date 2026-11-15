@@ -1273,7 +1273,9 @@ internal fun KKMonthlyActivity(
                             Text("Category spending changes", style = MaterialTheme.typography.labelLarge)
                         }
 
-                        if (!insightsMode || account.id in expandedCategoryChanges) categoryChanges.forEach { (categoryId, change) ->
+                        if (!insightsMode || account.id in expandedCategoryChanges) {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        categoryChanges.forEach { (categoryId, change) ->
                             val spendingLabel = when {
                                 change > 0L -> "Spending up"
                                 change < 0L -> "Spending down"
@@ -1318,6 +1320,8 @@ internal fun KKMonthlyActivity(
                                     softWrap = true
                                 )
                             }
+                        }
+                        } // Spaced category-change rows
                         }
                     }
                     }

@@ -1332,6 +1332,7 @@ internal fun KKMonthlyActivity(
                     } // Expanded comparison content
                     } // Category content column
                     } // Centering box
+                    } // CategoryDistributionPanel
 
                     androidx.compose.foundation.layout.BoxWithConstraints(
                         modifier = Modifier.fillMaxWidth()

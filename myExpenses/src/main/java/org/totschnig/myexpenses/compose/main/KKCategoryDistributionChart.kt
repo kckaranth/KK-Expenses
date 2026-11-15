@@ -271,7 +271,11 @@ internal fun KKCategoryDistributionChart(
                         horizontalArrangement = Arrangement.spacedBy(24.dp),
                         verticalAlignment = Alignment.Top
                     ) {
-                        Box(modifier = Modifier.weight(1f)) {
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
                             DonutAndSelection()
                         }
                         Column(modifier = Modifier.weight(1.25f)) {

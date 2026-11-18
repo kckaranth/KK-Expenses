@@ -106,9 +106,13 @@ internal fun KKCategoryDistributionChart(
                 mutableIntStateOf(0)
             }
 
-            val selected = chartCategories[
-                selectedIndex.coerceIn(chartCategories.indices)
-            ]
+            // A breakdown row can represent a category grouped into the donut's
+            // Others slice. Keep its actual amount in the detail selection.
+            var selectedBreakdownId by remember(categories) { mutableStateOf<Long?>(null) }
+            val selected = selectedBreakdownId?.let { id ->
+                categories.firstOrNull { it.first == id }
+                    ?.let { Triple(it.first, it.second, false) }
+            } ?: chartCategories[selectedIndex.coerceIn(chartCategories.indices)]
 
             val total = categories.sumOf { it.second }
             val maximumAmount =
@@ -168,6 +172,7 @@ internal fun KKCategoryDistributionChart(
                                 index in chartCategories.indices
                             ) {
                                 selectedIndex = index
+                                selectedBreakdownId = null
                             }
                         }
                     )
@@ -217,6 +222,7 @@ internal fun KKCategoryDistributionChart(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
+                                selectedBreakdownId = id
                                 selectedIndex = index.coerceAtMost(chartCategories.lastIndex)
                             },
                         horizontalArrangement =

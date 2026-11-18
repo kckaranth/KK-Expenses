@@ -1188,8 +1188,16 @@ internal fun KKMonthlyActivity(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text("Category spending changes", style = MaterialTheme.typography.labelLarge)
-                                TextButton(onClick = {
+                                Text("Category spending changes",
+                                    modifier = Modifier.weight(1f),
+                                    style = MaterialTheme.typography.labelLarge)
+                                TextButton(
+                                    modifier = Modifier.semantics {
+                                        stateDescription = if (account.id in expandedCategoryChanges)
+                                            "Expanded" else "Collapsed"
+                                        contentDescription = "Category spending changes"
+                                    },
+                                    onClick = {
                                     expandedCategoryChanges = if (account.id in expandedCategoryChanges)
                                         expandedCategoryChanges - account.id
                                     else expandedCategoryChanges + account.id
@@ -1207,7 +1215,7 @@ internal fun KKMonthlyActivity(
                         }
 
                         if (!insightsMode || account.id in expandedCategoryChanges) {
-                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         categoryChanges.forEach { (categoryId, change) ->
                             val spendingLabel = when {
                                 change > 0L -> "Spending up"
@@ -1268,7 +1276,8 @@ internal fun KKMonthlyActivity(
                         contentAlignment = Alignment.TopCenter
                     ) {
                     Column(
-                        modifier = Modifier.widthIn(max = 760.dp).fillMaxWidth()
+                        modifier = Modifier.widthIn(max = 760.dp).fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                     if (account.id in expandedComparisons) {
                     KKCategoryDistributionChart(

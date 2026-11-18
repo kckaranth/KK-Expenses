@@ -202,7 +202,7 @@ internal fun KKCategoryDistributionChart(
                 )
 
                 val displayedCategories = if (showAllCategories) categories else categories.take(5)
-                Column(verticalArrangement = Arrangement.spacedBy(if (compact) 6.dp else 12.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(if (compact) 8.dp else 12.dp)) {
                 displayedCategories.forEachIndexed { index, category ->
                     val (id, amount) = category
 
@@ -285,7 +285,8 @@ internal fun KKCategoryDistributionChart(
                             // Keep spending changes with the donut, never inside the breakdown list.
                             landscapeLeftFooter()
                         }
-                        Column(modifier = Modifier.weight(1.25f)) {
+                        Column(modifier = Modifier.weight(1.25f),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             BreakdownRows()
                         }
                     }

@@ -1,6 +1,11 @@
 package org.totschnig.myexpenses.compose.main
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.semantics.semantics
+import androidx.compose.foundation.semantics.selected
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -20,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -93,23 +99,22 @@ internal fun KKCategoryDistributionChart(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         } else {
-            var showAllCategories by remember(categories, compact) { mutableStateOf(!compact) }
+            var showAllCategories by rememberSaveable(compact) { mutableStateOf(!compact) }
             // On wide screens, reveal long lists in manageable batches.
             // Portrait retains the existing show-all behavior.
-            var landscapeVisibleCount by remember(categories, compact) { mutableIntStateOf(10) }
+            var landscapeVisibleCount by rememberSaveable(compact) { mutableIntStateOf(10) }
             val chartCategories = remember(categories, compact) {
                 if (!compact || categories.size <= 5) categories.map { Triple(it.first, it.second, false) }
                 else categories.take(5).map { Triple(it.first, it.second, false) } +
                     Triple(Long.MIN_VALUE, categories.drop(5).sumOf { it.second }, true)
             }
-            var selectedIndex by remember(chartCategories) {
-                mutableIntStateOf(0)
-            }
+            var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
 
             // A breakdown row can represent a category grouped into the donut's
             // Others slice. Keep its actual amount in the detail selection.
-            var selectedBreakdownId by remember(categories) { mutableStateOf<Long?>(null) }
-            val selected = selectedBreakdownId?.let { id ->
+            var selectedBreakdownId by rememberSaveable { mutableStateOf<Long?>(null) }
+            val validBreakdownId = selectedBreakdownId?.takeIf { id -> categories.any { it.first == id } }
+            val selected = validBreakdownId?.let { id ->
                 categories.firstOrNull { it.first == id }
                     ?.let { Triple(it.first, it.second, false) }
             } ?: chartCategories[selectedIndex.coerceIn(chartCategories.indices)]
@@ -218,13 +223,26 @@ internal fun KKCategoryDistributionChart(
                 displayedCategories.forEachIndexed { index, category ->
                     val (id, amount) = category
 
+                    val isSelected = if (validBreakdownId != null) {
+                        validBreakdownId == id
+                    } else {
+                        chartCategories.getOrNull(selectedIndex)?.first == id
+                    }
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .background(
+                                if (isSelected) MaterialTheme.colorScheme.primaryContainer
+                                else Color.Transparent,
+                                RoundedCornerShape(8.dp)
+                            )
+                            .semantics { selected = isSelected }
                             .clickable {
                                 selectedBreakdownId = id
-                                selectedIndex = index.coerceAtMost(chartCategories.lastIndex)
-                            },
+                                selectedIndex = chartCategories.indexOfFirst { it.first == id }
+                                    .takeIf { it >= 0 } ?: chartCategories.lastIndex
+                            }
+                            .padding(horizontal = 8.dp, vertical = 8.dp),
                         horizontalArrangement =
                             Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically

@@ -209,7 +209,7 @@ internal fun KKCategoryDistributionChart(
                     landscapePaged -> categories.take(landscapeVisibleCount)
                     else -> categories
                 }
-                Column(verticalArrangement = Arrangement.spacedBy(if (compact) 8.dp else 12.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(if (compact) 6.dp else 12.dp)) {
                 displayedCategories.forEachIndexed { index, category ->
                     val (id, amount) = category
 
@@ -295,7 +295,7 @@ internal fun KKCategoryDistributionChart(
                     ) {
                         Column(
                             modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             DonutAndSelection()

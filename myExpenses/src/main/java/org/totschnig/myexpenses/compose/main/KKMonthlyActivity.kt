@@ -1215,7 +1215,7 @@ internal fun KKMonthlyActivity(
                         }
 
                         if (!insightsMode || account.id in expandedCategoryChanges) {
-                        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Column(verticalArrangement = Arrangement.spacedBy(if (insightsMode) 8.dp else 12.dp)) {
                         categoryChanges.forEach { (categoryId, change) ->
                             val spendingLabel = when {
                                 change > 0L -> "Spending up"

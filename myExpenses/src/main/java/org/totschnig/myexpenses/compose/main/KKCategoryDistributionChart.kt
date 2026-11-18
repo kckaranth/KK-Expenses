@@ -94,6 +94,9 @@ internal fun KKCategoryDistributionChart(
             )
         } else {
             var showAllCategories by remember(categories, compact) { mutableStateOf(!compact) }
+            // On wide screens, reveal long lists in manageable batches.
+            // Portrait retains the existing show-all behavior.
+            var landscapeVisibleCount by remember(categories, compact) { mutableIntStateOf(10) }
             val chartCategories = remember(categories, compact) {
                 if (!compact || categories.size <= 5) categories.map { Triple(it.first, it.second, false) }
                 else categories.take(5).map { Triple(it.first, it.second, false) } +
@@ -195,13 +198,17 @@ internal fun KKCategoryDistributionChart(
             }
 
             @Composable
-            fun BreakdownRows() {
+            fun BreakdownRows(landscapePaged: Boolean) {
                 Text(
                     text = "Category breakdown",
                     style = MaterialTheme.typography.labelLarge
                 )
 
-                val displayedCategories = if (showAllCategories) categories else categories.take(5)
+                val displayedCategories = when {
+                    !showAllCategories -> categories.take(5)
+                    landscapePaged -> categories.take(landscapeVisibleCount)
+                    else -> categories
+                }
                 Column(verticalArrangement = Arrangement.spacedBy(if (compact) 8.dp else 12.dp)) {
                 displayedCategories.forEachIndexed { index, category ->
                     val (id, amount) = category
@@ -254,7 +261,17 @@ internal fun KKCategoryDistributionChart(
                 }
                 } // Category rows with consistent spacing
                 if (compact && categories.size > 5) {
-                    TextButton(onClick = { showAllCategories = !showAllCategories }) {
+                    if (landscapePaged && showAllCategories && landscapeVisibleCount < categories.size) {
+                        TextButton(onClick = {
+                            landscapeVisibleCount = (landscapeVisibleCount + 10).coerceAtMost(categories.size)
+                        }) {
+                            Text("Show next ${(categories.size - landscapeVisibleCount).coerceAtMost(10)} categories")
+                        }
+                    }
+                    TextButton(onClick = {
+                        showAllCategories = !showAllCategories
+                        if (!showAllCategories) landscapeVisibleCount = 10
+                    }) {
                         Text(if (showAllCategories) "Show fewer categories" else "Show all ${categories.size} categories")
                     }
                     if (!showAllCategories) {
@@ -287,13 +304,13 @@ internal fun KKCategoryDistributionChart(
                         }
                         Column(modifier = Modifier.weight(1.25f),
                             verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            BreakdownRows()
+                            BreakdownRows(landscapePaged = true)
                         }
                     }
                 } else {
                     Column(verticalArrangement = Arrangement.spacedBy(if (compact) 8.dp else 12.dp)) {
                         DonutAndSelection()
-                        BreakdownRows()
+                        BreakdownRows(landscapePaged = false)
                         landscapeLeftFooter()
                     }
                 }

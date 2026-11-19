@@ -285,6 +285,9 @@ internal fun KKCategoryDistributionChart(
                 }
                 } // Category rows with consistent spacing
                 if (compact && categories.size > 5) {
+                    // Keep pagination actions together instead of adding the
+                    // category-row gap between the two landscape controls.
+                    Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
                     if (landscapePaged && showAllCategories && landscapeVisibleCount < categories.size) {
                         TextButton(onClick = {
                             landscapeVisibleCount = (landscapeVisibleCount + 10).coerceAtMost(categories.size)
@@ -298,6 +301,7 @@ internal fun KKCategoryDistributionChart(
                     }) {
                         Text(if (showAllCategories) "Show fewer categories" else "Show all ${categories.size} categories")
                     }
+                    } // Group pagination controls without extra inter-button spacing.
                     if (!showAllCategories) {
                         Text(
                             "Others: " + formatter.convAmount(categories.drop(5).sumOf { it.second }, currency),

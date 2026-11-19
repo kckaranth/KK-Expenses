@@ -1,5 +1,6 @@
 package org.totschnig.myexpenses.compose.accounts
 
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -47,6 +48,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -111,6 +114,8 @@ fun AccountsScreen(
 val hideAccountFab =
         selectedTab.value != AccountsScreenTab.LIST ||
             isAccountListScrolling
+
+    val accountEntryFocusRequester = remember { FocusRequester() }
 
     var accountSearchQuery by rememberSaveable {
         mutableStateOf("")
@@ -337,6 +342,16 @@ val hideAccountFab =
                                     .fillMaxHeight()
                                     .padding(paddingValues)
                             ) {
+                                // Focus a non-text target on entry so the IME stays closed.
+                                // Tapping the search field still opens the keyboard normally.
+                                Box(
+                                    modifier = Modifier
+                                        .focusRequester(accountEntryFocusRequester)
+                                        .focusable()
+                                )
+                                LaunchedEffect(Unit) {
+                                    accountEntryFocusRequester.requestFocus()
+                                }
                                 TextField(
                                     value = accountSearchQuery,
                                     onValueChange = {

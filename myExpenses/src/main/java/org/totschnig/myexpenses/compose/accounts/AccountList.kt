@@ -142,11 +142,16 @@ fun KKDirectAccountList(
     val formatter = LocalCurrencyFormatter.current
     val homeCurrency = LocalCurrencyContext.current.homeCurrencyUnit
     val layoutDirection = LocalLayoutDirection.current
+    // The Scaffold action menu overlays the bottom-right corner in landscape.
+    // Reserve space on the right of the direct account cards, not only below them.
+    val landscapeActionInset = if (
+        LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+    ) 112.dp else 0.dp
 
     LazyColumnWithScrollbar(
         modifier = modifier.padding(
             start = scaffoldPadding.calculateStartPadding(layoutDirection),
-            end = scaffoldPadding.calculateEndPadding(layoutDirection)
+            end = scaffoldPadding.calculateEndPadding(layoutDirection) + landscapeActionInset
         ),
         state = listState,
         itemsAvailable = accountData.size,

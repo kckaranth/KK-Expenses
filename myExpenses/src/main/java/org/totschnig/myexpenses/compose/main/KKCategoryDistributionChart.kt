@@ -219,7 +219,7 @@ internal fun KKCategoryDistributionChart(
                     landscapePaged -> categories.take(landscapeVisibleCount)
                     else -> categories
                 }
-                Column(verticalArrangement = Arrangement.spacedBy(if (compact) 6.dp else 12.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(if (compact) 4.dp else 10.dp)) {
                 displayedCategories.forEachIndexed { index, category ->
                     val (id, amount) = category
 
@@ -242,7 +242,7 @@ internal fun KKCategoryDistributionChart(
                                 selectedIndex = chartCategories.indexOfFirst { it.first == id }
                                     .takeIf { it >= 0 } ?: chartCategories.lastIndex
                             }
-                            .padding(horizontal = 8.dp, vertical = 8.dp),
+                            .padding(horizontal = 8.dp, vertical = 6.dp),
                         horizontalArrangement =
                             Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically

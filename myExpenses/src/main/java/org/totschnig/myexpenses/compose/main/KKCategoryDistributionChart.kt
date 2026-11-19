@@ -236,7 +236,7 @@ internal fun KKCategoryDistributionChart(
                                 else Color.Transparent,
                                 RoundedCornerShape(8.dp)
                             )
-                            .semantics { selected = isSelected }
+                            .semantics { this.selected = isSelected }
                             .clickable {
                                 selectedBreakdownId = id
                                 selectedIndex = chartCategories.indexOfFirst { it.first == id }

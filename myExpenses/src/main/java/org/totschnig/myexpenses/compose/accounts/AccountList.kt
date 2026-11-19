@@ -1,6 +1,7 @@
 package org.totschnig.myexpenses.compose.accounts
 
 import android.content.Context
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -49,6 +50,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalResources
@@ -303,10 +305,15 @@ fun AccountListV2(
     }
 
     val layoutDirection = LocalLayoutDirection.current
+    // Keep the landscape account cards clear of the persistent floating action menu.
+    // Portrait retains the existing full-width list and FAB behavior.
+    val landscapeActionInset = if (
+        LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+    ) 112.dp else 0.dp
     LazyColumnWithScrollbar(
         modifier = Modifier.padding(
             start = scaffoldPadding.calculateStartPadding(layoutDirection),
-            end = scaffoldPadding.calculateEndPadding(layoutDirection)
+            end = scaffoldPadding.calculateEndPadding(layoutDirection) + landscapeActionInset
         ),
         state = listState,
         itemsAvailable = accountData.size + grouped.size,

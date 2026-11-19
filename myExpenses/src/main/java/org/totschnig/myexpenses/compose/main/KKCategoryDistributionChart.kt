@@ -303,11 +303,50 @@ internal fun KKCategoryDistributionChart(
                     }
                     } // Group pagination controls without extra inter-button spacing.
                     if (!showAllCategories) {
-                        Text(
-                            "Others: " + formatter.convAmount(categories.drop(5).sumOf { it.second }, currency),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        val othersIndex = chartCategories.indexOfFirst { it.third }
+                        if (othersIndex >= 0) {
+                            val othersAmount = chartCategories[othersIndex].second
+                            val othersSelected = validBreakdownId == null && selectedIndex == othersIndex
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(
+                                        if (othersSelected) MaterialTheme.colorScheme.primaryContainer
+                                        else Color.Transparent,
+                                        RoundedCornerShape(8.dp)
+                                    )
+                                    .semantics { this.selected = othersSelected }
+                                    .clickable {
+                                        selectedBreakdownId = null
+                                        selectedIndex = othersIndex
+                                    }
+                                    .padding(horizontal = 8.dp, vertical = if (compact) 4.dp else 6.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Surface(
+                                    modifier = Modifier.size(12.dp),
+                                    shape = CircleShape,
+                                    color = Color(palette[othersIndex % palette.size])
+                                ) {}
+                                Text(
+                                    text = "Others",
+                                    modifier = Modifier.weight(1f),
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                                Column(horizontalAlignment = Alignment.End) {
+                                    Text(
+                                        text = formatter.convAmount(othersAmount, currency),
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                    Text(
+                                        text = percentage(othersAmount),
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }

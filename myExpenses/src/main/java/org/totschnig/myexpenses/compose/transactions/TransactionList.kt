@@ -1,6 +1,7 @@
 package org.totschnig.myexpenses.compose.transactions
 
 import android.content.Context
+import android.content.res.Configuration
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -46,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.platform.testTag
@@ -312,10 +314,17 @@ fun TransactionList(
 
             val nestedScrollInterop = rememberNestedScrollInteropConnection()
             val context = LocalContext.current
+            val landscapeFabEndInset = if (
+                LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+            ) 112.dp else 0.dp
             val amountFormatter = LocalCurrencyFormatter.current
 
             LazyColumnWithScrollbar(
-                modifier = modifier.nestedScroll(nestedScrollInterop),
+                // Keep full-width transaction rows and their amounts clear of the landscape FAB.
+                // Modifier.end padding follows RTL layout direction and also moves the scrollbar.
+                modifier = modifier
+                    .padding(end = landscapeFabEndInset)
+                    .nestedScroll(nestedScrollInterop),
                 state = listState,
                 fastScroll = true,
                 contentPadding = windowInsets

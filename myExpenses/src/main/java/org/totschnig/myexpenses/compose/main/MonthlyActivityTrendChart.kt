@@ -48,6 +48,9 @@ import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.roundToInt
 
+internal fun minorUnitsToMajor(amount: Double, fractionDigits: Int): Double =
+    amount / Math.pow(10.0, fractionDigits.coerceAtLeast(0).toDouble())
+
 @Composable
 internal fun MonthlyActivityTrendChart(
     points: List<MonthlyTrendPoint>,
@@ -105,7 +108,7 @@ internal fun MonthlyActivityTrendChart(
     val maximum = maxOf(0.0, values.maxOrNull() ?: 0.0)
     val range = (maximum - minimum).coerceAtLeast(1.0)
 
-    val axisFormatter = remember(currency.code) {
+    val axisFormatter = remember(currency.code, currency.fractionDigits) {
         NumberFormat.getNumberInstance(
             Locale.getDefault()
         ).apply {
@@ -114,17 +117,10 @@ internal fun MonthlyActivityTrendChart(
         }
     }
 
-    val fractionDigits = remember(currency.code) {
-        runCatching {
-            java.util.Currency.getInstance(
-                currency.code
-            ).defaultFractionDigits
-        }.getOrDefault(2).coerceAtLeast(0)
-    }
+    val fractionDigits = currency.fractionDigits.coerceAtLeast(0)
 
     fun axisLabel(value: Double): String {
-        val major = value /
-            Math.pow(10.0, fractionDigits.toDouble())
+        val major = minorUnitsToMajor(value, fractionDigits)
 
         val absolute = kotlin.math.abs(major)
 

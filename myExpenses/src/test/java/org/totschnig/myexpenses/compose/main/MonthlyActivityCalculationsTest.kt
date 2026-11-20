@@ -5,6 +5,21 @@ import org.junit.Test
 
 class MonthlyActivityCalculationsTest {
 
+    @Test
+    fun trendAxisUsesConfiguredCurrencyPrecision() {
+        assertThat(minorUnitsToMajor(1234567890.0, 8))
+            .isWithin(0.0000001)
+            .of(12.3456789)
+        assertThat(minorUnitsToMajor(123456.0, 2))
+            .isWithin(0.000001)
+            .of(1234.56)
+    }
+
+    @Test
+    fun trendAxisClampsNegativePrecisionToZero() {
+        assertThat(minorUnitsToMajor(123.0, -1)).isEqualTo(123.0)
+    }
+
     private fun entry(
         id: Long,
         accountId: Long,

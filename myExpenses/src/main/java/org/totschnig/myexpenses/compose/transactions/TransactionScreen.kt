@@ -182,6 +182,15 @@ fun TransactionScreen(
         it.isNotEmpty()
     } ?: return
 
+    // Discard scroll flags for accounts removed from the pager. A newly added
+    // account must not inherit an obsolete hidden-FAB state from an old entry.
+    LaunchedEffect(accountList.map { it.id }) {
+        val activeIds = accountList.mapTo(mutableSetOf()) { it.id }
+        transactionListAwayFromTop.keys.toList().forEach { accountId ->
+            if (accountId !in activeIds) transactionListAwayFromTop.remove(accountId)
+        }
+    }
+
     val initialIndex = remember(accountList, selectedAccountId) {
         accountList.indexOfFirst { it.id == selectedAccountId }
             .takeIf { it != -1 } ?: 0

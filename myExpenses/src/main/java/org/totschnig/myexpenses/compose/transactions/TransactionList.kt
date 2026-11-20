@@ -42,6 +42,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -67,6 +69,7 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.distinctUntilChanged
 import myiconpack.IcActionTemplateAdd
 import org.totschnig.myexpenses.R
 import org.totschnig.myexpenses.activity.BaseActivity
@@ -215,6 +218,11 @@ interface HeaderEventHandler {
     operator fun invoke(event: HeaderEvent, row: HeaderRow)
 }
 
+// Provided by TransactionScreen to report the current account list's actual position.
+// Null when the list is hosted outside TransactionScreen.
+internal val LocalTransactionListScrollReporter =
+    compositionLocalOf<((Boolean) -> Unit)?> { null }
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TransactionList(
@@ -239,6 +247,16 @@ fun TransactionList(
 ) {
 
     val listState = rememberLazyListState()
+    val scrollReporter = LocalTransactionListScrollReporter.current
+    LaunchedEffect(listState, scrollReporter) {
+        snapshotFlow {
+            listState.firstVisibleItemIndex > 0 ||
+                listState.firstVisibleItemScrollOffset > 0 ||
+                listState.isScrollInProgress
+        }.distinctUntilChanged().collect { awayFromTop ->
+            scrollReporter?.invoke(awayFromTop)
+        }
+    }
     val collapsedIds = if (expansionHandler != null)
         expansionHandler.state.collectAsState(initial = null).value
     else emptySet()

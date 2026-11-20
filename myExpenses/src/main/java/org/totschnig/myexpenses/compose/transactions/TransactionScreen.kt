@@ -64,6 +64,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
@@ -92,6 +95,8 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.totschnig.myexpenses.R
 import org.totschnig.myexpenses.activity.StartScreen
@@ -173,6 +178,30 @@ fun TransactionScreen(
     val activeFilter by viewModel.activeFilter.collectAsStateWithLifecycle()
     val coroutineScope = rememberCoroutineScope()
     val tabRowState = rememberCollapsingTabRowState()
+    // Hide the action menu while the user scrolls transaction content. Restore it
+    // shortly after the final scroll event, without changing list or amount geometry.
+    var transactionScrollActive by remember { mutableStateOf(false) }
+    var transactionScrollResetJob by remember { mutableStateOf<Job?>(null) }
+    val transactionScrollObserver = remember(coroutineScope) {
+        object : NestedScrollConnection {
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource
+            ): Offset {
+                if (source == NestedScrollSource.UserInput && consumed.y != 0f) {
+                    transactionScrollActive = true
+                    transactionScrollResetJob?.cancel()
+                    transactionScrollResetJob = coroutineScope.launch {
+                        delay(650)
+                        transactionScrollActive = false
+                    }
+                }
+                return Offset.Zero
+            }
+        }
+    }
+
 
     val accountList = viewModel.accountList.collectAsState(emptyList()).value.takeIf {
         it.isNotEmpty()
@@ -207,7 +236,9 @@ fun TransactionScreen(
     var showTradeScreen by rememberSaveable { mutableStateOf<Action?>(null) }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier
+            .nestedScroll(transactionScrollObserver)
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         contentWindowInsets = windowInsets,
         containerColor = containerColor,
         topBar = {
@@ -362,6 +393,7 @@ fun TransactionScreen(
         bottomBar = bottomBar,
         floatingActionButton = {
             val scope = rememberCoroutineScope()
+            if (!transactionScrollActive) {
 
             if ((currentAccount as? FullAccount)?.sealed == true) {
                 FloatingActionButton(
@@ -418,6 +450,7 @@ fun TransactionScreen(
                         )
                     }
                 }
+            }
             }
         }
     ) { paddingValues ->

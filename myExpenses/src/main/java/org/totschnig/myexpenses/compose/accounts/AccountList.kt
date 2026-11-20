@@ -147,6 +147,8 @@ fun KKDirectAccountList(
         LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
     ) 96.dp else 0.dp
 
+    val isLandscape = landscapeActionInset > 0.dp
+
     LazyColumnWithScrollbar(
         modifier = modifier.padding(
             start = scaffoldPadding.calculateStartPadding(layoutDirection),
@@ -158,7 +160,7 @@ fun KKDirectAccountList(
         contentPadding = PaddingValues(
             top = scaffoldPadding.calculateTopPadding(),
             bottom = scaffoldPadding.calculateBottomPadding() +
-                112.dp
+                if (isLandscape) 96.dp else 112.dp
         )
     ) {
         accountData.forEach { account ->
@@ -166,14 +168,14 @@ fun KKDirectAccountList(
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                        .padding(horizontal = 12.dp, vertical = if (isLandscape) 4.dp else 6.dp),
                     shape = MaterialTheme.shapes.large,
                     color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
                 ) {
                     Column(
-                        modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        modifier = Modifier.padding(if (isLandscape) 12.dp else 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(if (isLandscape) 6.dp else 8.dp)
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),

@@ -1,5 +1,6 @@
 package org.totschnig.myexpenses.compose.accounts
 
+import android.content.res.Configuration
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Arrangement
@@ -53,6 +54,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
@@ -117,6 +119,7 @@ val hideAccountFab =
             viewModel.listState.firstVisibleItemIndex > 0 ||
             viewModel.listState.firstVisibleItemScrollOffset > 0
 
+    val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
     val accountEntryFocusRequester = remember { FocusRequester() }
 
     var accountSearchQuery by rememberSaveable {
@@ -398,7 +401,7 @@ val hideAccountFab =
                                         .fillMaxWidth()
                                         .padding(
                                             horizontal = 16.dp,
-                                            vertical = 8.dp
+                                            vertical = if (isLandscape) 4.dp else 8.dp
                                         )
                                 )
 

@@ -574,6 +574,7 @@ fun HeaderData(
     alignStart: Boolean = false,
 ) {
     val amountFormatter = LocalCurrencyFormatter.current
+    val compactLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -581,7 +582,8 @@ fun HeaderData(
     ) {
         Text(
             text = displayTitle,
-            style = MaterialTheme.typography.titleMedium.copy(
+            style = (if (compactLandscape) MaterialTheme.typography.titleSmall
+                     else MaterialTheme.typography.titleMedium).copy(
                 fontWeight = FontWeight.SemiBold
             ),
         )
@@ -596,7 +598,8 @@ fun HeaderData(
             modifier = Modifier
                 .testTag(TEST_TAG_GROUP_SUMMARY)
                 .fillMaxWidth()
-                .padding(top = 4.dp, bottom = 2.dp),
+                .padding(top = if (compactLandscape) 0.dp else 4.dp,
+                         bottom = if (compactLandscape) 0.dp else 2.dp),
             horizontalArrangement = if (alignStart) Arrangement.Start else Arrangement.Center
         ) {
             if (!showOnlyDelta) {

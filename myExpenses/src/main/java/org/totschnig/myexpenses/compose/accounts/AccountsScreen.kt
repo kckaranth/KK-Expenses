@@ -113,7 +113,9 @@ fun AccountsScreen(
         viewModel.listState.isScrollInProgress
 val hideAccountFab =
         selectedTab.value != AccountsScreenTab.LIST ||
-            isAccountListScrolling
+            isAccountListScrolling ||
+            viewModel.listState.firstVisibleItemIndex > 0 ||
+            viewModel.listState.firstVisibleItemScrollOffset > 0
 
     val accountEntryFocusRequester = remember { FocusRequester() }
 
@@ -240,6 +242,7 @@ val hideAccountFab =
             ) {
                 FloatingActionButtonMenu(
                 modifier = Modifier.testTag(TEST_TAG_FAB_ACCOUNTS),
+                arthvexaCompact = true,
                 primaryAction = Action.AddAccount,
                 actions = listOf(Action.AddAccount, Action.AddPortfolio),
                 onAction = { action ->

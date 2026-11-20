@@ -12,10 +12,10 @@ import org.totschnig.myexpenses.model.CurrencyUnit
 import org.totschnig.myexpenses.model.Money
 import org.totschnig.myexpenses.prefHandler
 import org.totschnig.myexpenses.preference.PrefKey
+import java.math.BigDecimal
 import java.util.*
 
 class CurrencyFormatterTest {
-    //TODO extend
     private lateinit var currencyFormatter: CurrencyFormatter
     private lateinit var application: MyApplication
 
@@ -24,6 +24,35 @@ class CurrencyFormatterTest {
         whenever(prefHandler.getString(eq(PrefKey.CUSTOM_DECIMAL_FORMAT), any())).thenReturn("")
         application = mock()
         currencyFormatter = CurrencyFormatter(prefHandler, application)
+    }
+
+    @Test
+    fun testUsdFractionDigitsAndNegativeAmount() {
+        whenever(application.userPreferredLocale).thenReturn(Locale.US)
+        val usd = CurrencyUnit("USD", "$", 2)
+
+        assertThat(currencyFormatter.formatCurrency(BigDecimal("1234.5"), usd))
+            .isEqualTo("$1,234.50")
+        assertThat(currencyFormatter.formatCurrency(BigDecimal("-12.34"), usd))
+            .isEqualTo("−$12.34")
+    }
+
+    @Test
+    fun testZeroFractionCurrencyDoesNotDisplayDecimals() {
+        whenever(application.userPreferredLocale).thenReturn(Locale.US)
+        val jpy = CurrencyUnit("JPY", "¥", 0)
+
+        assertThat(currencyFormatter.formatCurrency(BigDecimal("1234"), jpy))
+            .isEqualTo("¥1,234")
+    }
+
+    @Test
+    fun testThreeFractionCurrencyPreservesPrecision() {
+        whenever(application.userPreferredLocale).thenReturn(Locale.US)
+        val kwd = CurrencyUnit("KWD", "KD", 3)
+
+        val formatted = currencyFormatter.formatCurrency(BigDecimal("1.234"), kwd)
+        assertThat(formatted).contains("1.234")
     }
 
     @Test

@@ -288,7 +288,7 @@ private fun ArthvexaMonthlyPeriodHeader(
             ) {
                 Column {
                     Text(
-                        if (insightsMode) "Financial analysis" else "Monthly activity",
+                        if (insightsMode) "Financial analysis" else "Monthly snapshot",
                         style = MaterialTheme.typography.titleLarge
                     )
                     Text(

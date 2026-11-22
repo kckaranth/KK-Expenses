@@ -522,6 +522,10 @@ fun MainScreenAdaptive(
                         showInsights = false
                         scope.launch { navigator.navigateToRoot(ListDetailPaneScaffoldRole.Detail) }
                     },
+                    onInsights = {
+                        showHome = false
+                        showInsights = true
+                    },
                     onQuickTransaction = { action ->
                         onAppEvent(AppEvent.CreateTransaction(action))
                     },
@@ -687,6 +691,7 @@ private fun KKHomeDashboard(
     onAccountOverviewExpandedChange: (Boolean) -> Unit,
     onAccounts: () -> Unit,
     onTransactions: () -> Unit,
+    onInsights: () -> Unit,
     onQuickTransaction: (Action) -> Unit,
 ) {
     val formatter = LocalCurrencyFormatter.current
@@ -903,9 +908,12 @@ accounts.forEach { account ->
 
         KKMonthlyActivity(
             accounts = accounts,
-            expanded = monthlyActivityExpanded,
-            onExpandedChange = onMonthlyActivityExpandedChange
+            expanded = false,
+            onExpandedChange = { onInsights() }
         )
+        OutlinedButton(onClick = onInsights, modifier = Modifier.fillMaxWidth()) {
+            Text("Explore detailed insights")
+        }
 
         Surface(
             modifier = Modifier.fillMaxWidth(),

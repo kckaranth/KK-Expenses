@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -66,6 +67,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalResources
@@ -461,10 +463,17 @@ fun TransactionScreen(
             }
         }
 
+        // Keep portrait rows full width. While the FAB is visible, reserve a
+        // vertical dock below the list instead of covering transaction amounts.
+        // The landscape list retains its existing horizontal FAB clearance.
+        val portraitFabDock =
+            LocalConfiguration.current.orientation != Configuration.ORIENTATION_LANDSCAPE &&
+                transactionListAwayFromTop[currentAccount.id] != true
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .padding(bottom = if (portraitFabDock) 88.dp else 0.dp)
                 .nestedScroll(tabRowState.nestedScrollConnection)
         ) {
             if (availableFilters.size > 1 || accountList.size > 1) {

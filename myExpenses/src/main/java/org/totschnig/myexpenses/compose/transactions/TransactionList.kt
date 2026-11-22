@@ -335,15 +335,10 @@ fun TransactionList(
 
             val nestedScrollInterop = rememberNestedScrollInteropConnection()
             val context = LocalContext.current
-            val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
-            val fabVisible = LocalTransactionFabVisible.current
-            // Keep portrait rows full width once the FAB hides on scroll.
-            // Reserve end-side space only when the menu can cover the amount column.
-            val fabEndInset = when {
-                isLandscape -> 112.dp
-                fabVisible -> 88.dp
-                else -> 0.dp
-            }
+            // Preserve landscape clearance; portrait rows and the Total header stay full width.
+            val fabEndInset = if (
+                LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+            ) 112.dp else 0.dp
             val amountFormatter = LocalCurrencyFormatter.current
 
             LazyColumnWithScrollbar(

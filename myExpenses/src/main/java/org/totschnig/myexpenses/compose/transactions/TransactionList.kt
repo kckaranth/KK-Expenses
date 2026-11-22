@@ -223,6 +223,9 @@ interface HeaderEventHandler {
 internal val LocalTransactionListScrollReporter =
     compositionLocalOf<((Boolean) -> Unit)?> { null }
 
+// Supplied by TransactionScreen: reserve portrait FAB clearance only while visible.
+internal val LocalTransactionFabVisible = compositionLocalOf { false }
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TransactionList(
@@ -332,16 +335,22 @@ fun TransactionList(
 
             val nestedScrollInterop = rememberNestedScrollInteropConnection()
             val context = LocalContext.current
-            val landscapeFabEndInset = if (
-                LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
-            ) 112.dp else 0.dp
+            val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+            val fabVisible = LocalTransactionFabVisible.current
+            // Keep portrait rows full width once the FAB hides on scroll.
+            // Reserve end-side space only when the menu can cover the amount column.
+            val fabEndInset = when {
+                isLandscape -> 112.dp
+                fabVisible -> 88.dp
+                else -> 0.dp
+            }
             val amountFormatter = LocalCurrencyFormatter.current
 
             LazyColumnWithScrollbar(
                 // Keep full-width transaction rows and their amounts clear of the landscape FAB.
                 // Modifier.end padding follows RTL layout direction and also moves the scrollbar.
                 modifier = modifier
-                    .padding(end = landscapeFabEndInset)
+                    .padding(end = fabEndInset)
                     .nestedScroll(nestedScrollInterop),
                 state = listState,
                 fastScroll = true,

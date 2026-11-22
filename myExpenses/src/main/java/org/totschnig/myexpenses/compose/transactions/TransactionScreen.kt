@@ -559,7 +559,8 @@ fun TransactionScreen(
                         CompositionLocalProvider(
                             LocalTransactionListScrollReporter provides { awayFromTop ->
                                 transactionListAwayFromTop[accountList[page].id] = awayFromTop
-                            }
+                            ,
+                            LocalTransactionFabVisible provides (transactionListAwayFromTop[accountList[page].id] != true)
                         ) {
                             TransactionListPage(accountList[page], isCurrentPage, pageContent)
                         }
@@ -569,7 +570,8 @@ fun TransactionScreen(
                 CompositionLocalProvider(
                     LocalTransactionListScrollReporter provides { awayFromTop ->
                         transactionListAwayFromTop[accountList.first().id] = awayFromTop
-                    }
+                    ,
+                    LocalTransactionFabVisible provides (transactionListAwayFromTop[accountList.first().id] != true)
                 ) {
                     TransactionListPage(accountList.first(), true, pageContent)
                 }

@@ -123,9 +123,9 @@ class TransferTest : BaseTestWithRepository() {
         contentResolver.update(
             TransactionProvider.TRANSACTIONS_URI.buildUpon()
                 .appendPath(TransactionProvider.URI_SEGMENT_LINK_TRANSFER)
-                .appendPath(transfer.data.uuid)
+                .appendPath(transfer.uuid)
                 .build(),
-            ContentValues(1).apply { put(KEY_UUID, peer.data.uuid) },
+            ContentValues(1).apply { put(KEY_UUID, peer.uuid) },
             null, null
         )
         verifyTransaction(transfer.id, peer.id, testAccount1, testAccount2)

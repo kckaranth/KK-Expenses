@@ -101,4 +101,34 @@ class TransferTest : BaseTestWithRepository() {
         verifyTransaction(id, transferPeer, testAccount1, testAccount2)
         verifyTransaction(transferPeer, id, testAccount2, testAccount1)
     }
+
+    @Test
+    fun unlinkAndRelinkTransferPreservesBothAccounts() {
+        val (transfer, peerNullable) = repository.insertTransfer(testAccount1, testAccount2, 500)
+        val peer = requireNotNull(peerNullable)
+
+        verifyTransaction(transfer.id, peer.id, testAccount1, testAccount2)
+        verifyTransaction(peer.id, transfer.id, testAccount2, testAccount1)
+
+        contentResolver.update(
+            ContentUris.appendId(
+                TransactionProvider.TRANSACTIONS_URI.buildUpon()
+                    .appendPath(TransactionProvider.URI_SEGMENT_UNLINK_TRANSFER),
+                transfer.id
+            ).build(), null, null, null
+        )
+        verifyTransaction(transfer.id, null, testAccount1, null)
+        verifyTransaction(peer.id, null, testAccount2, null)
+
+        contentResolver.update(
+            TransactionProvider.TRANSACTIONS_URI.buildUpon()
+                .appendPath(TransactionProvider.URI_SEGMENT_LINK_TRANSFER)
+                .appendPath(transfer.data.uuid)
+                .build(),
+            ContentValues(1).apply { put(KEY_UUID, peer.data.uuid) },
+            null, null
+        )
+        verifyTransaction(transfer.id, peer.id, testAccount1, testAccount2)
+        verifyTransaction(peer.id, transfer.id, testAccount2, testAccount1)
+    }
 }

@@ -77,6 +77,9 @@ import java.time.YearMonth
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+// Process-local Insights selection; independent of the Home monthly snapshot.
+private var lastInsightsMonthIso: String = LocalDate.now().withDayOfMonth(1).toString()
+
 private data class MonthlyAccountSummary(
     val current: List<ActivityEntry>,
     val previous: List<ActivityEntry>,
@@ -368,7 +371,14 @@ internal fun KKMonthlyActivity(
     // Save a String rather than LocalDate, which has no default Bundle saver.
     // Keep month selection when Insights is recreated by navigation or rotation.
     var selectedMonthIso by rememberSaveable {
-        mutableStateOf(LocalDate.now().withDayOfMonth(1).toString())
+        mutableStateOf(
+            if (insightsMode) lastInsightsMonthIso
+            else LocalDate.now().withDayOfMonth(1).toString()
+        )
+    }
+    // Keep Insights month across bottom-tab disposal, without changing Home's month.
+    LaunchedEffect(insightsMode, selectedMonthIso) {
+        if (insightsMode) lastInsightsMonthIso = selectedMonthIso
     }
     val selectedMonth = LocalDate.parse(selectedMonthIso)
     // Observe upstream provider notifications, including edits/deletions from the legacy editor.

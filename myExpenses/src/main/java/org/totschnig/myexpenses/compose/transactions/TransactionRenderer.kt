@@ -692,7 +692,9 @@ class NewTransactionRenderer(
                 Text(
                     text = it.format(transaction.date),
                     style = MaterialTheme.typography.bodySmall.copy(fontFeatureSettings = "tnum"),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    softWrap = false
                 )
             }
         }

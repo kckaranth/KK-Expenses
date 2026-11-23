@@ -590,6 +590,8 @@ fun HeaderData(
                      else MaterialTheme.typography.titleMedium).copy(
                 fontWeight = FontWeight.SemiBold
             ),
+            maxLines = 2,
+            textAlign = if (alignStart) TextAlign.Start else TextAlign.Center
         )
         val delta = " " +
                 (if (headerRow.delta.amountMinor >= 0) "+" else "\u2212") + " " + amountFormatter.formatMoney(

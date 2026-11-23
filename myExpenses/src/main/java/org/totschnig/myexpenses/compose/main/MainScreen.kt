@@ -698,7 +698,7 @@ private fun KKHomeDashboard(
 
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         ArthvexaBrandMark()
         Text("Your Finances. In Focus.", color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -906,29 +906,14 @@ accounts.forEach { account ->
                 }
             }
 
-        var homeMonthlyExpanded by remember { mutableStateOf(false) }
         KKMonthlyActivity(
             accounts = accounts,
-            expanded = homeMonthlyExpanded,
-            onExpandedChange = { homeMonthlyExpanded = it }
+            expanded = monthlyActivityExpanded,
+            onExpandedChange = onMonthlyActivityExpandedChange
         )
         OutlinedButton(onClick = onInsights, modifier = Modifier.fillMaxWidth()) {
             Text("Explore detailed insights")
         }
 
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.surfaceVariant,
-        ) {
-            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("Private by design", style = MaterialTheme.typography.titleSmall)
-                Text(
-                    "Balances come from your existing local database. This dashboard does not change transactions or account data.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-        }
     }
 }

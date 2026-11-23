@@ -66,10 +66,10 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
         ArthvexaBrandMark()
         Text("Insights", style = MaterialTheme.typography.headlineSmall)
         Text(
-            "Spending patterns, monthly comparisons and financial trends",
+            "Spending categories, monthly comparisons and six-month trends",
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        Text("Accounts", style = MaterialTheme.typography.titleSmall)
+        Text("Analyze account", style = MaterialTheme.typography.titleSmall)
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
             state = accountChipListState,

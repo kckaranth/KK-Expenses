@@ -1305,6 +1305,56 @@ internal fun KKMonthlyActivity(
                         landscapeLeftFooter = { CategoryChangesPanel() }
                     )
 
+                    // Concentration uses the same category totals as the donut chart.
+                    // Do not aggregate across accounts or currencies.
+                    val concentrationCategories = monthlySummary.currentCategorySpending
+                        .filterValues { it > 0L }
+                        .toList()
+                        .sortedWith(compareByDescending<Pair<Long, Long>> { it.second }.thenBy { it.first })
+                    val concentrationTotal = concentrationCategories.sumOf { it.second.toDouble() }
+                    if (insightsMode && concentrationTotal > 0.0) {
+                        val leading = concentrationCategories.take(3)
+                        val leadingAmount = leading.sumOf { it.second.toDouble() }
+                        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Text("Spending concentration", style = MaterialTheme.typography.titleSmall)
+                            Text(
+                                String.format(
+                                    java.util.Locale.getDefault(),
+                                    "Top %d categories account for %.1f%% of category spending",
+                                    leading.size,
+                                    leadingAmount / concentrationTotal * 100.0
+                                ),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            leading.forEach { (categoryId, amount) ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        data.categories[categoryId]?.ifBlank { "Uncategorized" }
+                                            ?: "Uncategorized",
+                                        modifier = Modifier.weight(1f),
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis,
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                    Text(
+                                        String.format(
+                                            java.util.Locale.getDefault(),
+                                            "%.1f%%",
+                                            amount.toDouble() / concentrationTotal * 100.0
+                                        ),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        textAlign = TextAlign.End
+                                    )
+                                }
+                            }
+                        }
+                    }
+
                     val reconciliation = monthlySummary.reconciliation
 
                     if (reconciliation.reconciliationDifference != 0L) {

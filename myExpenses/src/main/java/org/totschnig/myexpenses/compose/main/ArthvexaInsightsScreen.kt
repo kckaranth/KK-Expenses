@@ -24,13 +24,22 @@ import androidx.compose.ui.unit.dp
 import org.totschnig.myexpenses.compose.ArthvexaBrandMark
 import org.totschnig.myexpenses.viewmodel.data.FullAccount
 
+// Retain the last Insights account across bottom-navigation screen disposal/recreation.
+// This is UI-only process state, independent of the Transactions account selection.
+private var lastInsightsAccountId by mutableStateOf<Long?>(null)
+
 /** Read-only account insights. Values use existing account calculations and currencies. */
 @Composable
 internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
     var monthlyExpanded by rememberSaveable { mutableStateOf(true) }
     // Preserve a valid account selection; never combine currencies into a total.
-    var selectedAccountId by rememberSaveable { mutableStateOf<Long?>(null) }
+    var selectedAccountId by rememberSaveable { mutableStateOf(lastInsightsAccountId) }
     val activeAccounts = accounts.filter { it.id > 0 }
+    // Keep the selection when this composable leaves the navigation hierarchy.
+    // If an account disappears, the existing validity check selects a fallback.
+    LaunchedEffect(selectedAccountId) {
+        lastInsightsAccountId = selectedAccountId
+    }
     val accountChipListState = rememberLazyListState()
     LaunchedEffect(activeAccounts.map { it.id }) {
         if (selectedAccountId == null && activeAccounts.isNotEmpty()) {

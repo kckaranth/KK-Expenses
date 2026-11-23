@@ -906,10 +906,11 @@ accounts.forEach { account ->
                 }
             }
 
+        var homeMonthlyExpanded by rememberSaveable { mutableStateOf(false) }
         KKMonthlyActivity(
             accounts = accounts,
-            expanded = false,
-            onExpandedChange = { onInsights() }
+            expanded = homeMonthlyExpanded,
+            onExpandedChange = { homeMonthlyExpanded = it }
         )
         OutlinedButton(onClick = onInsights, modifier = Modifier.fillMaxWidth()) {
             Text("Explore detailed insights")

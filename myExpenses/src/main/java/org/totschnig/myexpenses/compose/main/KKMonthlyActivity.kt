@@ -401,7 +401,7 @@ internal fun KKMonthlyActivity(
                 onNextMonth = { selectedMonth = selectedMonth.plusMonths(1) },
                 onExpandedChange = onExpandedChange
             )
-            if (!expanded) {
+            if (!expanded || !insightsMode) {
                 if (error) {
                     Text(
                         "Monthly snapshot is temporarily unavailable.",
@@ -445,6 +445,20 @@ internal fun KKMonthlyActivity(
                                 )
                             }
 
+                            if (!expanded) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(account.label, style = MaterialTheme.typography.bodyMedium)
+                                    Text(
+                                        formatter.convAmount(summary.netCashFlow, account.currencyUnit),
+                                        color = arthvexaFinancialColor("net", summary.netCashFlow),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                }
+                            } else {
                             ArthvexaMonthlyAccountCard {
                             Column(
                                 verticalArrangement =
@@ -532,20 +546,21 @@ internal fun KKMonthlyActivity(
                             }
                             }
 
+                            }
                             HorizontalDivider()
                         }
                     }
 
                     Text(
-                        "Expand for trends, comparisons, and category spending. " +
-                            "Currencies remain separate.",
+                        if (insightsMode) "Expand for trends, comparisons, and category spending. Currencies remain separate."
+                        else "Net cash flow by account. Expand for income and expense details. Currencies remain separate.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
-            if (expanded) {
+            if (expanded && insightsMode) {
             if (error) {
                 Text("Monthly activity is temporarily unavailable. Account balances are unaffected.")
             } else if (data == null) {

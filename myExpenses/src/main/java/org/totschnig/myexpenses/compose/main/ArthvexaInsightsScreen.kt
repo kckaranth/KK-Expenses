@@ -28,7 +28,7 @@ import org.totschnig.myexpenses.viewmodel.data.FullAccount
 @Composable
 internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
     var monthlyExpanded by rememberSaveable { mutableStateOf(true) }
-    // A null selection means all accounts; never combine their currencies into a total.
+    // Preserve a valid account selection; never combine currencies into a total.
     var selectedAccountId by rememberSaveable { mutableStateOf<Long?>(null) }
     val activeAccounts = accounts.filter { it.id > 0 }
     val accountChipListState = rememberLazyListState()
@@ -39,13 +39,16 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
             selectedAccountId = activeAccounts.firstOrNull()?.id
         }
     }
-    val selectedChipIndex = activeAccounts.indexOfFirst { it.id == selectedAccountId } + 1
+    val effectiveAccountId = selectedAccountId?.takeIf { id ->
+        activeAccounts.any { it.id == id }
+    } ?: activeAccounts.firstOrNull()?.id
+    val selectedChipIndex = activeAccounts.indexOfFirst { it.id == effectiveAccountId }
     LaunchedEffect(selectedChipIndex) {
-        accountChipListState.animateScrollToItem(selectedChipIndex.coerceAtLeast(0))
+        if (selectedChipIndex >= 0) accountChipListState.animateScrollToItem(selectedChipIndex)
     }
 
     val visibleAccounts = activeAccounts.filter {
-        selectedAccountId == null || it.id == selectedAccountId
+        it.id == effectiveAccountId
     }
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
@@ -63,20 +66,15 @@ internal fun ArthvexaInsightsScreen(accounts: List<FullAccount>) {
             state = accountChipListState,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            item { FilterChip(
-                selected = selectedAccountId == null,
-                onClick = { selectedAccountId = null },
-                label = { Text("All accounts") },
-            ) }
             itemsIndexed(activeAccounts, key = { _, account -> account.id }) { _, account ->
                 FilterChip(
-                    selected = selectedAccountId == account.id,
+                    selected = effectiveAccountId == account.id,
                     onClick = { selectedAccountId = account.id },
                     label = { Text(account.label) },
                 )
             }
         }
-        if (selectedAccountId != null) {
+        if (effectiveAccountId != null) {
             // A single account is the only input to detailed analytics. This avoids
             // stacking full charts for every account and never combines currencies.
             KKMonthlyActivity(

@@ -906,7 +906,7 @@ accounts.forEach { account ->
                 }
             }
 
-        var homeMonthlyExpanded by rememberSaveable { mutableStateOf(false) }
+        var homeMonthlyExpanded by remember { mutableStateOf(false) }
         KKMonthlyActivity(
             accounts = accounts,
             expanded = homeMonthlyExpanded,

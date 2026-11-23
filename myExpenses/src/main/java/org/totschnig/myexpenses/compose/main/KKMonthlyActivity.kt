@@ -41,6 +41,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.key
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -364,9 +365,12 @@ internal fun KKMonthlyActivity(
     var expandedAccounts by remember(insightsMode, accounts.map { it.id }) {
         mutableStateOf(if (insightsMode) accounts.filter { it.id > 0 }.map { it.id }.toSet() else emptySet())
     }
-    var selectedMonth by remember {
-        mutableStateOf(LocalDate.now().withDayOfMonth(1))
+    // Save a String rather than LocalDate, which has no default Bundle saver.
+    // Keep month selection when Insights is recreated by navigation or rotation.
+    var selectedMonthIso by rememberSaveable {
+        mutableStateOf(LocalDate.now().withDayOfMonth(1).toString())
     }
+    val selectedMonth = LocalDate.parse(selectedMonthIso)
     // Observe upstream provider notifications, including edits/deletions from the legacy editor.
     DisposableEffect(context) {
         val observer = object : ContentObserver(Handler(Looper.getMainLooper())) {
@@ -397,8 +401,8 @@ internal fun KKMonthlyActivity(
                 monthStart = monthStart,
                 currentMonth = currentMonth,
                 expanded = expanded,
-                onPreviousMonth = { selectedMonth = selectedMonth.minusMonths(1) },
-                onNextMonth = { selectedMonth = selectedMonth.plusMonths(1) },
+                onPreviousMonth = { selectedMonthIso = selectedMonth.minusMonths(1).toString() },
+                onNextMonth = { selectedMonthIso = selectedMonth.plusMonths(1).toString() },
                 onExpandedChange = onExpandedChange
             )
             if (!expanded || !insightsMode) {
@@ -1305,8 +1309,8 @@ internal fun KKMonthlyActivity(
                         landscapeLeftFooter = { CategoryChangesPanel() }
                     )
 
-                    // Concentration uses the same category totals as the donut chart.
-                    // Do not aggregate across accounts or currencies.
+                    // Compact, read-only concentration summary. The full category
+                    // breakdown above remains the single source for category details.
                     val concentrationCategories = monthlySummary.currentCategorySpending
                         .filterValues { it > 0L }
                         .toList()
@@ -1320,38 +1324,17 @@ internal fun KKMonthlyActivity(
                             Text(
                                 String.format(
                                     java.util.Locale.getDefault(),
-                                    "Top %d categories account for %.1f%% of category spending",
+                                    "Top %d categories: %.1f%% of category spending",
                                     leading.size,
                                     leadingAmount / concentrationTotal * 100.0
                                 ),
-                                style = MaterialTheme.typography.bodySmall,
+                                style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                            leading.forEach { (categoryId, amount) ->
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        data.categories[categoryId]?.ifBlank { "Uncategorized" }
-                                            ?: "Uncategorized",
-                                        modifier = Modifier.weight(1f),
-                                        maxLines = 2,
-                                        overflow = TextOverflow.Ellipsis,
-                                        style = MaterialTheme.typography.bodySmall
-                                    )
-                                    Text(
-                                        String.format(
-                                            java.util.Locale.getDefault(),
-                                            "%.1f%%",
-                                            amount.toDouble() / concentrationTotal * 100.0
-                                        ),
-                                        style = MaterialTheme.typography.bodySmall,
-                                        textAlign = TextAlign.End
-                                    )
-                                }
-                            }
+                            Text(
+                                formatter.convAmount(leading.sumOf { it.second }, account.currencyUnit),
+                                style = MaterialTheme.typography.titleMedium
+                            )
                         }
                     }
 

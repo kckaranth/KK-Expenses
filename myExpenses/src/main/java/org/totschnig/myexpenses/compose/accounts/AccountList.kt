@@ -187,7 +187,7 @@ fun KKDirectAccountList(
                                     account.label,
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.SemiBold,
-                                    maxLines = 1,
+                                    maxLines = if (isLandscape) 1 else 2,
                                     overflow = TextOverflow.Ellipsis
                                 )
                                 Text(
@@ -211,7 +211,7 @@ fun KKDirectAccountList(
                                         account.openingBalance,
                                         account.currencyUnit
                                     ),
-                                    style = MaterialTheme.typography.bodyLarge,
+                                    style = MaterialTheme.typography.bodyLarge.copy(fontFeatureSettings = "tnum"),
                                     fontWeight = FontWeight.Medium,
                                     softWrap = true
                                 )
@@ -249,7 +249,7 @@ fun KKDirectAccountList(
                                         account.currencyUnit
                                     ),
                                     color = MaterialTheme.colorScheme.primary,
-                                    style = MaterialTheme.typography.bodyMedium
+                                    style = MaterialTheme.typography.bodyMedium.copy(fontFeatureSettings = "tnum")
                                 )
                             }
 
@@ -267,7 +267,7 @@ fun KKDirectAccountList(
                                         account.currencyUnit
                                     ),
                                     color = MaterialTheme.colorScheme.error,
-                                    style = MaterialTheme.typography.bodyMedium
+                                    style = MaterialTheme.typography.bodyMedium.copy(fontFeatureSettings = "tnum")
                                 )
                             }
                         }

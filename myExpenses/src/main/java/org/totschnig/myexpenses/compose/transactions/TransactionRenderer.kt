@@ -691,7 +691,7 @@ class NewTransactionRenderer(
             dateTimeFormatter?.let {
                 Text(
                     text = it.format(transaction.date),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodySmall.copy(fontFeatureSettings = "tnum"),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }

@@ -208,7 +208,11 @@ val hideAccountFab =
 
                                     options.forEach { (mode, label) ->
                                         DropdownMenuItem(
-                                            text = { Text(label) },
+                                            text = {
+                                                Text(
+                                                    if (accountSortMode == mode) "✓ $label" else label
+                                                )
+                                            },
                                             onClick = {
                                                 accountSortMode = mode
                                                 accountSortMenuExpanded = false
@@ -452,12 +456,14 @@ val hideAccountFab =
 
                                     filteredAccounts.isEmpty() -> {
                                         Text(
-                                            "No matching accounts",
+                                            "No accounts match \"$query\". Clear search to show all accounts.",
                                             modifier = Modifier.padding(24.dp)
                                         )
                                     }
 
                                     else -> {
+                                        // Search and sorting operate on the existing account data;
+                                        // no balances or financial aggregates are recomputed.
                                         KKDirectAccountList(
                                             modifier = Modifier.weight(1f),
                                             accountData = sortedAccounts,

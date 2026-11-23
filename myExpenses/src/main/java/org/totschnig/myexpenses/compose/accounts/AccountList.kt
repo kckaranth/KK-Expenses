@@ -65,6 +65,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -188,7 +190,8 @@ fun KKDirectAccountList(
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.SemiBold,
                                     maxLines = if (isLandscape) 1 else 2,
-                                    overflow = TextOverflow.Ellipsis
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.semantics { heading() }
                                 )
                                 Text(
                                     account.currencyUnit.code,
@@ -213,7 +216,8 @@ fun KKDirectAccountList(
                                     ),
                                     style = MaterialTheme.typography.bodyLarge.copy(fontFeatureSettings = "tnum"),
                                     fontWeight = FontWeight.Medium,
-                                    softWrap = true
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                             }
 
@@ -249,7 +253,9 @@ fun KKDirectAccountList(
                                         account.currencyUnit
                                     ),
                                     color = MaterialTheme.colorScheme.primary,
-                                    style = MaterialTheme.typography.bodyMedium.copy(fontFeatureSettings = "tnum")
+                                    style = MaterialTheme.typography.bodyMedium.copy(fontFeatureSettings = "tnum"),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                             }
 
@@ -267,7 +273,9 @@ fun KKDirectAccountList(
                                         account.currencyUnit
                                     ),
                                     color = MaterialTheme.colorScheme.error,
-                                    style = MaterialTheme.typography.bodyMedium.copy(fontFeatureSettings = "tnum")
+                                    style = MaterialTheme.typography.bodyMedium.copy(fontFeatureSettings = "tnum"),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                             }
                         }

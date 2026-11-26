@@ -54,7 +54,8 @@ internal fun KKCategoryDistributionChart(
     currency: CurrencyUnit,
     modifier: Modifier = Modifier,
     compact: Boolean = false,
-    landscapeLeftFooter: @Composable () -> Unit = {}
+    landscapeLeftFooter: @Composable () -> Unit = {},
+    onViewCategory: ((Long) -> Unit)? = null
 ) {
     val formatter = LocalCurrencyFormatter.current
 
@@ -205,6 +206,11 @@ internal fun KKCategoryDistributionChart(
                     modifier = Modifier.fillMaxWidth()
                 )
 
+                if (!selected.third && onViewCategory != null) {
+                    TextButton(onClick = { onViewCategory(selected.first) }) {
+                        Text("View category entries")
+                    }
+                }
             }
 
             @Composable

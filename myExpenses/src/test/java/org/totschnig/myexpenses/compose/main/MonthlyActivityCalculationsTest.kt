@@ -732,4 +732,15 @@ class MonthlyActivityCalculationsTest {
             10L, result.topCategoryId
         )
     }
+    @Test
+    fun insightDetailsUseParentTotalsAndAllocatedCategoryExpenses() {
+        val month = java.time.YearMonth.of(2026, 11)
+        val zone = java.time.ZoneOffset.UTC
+        val start = month.atDay(1).atStartOfDay(zone).toEpochSecond()
+        val parents = listOf(entry(1, 1, -1000, 0, start), entry(2, 1, 200, 3, start))
+        val parts = listOf(entry(3, 1, -600, 4, start), entry(4, 1, -400, 5, start), entry(5, 1, 100, 4, start), entry(6, 1, -50, 4, start - 1))
+        assertThat(incomeExpenseTotals(insightDetailEntries(parents, parts, month, null, zone))).isEqualTo(200L to -1000L)
+        assertThat(insightDetailEntries(parents, parts, month, 4L, zone).map { it.id }).containsExactly(3L)
+        assertThat(repeatedExpenseCategories(parts, month, zone)).containsExactly(4L to 600L)
+    }
 }

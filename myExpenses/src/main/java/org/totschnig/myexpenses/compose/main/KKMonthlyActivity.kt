@@ -24,6 +24,10 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.AlertDialog
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.Surface
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -783,6 +787,8 @@ internal fun KKMonthlyActivity(
                     }
                     }
                     if (account.id in expandedAccounts) {
+                    var detailMonth by remember(monthStart, account.id) { mutableStateOf<YearMonth?>(null) }
+                    var detailCategory by remember(monthStart, account.id) { mutableStateOf<Long?>(null) }
                     val trendPoints = remember(
                         data,
                         monthStart,
@@ -967,6 +973,10 @@ internal fun KKMonthlyActivity(
                     MonthlyActivityTrendChart(
                         points = trendPoints,
                         currency = account.currencyUnit,
+                        onViewMonth = if (insightsMode) { month ->
+                            detailCategory = null
+                            detailMonth = month
+                        } else null,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 6.dp)
@@ -1316,7 +1326,11 @@ internal fun KKMonthlyActivity(
                         currency = account.currencyUnit,
                         compact = insightsMode,
                         modifier = Modifier.fillMaxWidth(),
-                        landscapeLeftFooter = { CategoryChangesPanel() }
+                        landscapeLeftFooter = { CategoryChangesPanel() },
+                        onViewCategory = if (insightsMode) { category ->
+                            detailCategory = category
+                            detailMonth = YearMonth.from(monthStart)
+                        } else null
                     )
 
                     // Compact, read-only concentration summary. The full category
@@ -1441,6 +1455,55 @@ internal fun KKMonthlyActivity(
                         modifier = Modifier.height(if (insightsMode) 12.dp else 8.dp)
                     )
                     CategoryDistributionPanel()
+                    if (insightsMode) {
+                        val repeated = remember(accountCategoryEntries, monthStart, zone) {
+                            repeatedExpenseCategories(accountCategoryEntries, YearMonth.from(monthStart), zone)
+                        }
+                        if (repeated.isNotEmpty()) {
+                            Text("Repeated spending categories", style = MaterialTheme.typography.titleSmall)
+                            Text("Expenses in both this month and the previous month. Not scheduled payments.", style = MaterialTheme.typography.bodySmall)
+                            repeated.forEach { (category, amount) ->
+                                TextButton(onClick = {
+                                    detailCategory = category
+                                    detailMonth = YearMonth.from(monthStart)
+                                }) {
+                                    Text((data.categories[category] ?: "Uncategorized") + " · " + formatter.convAmount(amount, account.currencyUnit))
+                                }
+                            }
+                        }
+                        detailMonth?.let { month ->
+                            val category = detailCategory
+                            val rows = remember(month, category, accountEntries, accountCategoryEntries, zone) {
+                                insightDetailEntries(accountEntries, accountCategoryEntries, month, category, zone)
+                            }
+                            AlertDialog(
+                                onDismissRequest = { detailMonth = null },
+                                title = { Text(if (category == null) "Monthly transactions" else data.categories[category] ?: "Uncategorized") },
+                                text = {
+                                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        Text(account.label + " · " + month.format(DateTimeFormatter.ofPattern("MMMM yyyy")))
+                                        Text(if (category == null) "Transfers excluded; split totals shown at parent level." else "Expense entries including allocated split parts.", style = MaterialTheme.typography.bodySmall)
+                                        val (detailIncome, detailExpense) = incomeExpenseTotals(rows)
+                                        Text("Income: " + formatter.convAmount(detailIncome, account.currencyUnit))
+                                        Text("Expenses: " + formatter.convAmount(-detailExpense, account.currencyUnit))
+                                        Text("${rows.size} entries", style = MaterialTheme.typography.labelMedium)
+                                        LazyColumn(Modifier.heightIn(max = 260.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                            items(rows) { entry ->
+                                                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                                    Column(Modifier.weight(1f)) {
+                                                        Text(entry.description.ifBlank { data.categories[entry.categoryId] ?: "Transaction" })
+                                                        Text(Instant.ofEpochSecond(entry.epoch).atZone(zone).toLocalDate().toString(), style = MaterialTheme.typography.bodySmall)
+                                                    }
+                                                    Text(formatter.convAmount(entry.amount, account.currencyUnit))
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { detailMonth = null }) { Text("Close") } }
+                            )
+                        }
+                    }
 
                     val byCategory =
                         monthlySummary.currentCategorySpending

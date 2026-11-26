@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import java.time.YearMonth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -55,7 +57,8 @@ internal fun minorUnitsToMajor(amount: Double, fractionDigits: Int): Double =
 internal fun MonthlyActivityTrendChart(
     points: List<MonthlyTrendPoint>,
     currency: CurrencyUnit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onViewMonth: ((YearMonth) -> Unit)? = null
 ) {
     if (points.isEmpty()) return
 
@@ -475,6 +478,11 @@ internal fun MonthlyActivityTrendChart(
             color = netColor,
             amountColor = semanticNetColor
         )
+        if (onViewMonth != null) {
+            TextButton(onClick = { onViewMonth(selected.month) }) {
+                Text("View month transactions")
+            }
+        }
     }
 }
 

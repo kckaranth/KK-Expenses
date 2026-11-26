@@ -248,3 +248,25 @@ internal fun hasMonthlyTrendActivity(
         it.expenses != 0L ||
         it.netCashFlow != 0L
 }
+
+// Read-only detail selection from the same eligible entries used by analytics.
+internal fun insightDetailEntries(
+    parents: List<ActivityEntry>, categories: List<ActivityEntry>,
+    month: java.time.YearMonth, category: Long?, zone: java.time.ZoneId
+): List<ActivityEntry> {
+    val start = month.atDay(1).atStartOfDay(zone).toEpochSecond()
+    val end = month.plusMonths(1).atDay(1).atStartOfDay(zone).toEpochSecond()
+    return (if (category == null) parents else categories.filter {
+        it.categoryId == category && it.amount < 0L
+    }).filter { it.epoch >= start && it.epoch < end }.sortedByDescending { it.epoch }
+}
+
+internal fun repeatedExpenseCategories(
+    entries: List<ActivityEntry>, month: java.time.YearMonth, zone: java.time.ZoneId
+): List<Pair<Long, Long>> {
+    val current = categorySpending(insightDetailEntries(entries, entries, month, null, zone))
+    val previous = categorySpending(insightDetailEntries(entries, entries, month.minusMonths(1), null, zone))
+    return current.filterKeys { it in previous }.toList()
+        .sortedWith(compareByDescending<Pair<Long, Long>> { it.second }.thenBy { it.first })
+        .take(5)
+}

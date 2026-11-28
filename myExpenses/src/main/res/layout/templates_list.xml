@@ -27,7 +27,9 @@
         android:layout_weight="1"
         android:clipToPadding="false"
         android:drawSelectorOnTop="false"
-        android:paddingBottom="75dp" />
+        android:paddingBottom="96dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp" />
 
     <TextView
         android:id="@+id/empty"

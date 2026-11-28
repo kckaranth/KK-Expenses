@@ -92,6 +92,7 @@ import org.totschnig.myexpenses.provider.KEY_ORIGINAL_CURRENCY
 import org.totschnig.myexpenses.provider.KEY_PARENTID
 import org.totschnig.myexpenses.provider.KEY_PATH
 import org.totschnig.myexpenses.provider.KEY_PAYEE_NAME
+import org.totschnig.myexpenses.provider.KEY_PLAN_EXECUTION
 import org.totschnig.myexpenses.provider.KEY_PLANID
 import org.totschnig.myexpenses.provider.KEY_PLAN_INFO
 import org.totschnig.myexpenses.provider.KEY_ROWID
@@ -737,6 +738,13 @@ class TemplatesList : SortableListFragment(), LoaderManager.LoaderCallbacks<Curs
                     TextUtils.concat(catText, COMMENT_SEPARATOR, ssb)
             }
             tv2.text = catText
+            with(view.findViewById<TextView>(R.id.arthvexaPlanSummary)) {
+                val execution = cursor.getIntIfExists(KEY_PLAN_EXECUTION)
+                isVisible = doesHavePlan && execution != null
+                text = if (doesHavePlan && execution != null) {
+                    getString(if (execution > 0) R.string.arthvexa_plan_auto else R.string.arthvexa_plan_manual)
+                } else ""
+            }
             view.findViewById<TextView>(R.id.Title).text = cursor.getString(KEY_TITLE) +
                     if (doesHavePlan)
                         " (" + (cursor.getStringIfExists(KEY_PLAN_INFO)

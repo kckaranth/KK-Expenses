@@ -17,7 +17,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/arthvexa_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -608,6 +609,7 @@
                     <Spinner
                         android:id="@+id/DefaultAction"
                         style="@style/ArthvexaEditorLabel"
+                        android:popupBackground="@color/arthvexa_surface_container_low"
                         android:entries="@array/template_default_action_entries" />
 
                 </TableRow>
@@ -627,6 +629,7 @@
                         <Spinner
                             android:id="@+id/Recurrence"
                             style="@style/RecurrenceRowRecurrence"
+                            android:popupBackground="@color/arthvexa_surface_container_low"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -695,7 +698,7 @@
                         android:id="@+id/advanceExecutionLabel"
                         style="@style/ArthvexaEditorLabel"
                         android:labelFor="@id/advanceExecutionSeek"
-                        android:text="@string/advance_exexcution_in_days" />
+                        android:text="@string/arthvexa_advance_days" />
 
                     <LinearLayout style="@style/ArthvexaEditorField">
 

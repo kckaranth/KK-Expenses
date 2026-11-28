@@ -10,6 +10,8 @@ import androidx.annotation.PluralsRes
 import androidx.appcompat.view.ActionMode
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.add
@@ -260,7 +262,7 @@ class ManageCategories : ProtectedFragmentActivity(),
                         finishActionMode()
                     }
                     val typeFlags = viewModel.typeFilterLiveData.observeAsState(null).value
-                    Column(modifier = Modifier.fillMaxSize()) {
+                    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
                         if (typeFlags != null) {
                             TypeConfiguration(
                                 modifier = Modifier.align(CenterHorizontally),
@@ -391,7 +393,7 @@ class ManageCategories : ProtectedFragmentActivity(),
                                         },
                                         choiceMode = choiceMode,
                                         contentPadding = WindowInsets.navigationBars
-                                            .add(WindowInsets(bottom = dimensionResource(R.dimen.fab_related_bottom_padding)))
+                                            .add(WindowInsets(bottom = dimensionResource(R.dimen.fab_related_bottom_padding) + 16.dp))
                                             .asPaddingValues()
                                     )
                                 }

@@ -17,12 +17,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="?android:attr/activatedBackgroundIndicator"
     android:orientation="horizontal"
     android:paddingHorizontal="@dimen/general_padding"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:paddingTop="14dp"
+    android:paddingBottom="14dp">
 
     <ImageView
         android:id="@+id/Plan"
@@ -49,7 +49,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
-        android:textStyle="bold"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/arthvexa_on_surface"
+        android:textStyle="normal"
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@id/barrier"
         app:layout_constraintStart_toEndOf="@id/colorAccount"
@@ -64,7 +66,21 @@
         app:layout_constraintEnd_toStartOf="@id/barrier"
         app:layout_constraintStart_toEndOf="@id/colorAccount"
         app:layout_constraintTop_toBottomOf="@id/Title"
+        android:textColor="@color/arthvexa_on_surface_variant"
         tools:text="CATEGORY very adfadsfadsf asdfasdfadsf asdfadsf asdfasdfadsf" />
+
+    <TextView
+        android:id="@+id/arthvexaPlanSummary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="4dp"
+        android:textSize="12sp"
+        android:textColor="@color/arthvexa_on_surface_variant"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/colorAccount"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
+        app:layout_constraintTop_toBottomOf="@id/Category" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier"

@@ -18,7 +18,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/activatedBackgroundIndicator"
+    android:background="@drawable/arthvexa_template_card"
     android:orientation="horizontal"
     android:paddingHorizontal="@dimen/general_padding"
     android:paddingTop="14dp"
@@ -70,6 +70,17 @@
         tools:text="CATEGORY very adfadsfadsf asdfasdfadsf asdfadsf asdfasdfadsf" />
 
     <TextView
+        android:id="@+id/arthvexaTemplateAccount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:textSize="12sp"
+        android:textColor="@color/arthvexa_on_surface_variant"
+        app:layout_constraintStart_toEndOf="@id/colorAccount"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
+        app:layout_constraintTop_toBottomOf="@id/Category" />
+
+    <TextView
         android:id="@+id/arthvexaPlanSummary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -80,7 +91,7 @@
         android:visibility="gone"
         app:layout_constraintStart_toEndOf="@id/colorAccount"
         app:layout_constraintEnd_toStartOf="@id/barrier"
-        app:layout_constraintTop_toBottomOf="@id/Category" />
+        app:layout_constraintTop_toBottomOf="@id/arthvexaTemplateAccount" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier"

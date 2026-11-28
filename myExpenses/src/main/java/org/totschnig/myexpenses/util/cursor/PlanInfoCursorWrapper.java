@@ -23,6 +23,7 @@ import java.util.Collections;
 
 public class PlanInfoCursorWrapper extends CursorWrapperHelper {
   private final Context context;
+  private final LongSparseArray<Long> upcoming = new LongSparseArray<>();
   private final LongSparseArray<String> planInfo = new LongSparseArray<>();
   private final SparseArrayCompat<Long> nextInstance = new SparseArrayCompat<>();
   private final ArrayList<Integer> sortedPositions = new ArrayList<>();
@@ -50,8 +51,15 @@ public class PlanInfoCursorWrapper extends CursorWrapperHelper {
         int wrappedPos = wrapped.getPosition();
         if ((planId = getLong(columnIndexPlanId)) != 0L) {
           plans.add(planId);
+          long next = Long.MAX_VALUE;
+          try {
+            next = getNextInstance(planId);
+          } catch (SecurityException ignored) {
+            // Calendar permission may have been revoked during loading.
+          }
+          upcoming.put(planId, next);
           if (shouldSortByNextInstance) {
-            nextInstance.put(wrappedPos, getNextInstance(planId));
+            nextInstance.put(wrappedPos, next);
           }
         }
         sortedPositions.add(wrappedPos);
@@ -124,7 +132,7 @@ public class PlanInfoCursorWrapper extends CursorWrapperHelper {
       Cursor c = context.getContentResolver().query(eventsUri, null,
           CalendarContract.Instances.EVENT_ID + " = ?",
           new String[]{String.valueOf(planId)},
-          null);
+          CalendarContract.Instances.BEGIN + " ASC");
       if (c != null) {
         if (c.moveToFirst()) {
           result = c.getLong(c.getColumnIndexOrThrow(CalendarContract.Instances.BEGIN));
@@ -147,6 +155,9 @@ public class PlanInfoCursorWrapper extends CursorWrapperHelper {
   @Override
   public int getColumnIndex(String columnName) {
     int result;
+    if (columnName.equals("arthvexa_next_occurrence")) {
+      return getColumnCount() + 1;
+    }
     if (columnName.equals(KEY_PLAN_INFO)) {
       result = getColumnCount();
     } else {
@@ -157,6 +168,7 @@ public class PlanInfoCursorWrapper extends CursorWrapperHelper {
 
   @Override
   public String getColumnName(int columnIndex) {
+    if (columnIndex == getColumnCount() + 1) return "arthvexa_next_occurrence";
     if (columnIndex == getColumnCount()) {
       return KEY_PLAN_INFO;
     }
@@ -165,6 +177,10 @@ public class PlanInfoCursorWrapper extends CursorWrapperHelper {
 
   @Override
   public String getString(int columnIndex) {
+    if (columnIndex == getColumnCount() + 1) {
+      Long next = upcoming.get(getLong(getColumnIndex(KEY_PLANID)));
+      return next == null || next == Long.MAX_VALUE ? null : java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM).format(new java.util.Date(next));
+    }
     if (columnIndex == getColumnCount()) {
       return planInfo.get(getLong(getColumnIndex(KEY_PLANID)));
     }
@@ -173,7 +189,7 @@ public class PlanInfoCursorWrapper extends CursorWrapperHelper {
 
   @Override
   public boolean isNull(int columnIndex) {
-    if (columnIndex == getColumnCount()) {
+    if (columnIndex == getColumnCount() || columnIndex == getColumnCount() + 1) {
       return getString(columnIndex) == null;
     }
     return super.isNull(columnIndex);

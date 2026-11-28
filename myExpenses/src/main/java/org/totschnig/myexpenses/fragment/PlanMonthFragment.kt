@@ -139,6 +139,8 @@ class PlanMonthFragment : CaldroidFragment(), LoaderManager.LoaderCallbacks<Curs
             )
             true
         }
+        toolbar.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.arthvexa_surface_container_low, null))
+        toolbar.setTitleTextColor(ResourcesCompat.getColor(resources, R.color.arthvexa_on_surface, null))
         toolbar.inflateMenu(R.menu.help_with_icon)
         toolbar.title = requireArguments().getString(TOOLBAR_TITLE)
         requireLoader(INSTANCE_STATUS_CURSOR)
@@ -352,6 +354,12 @@ class PlanMonthFragment : CaldroidFragment(), LoaderManager.LoaderCallbacks<Curs
                 state.visibility = View.GONE
                 frameLayout.setOnClickListener(null)
             }
+            frameLayout.contentDescription = text.text.toString() +
+                if (selectedDates.contains(dateTime)) ", " + when (planInstanceState) {
+                    PlanInstanceState.OPEN -> getString(R.string.plan_instance_state_open)
+                    PlanInstanceState.APPLIED -> getString(R.string.plan_instance_state_applied)
+                    PlanInstanceState.CANCELLED -> getString(R.string.plan_instance_state_cancelled)
+                } else ""
             return frameLayout
         }
 

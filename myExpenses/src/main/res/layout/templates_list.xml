@@ -27,6 +27,8 @@
         android:layout_weight="1"
         android:clipToPadding="false"
         android:drawSelectorOnTop="false"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="8dp"
         android:paddingBottom="96dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp" />

@@ -680,9 +680,9 @@ class TemplatesList : SortableListFragment(), LoaderManager.LoaderCallbacks<Curs
     private inner class MyAdapter(context: Context) :
         SimpleCursorAdapter(context, R.layout.template_row, null, emptyArray(), intArrayOf(), 0) {
         private val colorExpense: Int =
-            ResourcesCompat.getColor(resources, R.color.colorExpense, null)
+            ResourcesCompat.getColor(resources, R.color.arthvexa_template_expense, null)
         private val colorIncome: Int =
-            ResourcesCompat.getColor(resources, R.color.colorIncome, null)
+            ResourcesCompat.getColor(resources, R.color.arthvexa_template_income, null)
         private val colorTransfer: Int =
             ResourcesCompat.getColor(resources, R.color.colorTransfer, null)
         private val colorDefault: Int = readPrimaryTextColor(context)
@@ -738,11 +738,13 @@ class TemplatesList : SortableListFragment(), LoaderManager.LoaderCallbacks<Curs
                     TextUtils.concat(catText, COMMENT_SEPARATOR, ssb)
             }
             tv2.text = catText
+            view.findViewById<TextView>(R.id.arthvexaTemplateAccount).text = cursor.getStringIfExists(KEY_ACCOUNT_LABEL).orEmpty()
             with(view.findViewById<TextView>(R.id.arthvexaPlanSummary)) {
                 val execution = cursor.getIntIfExists(KEY_PLAN_EXECUTION)
                 isVisible = doesHavePlan && execution != null
                 text = if (doesHavePlan && execution != null) {
-                    getString(if (execution > 0) R.string.arthvexa_plan_auto else R.string.arthvexa_plan_manual)
+                    getString(if (execution > 0) R.string.arthvexa_plan_auto else R.string.arthvexa_plan_manual) +
+                        (cursor.getStringIfExists("arthvexa_next_occurrence")?.let { "\n" + getString(R.string.arthvexa_next_occurrence, it) } ?: "")
                 } else ""
             }
             view.findViewById<TextView>(R.id.Title).text = cursor.getString(KEY_TITLE) +

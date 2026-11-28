@@ -52,4 +52,6 @@
     <color name="arthvexa_a2_rose">#FF94CA</color>
     <color name="arthvexa_a2_sky_blue">#7DDCFF</color>
     <color name="arthvexa_surface_container_low">#1C2827</color>
+    <color name="arthvexa_template_income">#80E0C7</color>
+    <color name="arthvexa_template_expense">#FF9B86</color>
 </resources>

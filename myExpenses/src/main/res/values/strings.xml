@@ -1191,4 +1191,5 @@
     <string name="arthvexa_plan_auto">Automatic execution</string>
     <string name="arthvexa_plan_manual">Manual execution</string>
     <string name="arthvexa_advance_days">Advance (days)</string>
+    <string name="arthvexa_next_occurrence">Next calendar occurrence: %1$s</string>
 </resources>

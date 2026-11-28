@@ -7,7 +7,8 @@ internal data class ActivityEntry(
     val amount: Long,
     val epoch: Long,
     val description: String,
-    val categoryId: Long
+    val categoryId: Long,
+    val payee: String = ""
 )
 internal fun incomeExpenseTotals(
     entries: List<ActivityEntry>

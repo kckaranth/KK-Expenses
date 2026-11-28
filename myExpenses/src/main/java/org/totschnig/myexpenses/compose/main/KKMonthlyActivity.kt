@@ -66,6 +66,7 @@ import org.totschnig.myexpenses.provider.KEY_PARENTID
 import org.totschnig.myexpenses.provider.KEY_PATH
 import org.totschnig.myexpenses.provider.KEY_AMOUNT
 import org.totschnig.myexpenses.provider.KEY_CATID
+import org.totschnig.myexpenses.provider.KEY_PAYEE_NAME
 import org.totschnig.myexpenses.provider.KEY_COMMENT
 import org.totschnig.myexpenses.provider.KEY_CR_STATUS
 import org.totschnig.myexpenses.provider.KEY_DATE
@@ -112,7 +113,7 @@ private fun readActivity(context: Context): ActivitySnapshot {
     val selection = "$KEY_TRANSFER_PEER IS NULL AND $KEY_PARENTID IS NULL AND $KEY_STATUS != $STATUS_ARCHIVED AND $KEY_CR_STATUS != 'VOID'"
     context.contentResolver.query(
         TransactionProvider.TRANSACTIONS_URI,
-        arrayOf(KEY_ROWID, KEY_ACCOUNTID, KEY_AMOUNT, KEY_DATE, KEY_COMMENT, KEY_CATID),
+        arrayOf(KEY_ROWID, KEY_ACCOUNTID, KEY_AMOUNT, KEY_DATE, KEY_COMMENT, KEY_CATID, KEY_PAYEE_NAME),
         selection, null, "$KEY_DATE DESC"
     )?.use { cursor ->
         val id = cursor.getColumnIndexOrThrow(KEY_ROWID)
@@ -120,10 +121,11 @@ private fun readActivity(context: Context): ActivitySnapshot {
         val amount = cursor.getColumnIndexOrThrow(KEY_AMOUNT)
         val date = cursor.getColumnIndexOrThrow(KEY_DATE)
         val comment = cursor.getColumnIndexOrThrow(KEY_COMMENT)
+        val payee = cursor.getColumnIndexOrThrow(KEY_PAYEE_NAME)
         val category = cursor.getColumnIndexOrThrow(KEY_CATID)
         while (cursor.moveToNext()) {
             entries.add(ActivityEntry(cursor.getLong(id), cursor.getLong(account), cursor.getLong(amount), cursor.getLong(date),
-                cursor.getString(comment).orEmpty(), cursor.getLong(category)))
+                cursor.getString(comment).orEmpty(), cursor.getLong(category), cursor.getString(payee).orEmpty()))
         }
     }
     // Read split parts separately for category attribution.
@@ -132,7 +134,7 @@ private fun readActivity(context: Context): ActivitySnapshot {
         TransactionProvider.TRANSACTIONS_URI,
         arrayOf(
             KEY_ROWID, KEY_ACCOUNTID, KEY_AMOUNT,
-            KEY_DATE, KEY_COMMENT, KEY_CATID, KEY_PARENTID
+            KEY_DATE, KEY_COMMENT, KEY_CATID, KEY_PARENTID, KEY_PAYEE_NAME
         ),
         monthlySplitChildSelection(),
         null,
@@ -143,6 +145,7 @@ private fun readActivity(context: Context): ActivitySnapshot {
         val amount = cursor.getColumnIndexOrThrow(KEY_AMOUNT)
         val date = cursor.getColumnIndexOrThrow(KEY_DATE)
         val comment = cursor.getColumnIndexOrThrow(KEY_COMMENT)
+        val payee = cursor.getColumnIndexOrThrow(KEY_PAYEE_NAME)
         val category = cursor.getColumnIndexOrThrow(KEY_CATID)
         val parent = cursor.getColumnIndexOrThrow(KEY_PARENTID)
 
@@ -165,7 +168,8 @@ private fun readActivity(context: Context): ActivitySnapshot {
                     cursor.getLong(amount),
                     parentEntry.epoch,
                     cursor.getString(comment).orEmpty(),
-                    cursor.getLong(category)
+                    cursor.getLong(category),
+                    cursor.getString(payee).orEmpty().ifBlank { parentEntry.payee }
                 )
             )
         }
@@ -1467,7 +1471,16 @@ internal fun KKMonthlyActivity(
                                     detailCategory = category
                                     detailMonth = YearMonth.from(monthStart)
                                 }) {
-                                    Text((data.categories[category] ?: "Uncategorized") + " · " + formatter.convAmount(amount, account.currencyUnit))
+                                    val previous = monthlySummary.previousCategorySpending[category] ?: 0L
+                                    Column(Modifier.fillMaxWidth()) {
+                                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                            Text(data.categories[category] ?: "Uncategorized", Modifier.weight(1f))
+                                            Text(formatter.convAmount(amount, account.currencyUnit))
+                                        }
+                                        Text("Previous: " + formatter.convAmount(previous, account.currencyUnit) +
+                                            " · Change: " + formatter.convAmount(amount - previous, account.currencyUnit),
+                                            style = MaterialTheme.typography.bodySmall)
+                                    }
                                 }
                             }
                         }
@@ -1484,18 +1497,26 @@ internal fun KKMonthlyActivity(
                                         Text(account.label + " · " + month.format(DateTimeFormatter.ofPattern("MMMM yyyy")))
                                         Text(if (category == null) "Transfers excluded; split totals shown at parent level." else "Expense entries including allocated split parts.", style = MaterialTheme.typography.bodySmall)
                                         val (detailIncome, detailExpense) = incomeExpenseTotals(rows)
-                                        Text("Income: " + formatter.convAmount(detailIncome, account.currencyUnit))
-                                        Text("Expenses: " + formatter.convAmount(-detailExpense, account.currencyUnit))
+                                        Text("Income: " + formatter.convAmount(detailIncome, account.currencyUnit), color = arthvexaFinancialColor("income"))
+                                        Text("Expenses: " + formatter.convAmount(-detailExpense, account.currencyUnit), color = arthvexaFinancialColor("expense"))
                                         Text("${rows.size} entries", style = MaterialTheme.typography.labelMedium)
-                                        LazyColumn(Modifier.heightIn(max = 260.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        LazyColumn(Modifier.heightIn(max = (androidx.compose.ui.platform.LocalConfiguration.current.screenHeightDp * 0.32f).dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                             items(rows) { entry ->
                                                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                                     Column(Modifier.weight(1f)) {
-                                                        Text(entry.description.ifBlank { data.categories[entry.categoryId] ?: "Transaction" })
-                                                        Text(Instant.ofEpochSecond(entry.epoch).atZone(zone).toLocalDate().toString(), style = MaterialTheme.typography.bodySmall)
+                                                        val label = data.categories[entry.categoryId] ?: "Uncategorized"
+                                                        Text(entry.payee.ifBlank { entry.description.ifBlank { label } }, style = MaterialTheme.typography.bodyMedium)
+                                                        if (entry.payee.isNotBlank() && entry.description.isNotBlank()) {
+                                                            Text(entry.description, style = MaterialTheme.typography.bodySmall)
+                                                        }
+                                                        if (category == null && (entry.payee.isNotBlank() || entry.description.isNotBlank())) {
+                                                            Text(label, style = MaterialTheme.typography.bodySmall)
+                                                        }
+                                                        Text(Instant.ofEpochSecond(entry.epoch).atZone(zone).toLocalDate().format(DateTimeFormatter.ofPattern("d MMM yyyy")), style = MaterialTheme.typography.bodySmall)
                                                     }
-                                                    Text(formatter.convAmount(entry.amount, account.currencyUnit))
+                                                    Text(formatter.convAmount(entry.amount, account.currencyUnit), color = arthvexaFinancialColor("net", entry.amount), style = MaterialTheme.typography.bodyMedium)
                                                 }
+                                                HorizontalDivider()
                                             }
                                         }
                                     }

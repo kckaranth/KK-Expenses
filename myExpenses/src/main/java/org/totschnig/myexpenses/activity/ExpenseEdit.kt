@@ -1108,6 +1108,10 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
         get() = if (isSplitPart) PrefKey.EXPENSE_EDIT_SAVE_AND_NEW_SPLIT_PART else PrefKey.EXPENSE_EDIT_SAVE_AND_NEW
 
     private fun setTitle() {
+        val saveLabel = rootBinding.root.findViewById<TextView>(R.id.arthvexaSaveLabel)
+        val label = getString(if (isTemplate && !isSplitPart) R.string.arthvexa_save_template else R.string.arthvexa_save_transaction)
+        saveLabel.text = label
+        saveLabel.contentDescription = label
         val editHeading = rootBinding.root.findViewById<TextView>(R.id.arthvexaEditHeading)
         if (withTypeSpinner) {
             editHeading.visibility = View.GONE

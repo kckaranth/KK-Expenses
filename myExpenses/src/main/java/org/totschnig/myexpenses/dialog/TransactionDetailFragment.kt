@@ -164,7 +164,7 @@ class TransactionDetailFragment : ComposeBaseDialogFragment3() {
                     .setAllCornerSizes(24 * resources.displayMetrics.density).build()
             )
             background.fillColor = android.content.res.ColorStateList.valueOf(
-                androidx.core.content.ContextCompat.getColor(requireContext(), R.color.arthvexa_surface_container_low)
+                androidx.core.content.ContextCompat.getColor(builder.context, R.color.arthvexa_surface_container_low)
             )
             builder.setBackground(background)
         }

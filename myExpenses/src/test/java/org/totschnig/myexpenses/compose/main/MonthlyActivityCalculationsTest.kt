@@ -4,6 +4,14 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class MonthlyActivityCalculationsTest {
+    @Test
+    fun repeatedSpendingPercentageHandlesIncreaseDecreaseAndMissingBaseline() {
+        assertThat(repeatedSpendingPercent(1800, 300)!!).isWithin(0.00001).of(500.0)
+        assertThat(repeatedSpendingPercent(50, 100)!!).isWithin(0.00001).of(-50.0)
+        assertThat(repeatedSpendingPercent(100, 100)!!).isWithin(0.00001).of(0.0)
+        assertThat(repeatedSpendingPercent(100, 0)).isNull()
+    }
+
 
     @Test
     fun trendAxisUsesConfiguredCurrencyPrecision() {

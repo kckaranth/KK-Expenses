@@ -271,3 +271,6 @@ internal fun repeatedExpenseCategories(
         .sortedWith(compareByDescending<Pair<Long, Long>> { it.second }.thenBy { it.first })
         .take(5)
 }
+
+internal fun repeatedSpendingPercent(current: Long, previous: Long): Double? =
+    if (previous <= 0L) null else (current.toDouble() - previous.toDouble()) / previous.toDouble() * 100.0

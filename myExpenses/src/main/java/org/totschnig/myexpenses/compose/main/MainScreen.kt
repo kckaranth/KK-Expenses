@@ -526,6 +526,7 @@ fun MainScreenAdaptive(
                         showHome = false
                         showInsights = true
                     },
+                    onTemplates = { onAppEvent(AppEvent.MenuItemClicked(R.id.MANAGE_TEMPLATES_COMMAND)) },
                     onQuickTransaction = { action ->
                         onAppEvent(AppEvent.CreateTransaction(action))
                     },
@@ -692,6 +693,7 @@ private fun KKHomeDashboard(
     onAccounts: () -> Unit,
     onTransactions: () -> Unit,
     onInsights: () -> Unit,
+    onTemplates: () -> Unit,
     onQuickTransaction: (Action) -> Unit,
 ) {
     val formatter = LocalCurrencyFormatter.current
@@ -721,6 +723,7 @@ private fun KKHomeDashboard(
                 enabled = accounts.size > 1,
             ) { Text("Transfer") }
         }
+        OutlinedButton(onClick = onTemplates, modifier = Modifier.fillMaxWidth()) { Text("Templates & scheduled payments") }
         if (accounts.size == 1) {
             Text(
                 "Add a second account to enable transfers.",

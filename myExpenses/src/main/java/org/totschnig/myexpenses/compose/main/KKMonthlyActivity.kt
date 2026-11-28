@@ -24,7 +24,12 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
-import androidx.compose.material3.AlertDialog
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.heightIn
@@ -1477,9 +1482,13 @@ internal fun KKMonthlyActivity(
                                             Text(data.categories[category] ?: "Uncategorized", Modifier.weight(1f))
                                             Text(formatter.convAmount(amount, account.currencyUnit))
                                         }
-                                        Text("Previous: " + formatter.convAmount(previous, account.currencyUnit) +
-                                            " · Change: " + formatter.convAmount(amount - previous, account.currencyUnit),
-                                            style = MaterialTheme.typography.bodySmall)
+                                        Text("Previous: " + formatter.convAmount(previous, account.currencyUnit), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        val change = amount - previous
+                                        val percent = repeatedSpendingPercent(amount, previous)
+                                        Text("Change: " + (if (change > 0) "+" else "") + formatter.convAmount(change, account.currencyUnit) +
+                                            (percent?.let { " · " + String.format(java.util.Locale.getDefault(), "%+.1f%%", it) } ?: ""),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = arthvexaFinancialColor("net", -change))
                                     }
                                 }
                             }
@@ -1489,18 +1498,23 @@ internal fun KKMonthlyActivity(
                             val rows = remember(month, category, accountEntries, accountCategoryEntries, zone) {
                                 insightDetailEntries(accountEntries, accountCategoryEntries, month, category, zone)
                             }
-                            AlertDialog(
-                                onDismissRequest = { detailMonth = null },
-                                title = { Text(if (category == null) "Monthly transactions" else data.categories[category] ?: "Uncategorized") },
-                                text = {
-                                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                        Text(account.label + " · " + month.format(DateTimeFormatter.ofPattern("MMMM yyyy")))
-                                        Text(if (category == null) "Transfers excluded; split totals shown at parent level." else "Expense entries including allocated split parts.", style = MaterialTheme.typography.bodySmall)
-                                        val (detailIncome, detailExpense) = incomeExpenseTotals(rows)
-                                        Text("Income: " + formatter.convAmount(detailIncome, account.currencyUnit), color = arthvexaFinancialColor("income"))
-                                        Text("Expenses: " + formatter.convAmount(-detailExpense, account.currencyUnit), color = arthvexaFinancialColor("expense"))
-                                        Text("${rows.size} entries", style = MaterialTheme.typography.labelMedium)
-                                        LazyColumn(Modifier.heightIn(max = (androidx.compose.ui.platform.LocalConfiguration.current.screenHeightDp * 0.32f).dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            val config = androidx.compose.ui.platform.LocalConfiguration.current
+                            val wide = config.screenWidthDp >= 600 && config.screenWidthDp > config.screenHeightDp
+                            val summary: @Composable () -> Unit = {
+                                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    Text(account.label + " · " + month.format(DateTimeFormatter.ofPattern("MMMM yyyy")))
+                                    Text(if (category == null) "Transfers excluded; split totals shown at parent level." else "Expense entries including allocated split parts.", style = MaterialTheme.typography.bodySmall)
+                                    val (detailIncome, detailExpense) = incomeExpenseTotals(rows)
+                                    if (category == null) Text("Income: " + formatter.convAmount(detailIncome, account.currencyUnit), color = arthvexaFinancialColor("income"))
+                                    Text("Expenses: " + formatter.convAmount(-detailExpense, account.currencyUnit), color = arthvexaFinancialColor("expense"))
+                                    Text("${rows.size} entries", style = MaterialTheme.typography.labelMedium)
+                                }
+                            }
+                            val entries: @Composable (Modifier) -> Unit = { modifier ->
+                                val listState = androidx.compose.foundation.lazy.rememberLazyListState()
+                                Column(modifier) {
+                                    if (rows.isNotEmpty()) Text("Entry ${listState.firstVisibleItemIndex + 1} of ${rows.size}", style = MaterialTheme.typography.labelSmall)
+                                    LazyColumn(Modifier.weight(1f).fillMaxWidth(), state = listState, verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                             items(rows) { entry ->
                                                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                                     Column(Modifier.weight(1f)) {
@@ -1518,11 +1532,28 @@ internal fun KKMonthlyActivity(
                                                 }
                                                 HorizontalDivider()
                                             }
+                                    }
+                                }
+                            }
+                            Dialog(onDismissRequest = { detailMonth = null }, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+                                Surface(modifier = Modifier.widthIn(max = if (wide) 880.dp else 480.dp).fillMaxWidth(if (wide) 0.92f else 0.90f).fillMaxHeight(if (wide) 0.92f else 0.80f), shape = RoundedCornerShape(24.dp), color = MaterialTheme.colorScheme.surface) {
+                                    Column(Modifier.padding(if (wide) 12.dp else 20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Text(if (category == null) "Monthly transactions" else data.categories[category] ?: "Uncategorized", Modifier.weight(1f), style = MaterialTheme.typography.titleLarge)
+                                            TextButton(onClick = { detailMonth = null }) { Text("Close") }
+                                        }
+                                        if (wide) {
+                                            Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                                                Column(Modifier.weight(0.36f).verticalScroll(rememberScrollState())) { summary() }
+                                                entries(Modifier.weight(0.64f).fillMaxHeight())
+                                            }
+                                        } else {
+                                            summary()
+                                            entries(Modifier.weight(1f))
                                         }
                                     }
-                                },
-                                confirmButton = { TextButton(onClick = { detailMonth = null }) { Text("Close") } }
-                            )
+                                }
+                            }
                         }
                     }
 

@@ -35,7 +35,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/no_templates"
+        android:text="@string/arthvexa_templates_empty"
         android:textColor="@color/arthvexa_on_surface_variant"
         android:textSize="16sp"
         android:padding="24dp"

@@ -58,6 +58,8 @@ class ManageTemplates : ProtectedFragmentActivity(), ConfirmationDialogListener,
         toolbar.navigationIcon?.mutate()?.setTint(foreground)
         floatingActionButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.arthvexa_primary))
         floatingActionButton.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.arthvexa_on_primary))
+        window.statusBarColor = surface
+        window.navigationBarColor = surface
         title = getString(R.string.menu_manage_plans)
         val uriString = intent.getStringExtra(CalendarContract.Events.CUSTOM_APP_URI)
         if (uriString != null) {
@@ -149,6 +151,7 @@ class ManageTemplates : ProtectedFragmentActivity(), ConfirmationDialogListener,
     }
 
     companion object {
+        const val EXTRA_REVIEW_BEFORE_SAVE = "arthvexa.review_before_save"
         const val NOT_CALLED = -1L
     }
 }

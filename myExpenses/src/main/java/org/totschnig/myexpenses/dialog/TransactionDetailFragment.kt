@@ -157,6 +157,19 @@ class TransactionDetailFragment : ComposeBaseDialogFragment3() {
 
     override val horizontalPadding = 0.dp
 
+    override fun initBuilder(): AlertDialog.Builder = super.initBuilder().also { builder ->
+        if (builder is com.google.android.material.dialog.MaterialAlertDialogBuilder) {
+            val background = com.google.android.material.shape.MaterialShapeDrawable(
+                com.google.android.material.shape.ShapeAppearanceModel.builder()
+                    .setAllCornerSizes(24 * resources.displayMetrics.density).build()
+            )
+            background.fillColor = android.content.res.ColorStateList.valueOf(
+                androidx.core.content.ContextCompat.getColor(requireContext(), R.color.arthvexa_surface_container_low)
+            )
+            builder.setBackground(background)
+        }
+    }
+
     @Composable
     fun TableRow(
         modifier: Modifier = Modifier,

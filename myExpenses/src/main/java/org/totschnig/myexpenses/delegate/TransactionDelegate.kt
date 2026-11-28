@@ -443,7 +443,7 @@ abstract class TransactionDelegate(
             methodRowBinding.Number.setText(transaction.referenceNumber)
         }
 
-        fillAmount(transaction.amount.amountMajor)
+        fillAmount(transaction.amount.amountMajor, focusAmount = host.newInstance)
         if (transaction.amount.amountMinor == 0L && transaction.type == FLAG_INCOME) {
             viewBinding.Amount.type = true
         }
@@ -464,14 +464,16 @@ abstract class TransactionDelegate(
             context.getString(R.string.status) + ": " + context.getString(crStatus.toStringRes())
     }
 
-    fun fillAmount(amount: BigDecimal) {
+    fun fillAmount(amount: BigDecimal, focusAmount: Boolean = true) {
         with(viewBinding.Amount) {
             if (amount.signum() != 0) {
                 lastFilledAmount = amount
                 setAmount(amount)
             }
-            requestFocus()
-            selectAll()
+            if (focusAmount) {
+                requestFocus()
+                selectAll()
+            }
         }
     }
 

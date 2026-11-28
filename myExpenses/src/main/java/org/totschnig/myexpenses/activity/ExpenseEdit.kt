@@ -586,6 +586,9 @@ open class ExpenseEdit : AmountActivity<TransactionEditViewModel>(), ContribIFac
             }
             newInstance =
                 mRowId == 0L || task == TRANSACTION_FROM_TEMPLATE || task == TEMPLATE_FROM_TRANSACTION
+            if (!newInstance && !isClone) {
+                window.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+            }
             withTypeSpinner = mRowId == 0L
             //were we called from a notification
             val notificationId = intent.getIntExtra(MyApplication.KEY_NOTIFICATION_ID, 0)

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
@@ -1537,6 +1538,7 @@ internal fun KKMonthlyActivity(
                                                         Text(Instant.ofEpochSecond(entry.epoch).atZone(zone).toLocalDate().format(DateTimeFormatter.ofPattern("d MMM yyyy")), style = MaterialTheme.typography.bodySmall)
                                                     }
                                                     Text(formatter.convAmount(entry.amount, account.currencyUnit), color = arthvexaFinancialColor("net", entry.amount), style = MaterialTheme.typography.bodyMedium)
+                                                    if (host != null) Icon(Icons.Filled.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(18.dp))
                                                 }
                                                 HorizontalDivider()
                                             }

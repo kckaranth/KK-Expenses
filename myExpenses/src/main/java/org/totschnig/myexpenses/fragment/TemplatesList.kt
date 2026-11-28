@@ -223,7 +223,7 @@ class TemplatesList : SortableListFragment(), LoaderManager.LoaderCallbacks<Curs
                             templatesCursor.getString(KEY_DEFAULT_ACTION),
                             Template.Action.SAVE
                         )
-                        if (defaultAction == Template.Action.SAVE) {
+                        if (defaultAction == Template.Action.SAVE && !ctx.intent.getBooleanExtra(ManageTemplates.EXTRA_REVIEW_BEFORE_SAVE, false)) {
                             if (splitAtPosition) {
                                 requestSplitTransaction(longArrayOf(id))
                             } else {

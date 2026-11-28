@@ -526,7 +526,11 @@ fun MainScreenAdaptive(
                         showHome = false
                         showInsights = true
                     },
-                    onTemplates = { onAppEvent(AppEvent.MenuItemClicked(R.id.MANAGE_TEMPLATES_COMMAND)) },
+                    onTemplates = {
+                        context.startActivity(android.content.Intent(context, org.totschnig.myexpenses.activity.ManageTemplates::class.java).apply {
+                            putExtra(org.totschnig.myexpenses.activity.ManageTemplates.EXTRA_REVIEW_BEFORE_SAVE, true)
+                        })
+                    },
                     onQuickTransaction = { action ->
                         onAppEvent(AppEvent.CreateTransaction(action))
                     },

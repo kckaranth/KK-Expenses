@@ -742,6 +742,7 @@ class TemplatesList : SortableListFragment(), LoaderManager.LoaderCallbacks<Curs
             with(view.findViewById<TextView>(R.id.arthvexaPlanSummary)) {
                 val execution = cursor.getIntIfExists(KEY_PLAN_EXECUTION)
                 isVisible = doesHavePlan && execution != null
+                setTextColor(ResourcesCompat.getColor(resources, if (execution != null && execution > 0) R.color.arthvexa_primary else R.color.arthvexa_on_surface_variant, null))
                 text = if (doesHavePlan && execution != null) {
                     getString(if (execution > 0) R.string.arthvexa_plan_auto else R.string.arthvexa_plan_manual) +
                         (cursor.getStringIfExists("arthvexa_next_occurrence")?.let { "\n" + getString(R.string.arthvexa_next_occurrence, it) } ?: "")

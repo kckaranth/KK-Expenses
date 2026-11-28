@@ -143,7 +143,27 @@ class PlanMonthFragment : CaldroidFragment(), LoaderManager.LoaderCallbacks<Curs
         toolbar.setTitleTextColor(ResourcesCompat.getColor(resources, R.color.arthvexa_on_surface, null))
         toolbar.inflateMenu(R.menu.help_with_icon)
         toolbar.title = requireArguments().getString(TOOLBAR_TITLE)
+        toolbar.subtitle = "… ${getString(R.string.plan_instance_state_open)} · ✓ ${getString(R.string.plan_instance_state_applied)} · × ${getString(R.string.plan_instance_state_cancelled)}"
+        toolbar.setSubtitleTextColor(ResourcesCompat.getColor(resources, R.color.arthvexa_on_surface_variant, null))
         requireLoader(INSTANCE_STATUS_CURSOR)
+        val surface = ResourcesCompat.getColor(resources, R.color.arthvexa_surface_container_low, null)
+        val foreground = ResourcesCompat.getColor(resources, R.color.arthvexa_on_surface, null)
+        fun styleHeader(node: View) {
+            if (node is android.widget.AdapterView<*> || node.javaClass.name.contains("ViewPager") || node is Toolbar) return
+            if (node is ViewGroup) {
+                node.setBackgroundColor(surface)
+                for (i in 0 until node.childCount) styleHeader(node.getChildAt(i))
+            } else if (node is TextView) {
+                node.setTextColor(foreground)
+                node.setBackgroundColor(surface)
+            }
+        }
+        styleHeader(view)
+        view.background = GradientDrawable().apply {
+            setColor(surface)
+            cornerRadius = 16 * resources.displayMetrics.density
+        }
+        view.clipToOutline = true
         return view
     }
 

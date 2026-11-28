@@ -155,6 +155,7 @@ public class PlanInfoCursorWrapper extends CursorWrapperHelper {
   @Override
   public int getColumnIndex(String columnName) {
     int result;
+    if (columnName.equals("arthvexa_next_occurrence_millis")) return getColumnCount() + 2;
     if (columnName.equals("arthvexa_next_occurrence")) {
       return getColumnCount() + 1;
     }
@@ -168,6 +169,7 @@ public class PlanInfoCursorWrapper extends CursorWrapperHelper {
 
   @Override
   public String getColumnName(int columnIndex) {
+    if (columnIndex == getColumnCount() + 2) return "arthvexa_next_occurrence_millis";
     if (columnIndex == getColumnCount() + 1) return "arthvexa_next_occurrence";
     if (columnIndex == getColumnCount()) {
       return KEY_PLAN_INFO;
@@ -177,6 +179,10 @@ public class PlanInfoCursorWrapper extends CursorWrapperHelper {
 
   @Override
   public String getString(int columnIndex) {
+    if (columnIndex == getColumnCount() + 2) {
+      Long next = upcoming.get(getLong(getColumnIndex(KEY_PLANID)));
+      return next == null || next == Long.MAX_VALUE ? null : next.toString();
+    }
     if (columnIndex == getColumnCount() + 1) {
       Long next = upcoming.get(getLong(getColumnIndex(KEY_PLANID)));
       return next == null || next == Long.MAX_VALUE ? null : java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM).format(new java.util.Date(next));
@@ -189,7 +195,7 @@ public class PlanInfoCursorWrapper extends CursorWrapperHelper {
 
   @Override
   public boolean isNull(int columnIndex) {
-    if (columnIndex == getColumnCount() || columnIndex == getColumnCount() + 1) {
+    if (columnIndex == getColumnCount() || columnIndex == getColumnCount() + 1 || columnIndex == getColumnCount() + 2) {
       return getString(columnIndex) == null;
     }
     return super.isNull(columnIndex);

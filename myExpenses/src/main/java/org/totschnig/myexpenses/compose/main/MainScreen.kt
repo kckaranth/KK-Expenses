@@ -92,6 +92,21 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.totschnig.myexpenses.provider.TransactionProvider
+import org.totschnig.myexpenses.provider.appendBooleanQueryParameter
+import org.totschnig.myexpenses.provider.getStringIfExists
+import org.totschnig.myexpenses.provider.getIntIfExists
+import org.totschnig.myexpenses.provider.getLong
+import org.totschnig.myexpenses.provider.KEY_PARENTID
+import org.totschnig.myexpenses.provider.KEY_PLAN_EXECUTION
+import org.totschnig.myexpenses.provider.KEY_TITLE
+import org.totschnig.myexpenses.provider.KEY_ACCOUNT_LABEL
+import org.totschnig.myexpenses.provider.KEY_AMOUNT
+import org.totschnig.myexpenses.provider.KEY_CURRENCY
+import org.totschnig.myexpenses.provider.KEY_TRANSFER_ACCOUNT
+import org.totschnig.myexpenses.provider.isNull
 import myiconpack.PaneSplit
 import org.totschnig.myexpenses.R
 import org.totschnig.myexpenses.activity.HELP_VARIANT_ACCOUNTS
@@ -728,6 +743,7 @@ private fun KKHomeDashboard(
             ) { Text("Transfer") }
         }
         OutlinedButton(onClick = onTemplates, modifier = Modifier.fillMaxWidth()) { Text("Templates & scheduled payments") }
+        UpcomingPlanSummary(accounts, onTemplates)
         if (accounts.size == 1) {
             Text(
                 "Add a second account to enable transfers.",
@@ -922,5 +938,78 @@ accounts.forEach { account ->
             Text("Explore detailed insights")
         }
 
+    }
+}
+
+
+private data class UpcomingPlanRow(
+    val title: String, val account: String, val currency: String,
+    val amount: Long, val automatic: Boolean, val date: String, val timestamp: Long, val transfer: Boolean,
+)
+
+@Composable
+private fun UpcomingPlanSummary(accounts: List<FullAccount>, onTemplates: () -> Unit) {
+    val context = LocalContext.current
+    val formatter = LocalCurrencyFormatter.current
+    var rows by remember { mutableStateOf<List<UpcomingPlanRow>?>(null) }
+    var unavailable by remember { mutableStateOf(false) }
+    LaunchedEffect(context) {
+        try {
+            rows = withContext(Dispatchers.IO) {
+                val uri = TransactionProvider.TEMPLATES_URI.buildUpon()
+                    .appendBooleanQueryParameter(TransactionProvider.QUERY_PARAMETER_WITH_PLAN_INFO)
+                    .build()
+                context.contentResolver.query(uri, null, "$KEY_PARENTID IS NULL", null, KEY_TITLE)?.use { cursor ->
+                    buildList {
+                        while (cursor.moveToNext()) {
+                            val date = cursor.getStringIfExists("arthvexa_next_occurrence") ?: continue
+                            val timestamp = cursor.getStringIfExists("arthvexa_next_occurrence_millis")?.toLongOrNull() ?: continue
+                            val execution = cursor.getIntIfExists(KEY_PLAN_EXECUTION) ?: continue
+                            add(UpcomingPlanRow(
+                                cursor.getStringIfExists(KEY_TITLE).orEmpty(),
+                                cursor.getStringIfExists(KEY_ACCOUNT_LABEL).orEmpty(),
+                                cursor.getStringIfExists(KEY_CURRENCY).orEmpty(),
+                                cursor.getLong(KEY_AMOUNT), execution > 0, date, timestamp, !cursor.isNull(KEY_TRANSFER_ACCOUNT),
+                            ))
+                        }
+                    }.sortedBy { it.timestamp }
+                } ?: emptyList()
+            }
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            unavailable = true
+        }
+    }
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text("Upcoming scheduled payments", style = MaterialTheme.typography.titleMedium)
+            val plans = rows
+            when {
+                unavailable -> Text("Calendar information unavailable.")
+                plans == null -> Text("Loading calendar occurrences…")
+                plans.isEmpty() -> Text("No upcoming calendar occurrences available.")
+                else -> {
+                    plans.take(3).forEach { plan ->
+                        val currency = accounts.firstOrNull { it.currencyUnit.code == plan.currency }?.currencyUnit
+                        Text(plan.title, style = MaterialTheme.typography.titleSmall)
+                        Text("${plan.account} · ${plan.date}", style = MaterialTheme.typography.bodySmall)
+                        Text(if (plan.automatic) "Automatic execution" else "Manual execution", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall)
+                        if (currency != null) Text((if (plan.transfer) "Transfer · " else "") + formatter.convAmount(plan.amount, currency))
+                    }
+                    Text("Next occurrence per plan; transfers excluded from totals. Not posted transactions or guaranteed execution dates.", style = MaterialTheme.typography.bodySmall)
+                    plans.filterNot { it.transfer }.groupBy { it.currency }.forEach { (code, group) ->
+                        val currency = accounts.firstOrNull { it.currencyUnit.code == code }?.currencyUnit
+                        if (currency != null) {
+                            val expenses = group.filter { it.amount < 0 }.sumOf { it.amount }
+                            val income = group.filter { it.amount > 0 }.sumOf { it.amount }
+                            Text("$code · Scheduled expenses: ${formatter.convAmount(expenses, currency)}", style = MaterialTheme.typography.bodySmall)
+                            if (income != 0L) Text("$code · Scheduled inflows: ${formatter.convAmount(income, currency)}", style = MaterialTheme.typography.bodySmall)
+                        }
+                    }
+                }
+            }
+            OutlinedButton(onClick = onTemplates, modifier = Modifier.fillMaxWidth()) { Text("View all plans") }
+        }
     }
 }

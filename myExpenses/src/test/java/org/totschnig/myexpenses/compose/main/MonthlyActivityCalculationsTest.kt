@@ -751,4 +751,12 @@ class MonthlyActivityCalculationsTest {
         assertThat(insightDetailEntries(parents, parts, month, 4L, zone).map { it.id }).containsExactly(3L)
         assertThat(repeatedExpenseCategories(parts, month, zone)).containsExactly(4L to 600L)
     }
+    @Test
+    fun insightOriginalTransactionUsesParentForAllocatedSplit() {
+        val parent = ActivityEntry(10, 1, -1000, 100, "", 0)
+        val child = ActivityEntry(11, 1, -600, 100, "", 4, parentTransactionId = 10)
+        assertThat(parent.originalTransactionId).isEqualTo(10L)
+        assertThat(child.originalTransactionId).isEqualTo(10L)
+        assertThat(child.amount).isEqualTo(-600L)
+    }
 }

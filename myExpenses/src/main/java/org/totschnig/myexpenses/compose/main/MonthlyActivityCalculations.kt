@@ -8,8 +8,11 @@ internal data class ActivityEntry(
     val epoch: Long,
     val description: String,
     val categoryId: Long,
-    val payee: String = ""
-)
+    val payee: String = "",
+    val parentTransactionId: Long? = null
+) {
+    val originalTransactionId: Long get() = parentTransactionId ?: id
+}
 internal fun incomeExpenseTotals(
     entries: List<ActivityEntry>
 ): Pair<Long, Long> {

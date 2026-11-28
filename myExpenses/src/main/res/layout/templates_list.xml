@@ -17,7 +17,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/arthvexa_background">
 
     <ListView
         android:id="@+id/list"
@@ -35,6 +36,9 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/no_templates"
+        android:textColor="@color/arthvexa_on_surface_variant"
+        android:textSize="16sp"
+        android:padding="24dp"
         android:translationY="-28dp"
         tools:ignore="UnusedAttribute" />
 </LinearLayout>

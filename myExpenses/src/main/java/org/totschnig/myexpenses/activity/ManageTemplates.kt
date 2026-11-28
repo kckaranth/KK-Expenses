@@ -15,6 +15,8 @@
 package org.totschnig.myexpenses.activity
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import androidx.core.content.ContextCompat
 import android.os.Bundle
 import android.provider.CalendarContract
 import androidx.core.app.NavUtils
@@ -49,6 +51,13 @@ class ManageTemplates : ProtectedFragmentActivity(), ConfirmationDialogListener,
             TemplatesList()
         }
         setupToolbar()
+        val surface = ContextCompat.getColor(this, R.color.arthvexa_background)
+        val foreground = ContextCompat.getColor(this, R.color.arthvexa_on_surface)
+        toolbar.setBackgroundColor(surface)
+        toolbar.setTitleTextColor(foreground)
+        toolbar.navigationIcon?.mutate()?.setTint(foreground)
+        floatingActionButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.arthvexa_primary))
+        floatingActionButton.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.arthvexa_on_primary))
         title = getString(R.string.menu_manage_plans)
         val uriString = intent.getStringExtra(CalendarContract.Events.CUSTOM_APP_URI)
         if (uriString != null) {

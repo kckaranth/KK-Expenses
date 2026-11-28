@@ -26,7 +26,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.clickable
+import android.content.ContextWrapper
+import org.totschnig.myexpenses.activity.BaseActivity
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -174,7 +176,8 @@ private fun readActivity(context: Context): ActivitySnapshot {
                     parentEntry.epoch,
                     cursor.getString(comment).orEmpty(),
                     cursor.getLong(category),
-                    cursor.getString(payee).orEmpty().ifBlank { parentEntry.payee }
+                    cursor.getString(payee).orEmpty().ifBlank { parentEntry.payee },
+                    parentId
                 )
             )
         }
@@ -1500,6 +1503,8 @@ internal fun KKMonthlyActivity(
                             }
                             val config = androidx.compose.ui.platform.LocalConfiguration.current
                             val wide = config.screenWidthDp >= 600 && config.screenWidthDp > config.screenHeightDp
+                            val host = generateSequence(context) { (it as? ContextWrapper)?.baseContext }
+                                .filterIsInstance<BaseActivity>().firstOrNull()
                             val summary: @Composable () -> Unit = {
                                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                     Text(account.label + " · " + month.format(DateTimeFormatter.ofPattern("MMMM yyyy")))
@@ -1507,16 +1512,19 @@ internal fun KKMonthlyActivity(
                                     val (detailIncome, detailExpense) = incomeExpenseTotals(rows)
                                     if (category == null) Text("Income: " + formatter.convAmount(detailIncome, account.currencyUnit), color = arthvexaFinancialColor("income"))
                                     Text("Expenses: " + formatter.convAmount(-detailExpense, account.currencyUnit), color = arthvexaFinancialColor("expense"))
-                                    Text("${rows.size} entries", style = MaterialTheme.typography.labelMedium)
+                                    Text(if (rows.size == 1) "1 entry" else "${rows.size} entries", style = MaterialTheme.typography.labelMedium)
                                 }
                             }
                             val entries: @Composable (Modifier) -> Unit = { modifier ->
                                 val listState = androidx.compose.foundation.lazy.rememberLazyListState()
                                 Column(modifier) {
-                                    if (rows.isNotEmpty()) Text("Entry ${listState.firstVisibleItemIndex + 1} of ${rows.size}", style = MaterialTheme.typography.labelSmall)
-                                    LazyColumn(Modifier.weight(1f).fillMaxWidth(), state = listState, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    if (listState.canScrollForward || listState.canScrollBackward) Text("Entry ${listState.firstVisibleItemIndex + 1} of ${rows.size}", style = MaterialTheme.typography.labelSmall)
+                                    LazyColumn(Modifier.weight(1f, fill = false).fillMaxWidth(), state = listState, verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                             items(rows) { entry ->
-                                                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                                Row(Modifier.fillMaxWidth().then(if (host != null) Modifier.clickable {
+                                                    detailMonth = null
+                                                    host.showDetails(entry.originalTransactionId)
+                                                } else Modifier).padding(vertical = 4.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                                     Column(Modifier.weight(1f)) {
                                                         val label = data.categories[entry.categoryId] ?: "Uncategorized"
                                                         Text(entry.payee.ifBlank { entry.description.ifBlank { label } }, style = MaterialTheme.typography.bodyMedium)
@@ -1536,20 +1544,20 @@ internal fun KKMonthlyActivity(
                                 }
                             }
                             Dialog(onDismissRequest = { detailMonth = null }, properties = DialogProperties(usePlatformDefaultWidth = false)) {
-                                Surface(modifier = Modifier.widthIn(max = if (wide) 880.dp else 480.dp).fillMaxWidth(if (wide) 0.92f else 0.90f).fillMaxHeight(if (wide) 0.92f else 0.80f), shape = RoundedCornerShape(24.dp), color = MaterialTheme.colorScheme.surface) {
+                                Surface(modifier = Modifier.widthIn(max = if (wide) 880.dp else 480.dp).fillMaxWidth(if (wide) 0.92f else 0.90f).heightIn(max = (config.screenHeightDp * (if (wide) 0.88f else 0.80f)).dp), shape = RoundedCornerShape(24.dp), color = MaterialTheme.colorScheme.surfaceContainerLow) {
                                     Column(Modifier.padding(if (wide) 12.dp else 20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             Text(if (category == null) "Monthly transactions" else data.categories[category] ?: "Uncategorized", Modifier.weight(1f), style = MaterialTheme.typography.titleLarge)
                                             TextButton(onClick = { detailMonth = null }) { Text("Close") }
                                         }
                                         if (wide) {
-                                            Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                                            Row(Modifier.weight(1f, fill = false), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                                                 Column(Modifier.weight(0.36f).verticalScroll(rememberScrollState())) { summary() }
-                                                entries(Modifier.weight(0.64f).fillMaxHeight())
+                                                entries(Modifier.weight(0.64f))
                                             }
                                         } else {
                                             summary()
-                                            entries(Modifier.weight(1f))
+                                            entries(Modifier.weight(1f, fill = false))
                                         }
                                     }
                                 }
